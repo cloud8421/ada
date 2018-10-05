@@ -6,7 +6,9 @@ defmodule Ada.HTTP.Router do
       {:_,
        [
          {'/locations', Handler.Locations, opts},
-         {'/locations/[:location_id]', Handler.Location, opts}
+         {'/locations/[:location_id]', Handler.Location, opts},
+         {'/users', Handler.Users, opts},
+         {'/users/[:user_id]', Handler.User, opts}
        ]}
     ])
   end
