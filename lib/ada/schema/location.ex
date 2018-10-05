@@ -10,4 +10,10 @@ defmodule Ada.Schema.Location do
 
     timestamps()
   end
+
+  def initial_changeset(params \\ %{}) do
+    %__MODULE__{}
+    |> Ecto.Changeset.cast(params, [:name, :lat, :lng])
+    |> Ecto.Changeset.validate_required([:name, :lat, :lng])
+  end
 end
