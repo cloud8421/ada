@@ -4,7 +4,7 @@ defmodule Ada.HTTP.Handler.Location do
   end
 
   def allowed_methods(req, state) do
-    {["OPTIONS", "HEAD", "GET", "PUT", "PATCH"], req, state}
+    {["OPTIONS", "HEAD", "GET", "PUT", "PATCH", "DELETE"], req, state}
   end
 
   def resource_exists(req, {_maybe_resource, ctx} = state) do
@@ -59,6 +59,15 @@ defmodule Ada.HTTP.Handler.Location do
     else
       _error ->
         {false, req, state}
+    end
+  end
+
+  def delete_resource(req, {location, ctx} = state) do
+    repo = Keyword.fetch!(ctx, :repo)
+
+    case repo.delete(location) do
+      {:ok, _} -> {true, req, {:no_resource, ctx}}
+      _error -> {false, req, state}
     end
   end
 end
