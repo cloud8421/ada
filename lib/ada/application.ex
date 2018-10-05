@@ -11,9 +11,10 @@ defmodule Ada.Application do
     Supervisor.start_link(children, opts)
   end
 
-  def common_children do
+  def common_children() do
     [
-      {Ada.Repo, []}
+      {Ada.Repo, []},
+      {Ada.HTTP.Listener, http_port()}
     ]
   end
 
@@ -29,5 +30,12 @@ defmodule Ada.Application do
       # Starts a worker by calling: Ada.Worker.start_link(arg)
       # {Ada.Worker, arg},
     ]
+  end
+
+  defp http_port do
+    case System.get_env("HTTP_PORT") do
+      nil -> 4000
+      str_value -> String.to_integer(str_value)
+    end
   end
 end
