@@ -41,6 +41,3 @@ config :nerves_init_gadget,
   node_name: nil,
   node_host: :mdns_domain,
   ssh_console_port: 22
-
-config :ada,
-  ecto_repos: [Ada.Repo]

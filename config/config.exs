@@ -5,6 +5,9 @@
 # is restricted to this project.
 use Mix.Config
 
+config :ada,
+  ecto_repos: [Ada.Repo]
+
 config :ada, Ada.Repo, adapter: Sqlite.Ecto2
 
 # Import target specific config. This must remain at the bottom
