@@ -6,12 +6,26 @@ defmodule Ada.Application do
   use Application
 
   def start(_type, _args) do
-    opts = [strategy: :one_for_one, name: Ada.Supervisor]
+    ensure_data_directory!()
+
     children = common_children() ++ children(@target)
+    opts = [strategy: :one_for_one, name: Ada.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
-  def common_children() do
+  def start_phase(:ensure_migrations, _type, _args) do
+    Ecto.Migrator.run(Ada.Repo, migrations_path(:ada, Ada.Repo), :up, all: true)
+
+    :ok
+  end
+
+  defp ensure_data_directory! do
+    db_file = Application.get_env(:ada, Ada.Repo)[:database]
+    directory = Path.dirname(db_file)
+    File.mkdir_p!(directory)
+  end
+
+  defp common_children() do
     [
       {Ada.Repo, []},
       {Ada.HTTP.Listener, [http_port: http_port(), repo: Ada.Repo]}
@@ -30,6 +44,13 @@ defmodule Ada.Application do
       # Starts a worker by calling: Ada.Worker.start_link(arg)
       # {Ada.Worker, arg},
     ]
+  end
+
+  defp migrations_path(app, repo) do
+    lib_dir = :code.lib_dir(app)
+    repo_path = Keyword.get(repo.config(), :priv, "priv/repo")
+
+    Path.join([lib_dir, repo_path, "migrations"])
   end
 
   defp http_port do
