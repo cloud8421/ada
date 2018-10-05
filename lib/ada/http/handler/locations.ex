@@ -10,6 +10,6 @@ defmodule Ada.HTTP.Handler.Locations do
   end
 
   def to_json(req, state) do
-    {"[]", req, state}
+    {Jason.encode!([]), req, state}
   end
 end
