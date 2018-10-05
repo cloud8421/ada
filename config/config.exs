@@ -45,8 +45,13 @@ config :nerves_init_gadget,
   node_host: :mdns_domain,
   ssh_console_port: 22
 
+config :ada,
+  ecto_repos: [Ada.Repo]
+
+config :ada, Ada.Repo, adapter: Sqlite.Ecto2
+
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations
 
-# import_config "#{Mix.Project.config[:target]}.exs"
+import_config "#{Mix.Project.config()[:target]}.exs"
