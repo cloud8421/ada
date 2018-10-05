@@ -1,20 +1,22 @@
 defmodule Ada.HTTP.Handler.Locations do
-  def init(req, opts) do
-    {:cowboy_rest, req, opts}
+  def init(req, ctx) do
+    {:cowboy_rest, req, ctx}
   end
 
-  def content_types_provided(req, state) do
+  def content_types_provided(req, ctx) do
     {[
        {"application/json", :to_json}
-     ], req, state}
+     ], req, ctx}
   end
 
-  def to_json(req, state) do
+  def to_json(req, ctx) do
+    repo = Keyword.fetch!(ctx, :repo)
+
     body =
       Ada.Schema.Location
-      |> Ada.Repo.all()
+      |> repo.all()
       |> Jason.encode!()
 
-    {body, req, state}
+    {body, req, ctx}
   end
 end

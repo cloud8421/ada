@@ -14,7 +14,7 @@ defmodule Ada.Application do
   def common_children() do
     [
       {Ada.Repo, []},
-      {Ada.HTTP.Listener, http_port()}
+      {Ada.HTTP.Listener, [http_port: http_port(), repo: Ada.Repo]}
     ]
   end
 
