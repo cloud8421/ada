@@ -18,6 +18,7 @@
     field: 3,
     timestamps: 1,
     embeds_one: 2,
-    embeds_one: 3
+    embeds_one: 3,
+    add: 3
   ]
 ]
