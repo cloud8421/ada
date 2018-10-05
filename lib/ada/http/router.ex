@@ -5,7 +5,8 @@ defmodule Ada.HTTP.Router do
     :cowboy_router.compile([
       {:_,
        [
-         {'/locations', Handler.Locations, opts}
+         {'/locations', Handler.Locations, opts},
+         {'/locations/[:location_id]', Handler.Location, opts}
        ]}
     ])
   end
