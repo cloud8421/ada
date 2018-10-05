@@ -38,7 +38,27 @@ defmodule Ada.HTTP.Handler.Location do
      ], req, state}
   end
 
+  def content_types_accepted(req, ctx) do
+    {[
+       {"application/json", :from_json}
+     ], req, ctx}
+  end
+
   def to_json(req, {location, _ctx} = state) do
     {Jason.encode!(location), req, state}
+  end
+
+  def from_json(req, {location, ctx} = state) do
+    repo = Keyword.fetch!(ctx, :repo)
+    {:ok, encoded, req} = :cowboy_req.read_body(req)
+
+    with {:ok, decoded} <- Jason.decode(encoded),
+         changeset <- Ada.Schema.Location.update_changeset(location, decoded),
+         {:ok, new_location} <- repo.update(changeset) do
+      {true, req, {new_location, ctx}}
+    else
+      _error ->
+        {false, req, state}
+    end
   end
 end
