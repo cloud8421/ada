@@ -1,10 +1,13 @@
-.PHONY: firmware burn test
+.PHONY: deps.get firmware burn test
+
+deps.get:
+	MIX_TARGET=rpi0 mix deps.get
 
 firmware:
-	mix firmware
+	MIX_TARGET=rpi0 mix firmware
 
 burn:
-	mix do firmware, firmware.burn
+	MIX_TARGET=rpi0 mix do firmware, firmware.burn
 
 test:
 	MIX_TARGET=host mix test
