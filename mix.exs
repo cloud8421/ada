@@ -37,6 +37,7 @@ defmodule Ada.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:sqlite_ecto2, "~> 2.2"},
       {:nerves, "~> 1.3", runtime: false},
       {:shoehorn, "~> 0.4"},
       {:ring_logger, "~> 0.4"}
