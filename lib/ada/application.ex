@@ -30,6 +30,8 @@ defmodule Ada.Application do
       Ada.PubSub.child_spec(),
       Ada.TimeKeeper,
       {Ada.Repo, []},
+      {Task.Supervisor, name: Ada.TaskSupervisor},
+      {Ada.Scheduler, [repo: Ada.Repo]},
       {Ada.HTTP.Listener, [http_port: http_port(), repo: Ada.Repo]}
     ]
   end

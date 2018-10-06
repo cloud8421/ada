@@ -12,6 +12,9 @@ defmodule Ada.Schema.ScheduledTask do
       field :minute, :integer, default: 0
       field :second, :integer, default: 0
     end
+
+    def hourly?(frequency), do: frequency.type == "hourly"
+    def daily?(frequency), do: frequency.type == "daily"
   end
 
   schema "scheduled_tasks" do
@@ -22,6 +25,16 @@ defmodule Ada.Schema.ScheduledTask do
 
     timestamps()
   end
+
+  @doc """
+  Returns true for an hourly task.
+  """
+  def hourly?(%__MODULE__{frequency: frequency}), do: Frequency.hourly?(frequency)
+
+  @doc """
+  Returns true for an daily task.
+  """
+  def daily?(%__MODULE__{frequency: frequency}), do: Frequency.daily?(frequency)
 
   @doc """
   Returns true for a task that matches a given datetime, where matching is defined as:
@@ -42,7 +55,7 @@ defmodule Ada.Schema.ScheduledTask do
   @doc """
   Performs a scheduled task resolving the contained workflow.
   """
-  def execute(scheduled_task, ctx) do
+  def execute(scheduled_task, ctx \\ []) do
     Ada.Workflow.run(scheduled_task.workflow_name, scheduled_task.params, ctx)
   end
 end
