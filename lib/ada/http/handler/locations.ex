@@ -35,7 +35,7 @@ defmodule Ada.HTTP.Handler.Locations do
     {:ok, encoded, req} = :cowboy_req.read_body(req)
 
     with {:ok, decoded} <- Jason.decode(encoded),
-         changeset <- Ada.Schema.Location.initial_changeset(decoded),
+         changeset <- Ada.Schema.Location.changeset(%Ada.Schema.Location{}, decoded),
          {:ok, _location} <- repo.insert(changeset) do
       {true, req, ctx}
     else
