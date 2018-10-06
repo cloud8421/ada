@@ -28,6 +28,7 @@ defmodule Ada.Application do
   defp common_children() do
     [
       Ada.PubSub.child_spec(),
+      Ada.TimeKeeper,
       {Ada.Repo, []},
       {Ada.HTTP.Listener, [http_port: http_port(), repo: Ada.Repo]}
     ]
