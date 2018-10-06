@@ -38,4 +38,11 @@ defmodule Ada.Schema.ScheduledTask do
         minute == datetime.minute and second == datetime.second
     end
   end
+
+  @doc """
+  Performs a scheduled task resolving the contained workflow.
+  """
+  def execute(scheduled_task, ctx) do
+    Ada.Workflow.run(scheduled_task.workflow_name, scheduled_task.params, ctx)
+  end
 end

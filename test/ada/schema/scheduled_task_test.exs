@@ -3,6 +3,19 @@ defmodule Ada.Schema.ScheduledTaskTest do
 
   alias Ada.Schema.ScheduledTask
 
+  defmodule TestWorkflow do
+    @behaviour Ada.Workflow
+
+    @impl true
+    def requirements, do: %{name: :string}
+
+    @impl true
+    def run(params, _ctx) do
+      name = Map.fetch!(params, :name)
+      String.upcase(name)
+    end
+  end
+
   describe "matches_time?/2" do
     test "daily frequency" do
       st = %ScheduledTask{frequency: %ScheduledTask.Frequency{}}
@@ -22,6 +35,14 @@ defmodule Ada.Schema.ScheduledTaskTest do
       refute ScheduledTask.matches_time?(st, ~N[2018-10-06 04:06:31.066161])
       refute ScheduledTask.matches_time?(st, ~N[2018-10-06 14:01:30.066161])
       refute ScheduledTask.matches_time?(st, ~N[2018-10-06 06:00:00.066161])
+    end
+  end
+
+  describe "execute/1" do
+    test "it runs the contained workflow" do
+      st = %ScheduledTask{workflow_name: TestWorkflow, params: %{name: "Ada"}}
+
+      assert "ADA" == ScheduledTask.execute(st, [])
     end
   end
 end
