@@ -10,14 +10,8 @@ defmodule Ada.Schema.User do
     timestamps()
   end
 
-  def initial_changeset(params \\ %{}) do
-    %__MODULE__{}
-    |> Ecto.Changeset.cast(params, [:name, :email])
-    |> Ecto.Changeset.validate_required([:name, :email])
-  end
-
-  def update_changeset(location, params) do
-    location
+  def changeset(user, params \\ %{}) do
+    user
     |> Ecto.Changeset.cast(params, [:name, :email])
     |> Ecto.Changeset.validate_required([:name, :email])
   end

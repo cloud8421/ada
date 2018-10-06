@@ -35,7 +35,7 @@ defmodule Ada.HTTP.Handler.Users do
     {:ok, encoded, req} = :cowboy_req.read_body(req)
 
     with {:ok, decoded} <- Jason.decode(encoded),
-         changeset <- Ada.Schema.User.initial_changeset(decoded),
+         changeset <- Ada.Schema.User.changeset(%Ada.Schema.User{}, decoded),
          {:ok, _user} <- repo.insert(changeset) do
       {true, req, ctx}
     else
