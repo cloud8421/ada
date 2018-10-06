@@ -22,4 +22,20 @@ defmodule Ada.Schema.ScheduledTask do
 
     timestamps()
   end
+
+  @doc """
+  Returns true for a task that matches a given datetime, where matching is defined as:
+
+  - same hour, same minute and zero seconds for a daily task
+  - same minute and second for a hourly task
+  """
+  def matches_time?(st, datetime) do
+    case st.frequency do
+      %{type: "daily", hour: hour, minute: minute} ->
+        hour == datetime.hour and minute == datetime.minute and datetime.second == 0
+
+      %{type: "hourly", minute: minute, second: second} ->
+        minute == datetime.minute and second == datetime.second
+    end
+  end
 end
