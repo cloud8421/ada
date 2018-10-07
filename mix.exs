@@ -33,7 +33,7 @@ defmodule Ada.MixProject do
       start_phases: [
         ensure_migrations: []
       ],
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :inets, :ssl]
     ]
   end
 
