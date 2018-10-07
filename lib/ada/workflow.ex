@@ -13,6 +13,11 @@ defmodule Ada.Workflow do
     end
   end
 
+  def valid_name?(workflow_name) do
+    Code.ensure_loaded?(workflow_name) and function_exported?(workflow_name, :requirements, 0) and
+      function_exported?(workflow_name, :run, 2)
+  end
+
   def validate(workflow_name, params) do
     changeset = validate_params(workflow_name, params)
 

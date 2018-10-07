@@ -13,6 +13,15 @@ defmodule Ada.Schema.ScheduledTask do
       field :second, :integer, default: 0
     end
 
+    def changeset(frequency, params) do
+      frequency
+      |> Ecto.Changeset.cast(params, [:type, :hour, :minute, :second])
+      |> Ecto.Changeset.validate_inclusion(:type, ["daily", "hourly"])
+      |> Ecto.Changeset.validate_inclusion(:hour, 0..23)
+      |> Ecto.Changeset.validate_inclusion(:minute, 0..59)
+      |> Ecto.Changeset.validate_inclusion(:second, 0..59)
+    end
+
     def hourly?(frequency), do: frequency.type == "hourly"
     def daily?(frequency), do: frequency.type == "daily"
   end
@@ -25,6 +34,18 @@ defmodule Ada.Schema.ScheduledTask do
 
     timestamps()
   end
+
+  def changeset(scheduled_task, params \\ %{}) do
+    scheduled_task
+    |> Ecto.Changeset.cast(params, [:version, :workflow_name, :params])
+    |> Ecto.Changeset.cast_embed(:frequency)
+    |> Ecto.Changeset.validate_required([:frequency, :workflow_name])
+    |> Ecto.Changeset.validate_number(:version, equal_to: @task_version)
+    |> Ecto.Changeset.validate_change(:workflow_name, workflow_name_validator())
+  end
+
+  defguard is_valid_hourly_spec?(minute, second) when minute in 0..59 and second in 0..59
+  defguard is_valid_daily_spec?(hour, minute) when hour in 0..23 and minute in 0..59
 
   @doc """
   Returns true for an hourly task.
@@ -57,5 +78,15 @@ defmodule Ada.Schema.ScheduledTask do
   """
   def execute(scheduled_task, ctx \\ []) do
     Ada.Workflow.run(scheduled_task.workflow_name, scheduled_task.params, ctx)
+  end
+
+  defp workflow_name_validator do
+    fn :workflow_name, workflow_name ->
+      if Ada.Workflow.valid_name?(workflow_name) do
+        []
+      else
+        [workflow_name: "workflow name is invalid"]
+      end
+    end
   end
 end
