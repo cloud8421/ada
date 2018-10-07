@@ -28,6 +28,16 @@ defmodule Ada.Email.Template do
   end
 
   defp format_weather_datetime(datetime) do
-    "#{datetime.hour}:#{datetime.minute}"
+    hour =
+      datetime.hour
+      |> Integer.to_string()
+      |> String.pad_leading(2, "0")
+
+    minute =
+      datetime.minute
+      |> Integer.to_string()
+      |> String.pad_leading(2, "0")
+
+    "#{hour}:#{minute}"
   end
 end
