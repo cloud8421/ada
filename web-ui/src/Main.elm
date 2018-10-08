@@ -35,9 +35,9 @@ init initialCount =
 
 view : Model -> Document Msg
 view model =
-    { title = "My new apps"
+    { title = "Ada"
     , body =
-        [ h1 [] [ text "it works" ]
+        [ h1 [] [ text "Management UI" ]
         ]
     }
 
