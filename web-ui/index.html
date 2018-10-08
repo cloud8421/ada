@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Elm Project</title>
+  <link rel="stylesheet" href="{{main_css}}">
+</head>
+<body>
+  <main id="app">
+    <h1>Loading...</h1>
+  </main>
+</body>
+<script type="text/javascript" src="{{main_js}}"></script>
+<script type="text/javascript" src="{{boot_js}}"></script>
+<script>
+  if (navigator.serviceWorker && !navigator.serviceWorker.controller) { navigator.serviceWorker.register('{{service_worker_js}}'); }
+</script>
+</html>
