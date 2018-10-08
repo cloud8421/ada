@@ -1,2 +1,3 @@
 export FORECAST_IO_API_KEY='<api-key>'
 export SENDGRID_API_TOKEN='<api-token>'
+export GUARDIAN_API_KEY='<api-key>'
