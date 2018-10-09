@@ -5,6 +5,8 @@
 # is restricted to this project.
 use Mix.Config
 
+config :ecto, json_library: Jason
+
 config :ada,
   ecto_repos: [Ada.Repo]
 
