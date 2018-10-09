@@ -17,7 +17,7 @@ defmodule Ada.Workflow do
     changeset = validate_params(workflow_name, params)
 
     if changeset.valid? do
-      {:ok, changeset.changes}
+      {:ok, apply_changes(changeset)}
     else
       {:error, :invalid_params, changeset.errors}
     end
