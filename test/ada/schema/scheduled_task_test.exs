@@ -1,7 +1,7 @@
 defmodule Ada.Schema.ScheduledTaskTest do
   use ExUnit.Case, async: true
 
-  alias Ada.Schema.ScheduledTask
+  alias Ada.Schema.{Frequency, ScheduledTask}
 
   defmodule TestWorkflow do
     @behaviour Ada.Workflow
@@ -18,7 +18,7 @@ defmodule Ada.Schema.ScheduledTaskTest do
 
   describe "matches_time?/2" do
     test "daily frequency" do
-      st = %ScheduledTask{frequency: %ScheduledTask.Frequency{}}
+      st = %ScheduledTask{frequency: %Frequency{}}
 
       assert ScheduledTask.matches_time?(st, ~N[2018-10-06 00:00:00.066161])
       refute ScheduledTask.matches_time?(st, ~N[2018-10-06 00:00:01.066161])
@@ -28,7 +28,7 @@ defmodule Ada.Schema.ScheduledTaskTest do
 
     test "hourly frequency" do
       st = %ScheduledTask{
-        frequency: %ScheduledTask.Frequency{type: "hourly", minute: 6, second: 30}
+        frequency: %Frequency{type: "hourly", minute: 6, second: 30}
       }
 
       assert ScheduledTask.matches_time?(st, ~N[2018-10-06 00:06:30.066161])
