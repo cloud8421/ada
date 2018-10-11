@@ -13,4 +13,4 @@ before_script:
 
 mix:
   script:
-    - make test
+    - make clean-and-test
