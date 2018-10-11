@@ -11,6 +11,7 @@ defmodule Ada.HTTP.Router do
          {'/users/[:user_id]', Handler.User, opts},
          {'/scheduled_tasks', Handler.ScheduledTasks, opts},
          {'/scheduled_tasks/[:scheduled_task_id]', Handler.ScheduledTask, opts},
+         {'/workflows', Handler.Workflows, opts},
          {"/", :cowboy_static, {:priv_file, :ada, 'static/web-ui/index.html'}},
          {"/[...]", :cowboy_static, {:priv_dir, :ada, 'static/web-ui'}}
        ]}
