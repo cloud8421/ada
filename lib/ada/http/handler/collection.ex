@@ -1,4 +1,4 @@
-defmodule Ada.HTTP.Handler.Users do
+defmodule Ada.HTTP.Handler.Collection do
   def init(req, ctx) do
     {:cowboy_rest, req, ctx}
   end
@@ -21,9 +21,10 @@ defmodule Ada.HTTP.Handler.Users do
 
   def to_json(req, ctx) do
     repo = Keyword.fetch!(ctx, :repo)
+    schema = Keyword.fetch!(ctx, :schema)
 
     body =
-      Ada.Schema.User
+      schema
       |> repo.all()
       |> Jason.encode!()
 
@@ -32,11 +33,12 @@ defmodule Ada.HTTP.Handler.Users do
 
   def from_json(req, ctx) do
     repo = Keyword.fetch!(ctx, :repo)
+    schema = Keyword.fetch!(ctx, :schema)
     {:ok, encoded, req} = :cowboy_req.read_body(req)
 
     with {:ok, decoded} <- Jason.decode(encoded),
-         changeset <- Ada.Schema.User.changeset(%Ada.Schema.User{}, decoded),
-         {:ok, _user} <- repo.insert(changeset) do
+         changeset <- schema.changeset(struct(schema), decoded),
+         {:ok, _location} <- repo.insert(changeset) do
       {true, req, ctx}
     else
       _error ->

@@ -5,12 +5,13 @@ defmodule Ada.HTTP.Router do
     :cowboy_router.compile([
       {:_,
        [
-         {'/locations', Handler.Locations, opts},
+         {'/locations', Handler.Collection, Keyword.put(opts, :schema, Ada.Schema.Location)},
          {'/locations/[:resource_id]', Handler.Resource,
           Keyword.put(opts, :schema, Ada.Schema.Location)},
-         {'/users', Handler.Users, opts},
+         {'/users', Handler.Collection, Keyword.put(opts, :schema, Ada.Schema.User)},
          {'/users/[:resource_id]', Handler.Resource, Keyword.put(opts, :schema, Ada.Schema.User)},
-         {'/scheduled_tasks', Handler.ScheduledTasks, opts},
+         {'/scheduled_tasks', Handler.Collection,
+          Keyword.put(opts, :schema, Ada.Schema.ScheduledTask)},
          {'/scheduled_tasks/[:resource_id]', Handler.Resource,
           Keyword.put(opts, :schema, Ada.Schema.ScheduledTask)},
          {'/workflows', Handler.Workflows, opts},
