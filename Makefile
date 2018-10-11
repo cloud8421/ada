@@ -10,7 +10,7 @@ burn:
 	MIX_TARGET=rpi0 mix do firmware, firmware.burn
 
 clean-and-test:
-	MIX_TARGET=host MIX_ENV=test HTTP_PORT=4001 mix do ecto.reset, test
+	MIX_TARGET=host MIX_ENV=test mix do ecto.reset, test
 
 test:
-	MIX_TARGET=host MIX_ENV=test HTTP_PORT=4001 mix test
+	MIX_TARGET=host MIX_ENV=test mix test

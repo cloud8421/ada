@@ -2,6 +2,7 @@ defmodule Ada.Application do
   @moduledoc false
 
   @target Mix.Project.config()[:target]
+  @env Mix.env()
 
   use Application
 
@@ -18,6 +19,8 @@ defmodule Ada.Application do
 
     :ok
   end
+
+  def http_port, do: http_port(@env)
 
   defp ensure_data_directory! do
     db_file = Application.get_env(:ada, Ada.Repo)[:database]
@@ -57,7 +60,9 @@ defmodule Ada.Application do
     Path.join([lib_dir, repo_path, "migrations"])
   end
 
-  defp http_port do
+  defp http_port(:test), do: 4001
+
+  defp http_port(_) do
     case System.get_env("HTTP_PORT") do
       nil -> 4000
       str_value -> String.to_integer(str_value)
