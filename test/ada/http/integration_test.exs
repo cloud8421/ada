@@ -3,6 +3,8 @@ defmodule Ada.HTTP.IntegrationTest do
 
   alias Ada.HTTPClient, as: H
 
+  @base_url "http://localhost:#{Ada.Application.http_port()}"
+
   setup [:db_cleanup]
 
   ################################################################################
@@ -11,7 +13,7 @@ defmodule Ada.HTTP.IntegrationTest do
 
   describe "GET /locations" do
     test "with no locations" do
-      response = H.json_get("http://localhost:#{http_port()}/locations")
+      response = H.json_get(@base_url <> "/locations")
       assert %H.Response{} = response
       assert 200 == response.status_code
       assert [] == response.body
@@ -19,7 +21,7 @@ defmodule Ada.HTTP.IntegrationTest do
 
     test "with locations" do
       location = Ada.Repo.insert!(%Ada.Schema.Location{name: "Home", lat: 1.0, lng: 1.0})
-      response = H.json_get("http://localhost:#{http_port()}/locations")
+      response = H.json_get(@base_url <> "/locations")
       assert %H.Response{} = response
       assert 200 == response.status_code
       assert [response_location] = response.body
@@ -31,14 +33,14 @@ defmodule Ada.HTTP.IntegrationTest do
   describe "POST /locations" do
     test "with valid data" do
       data = %{name: "Home", lat: 0.12, lng: 0.13}
-      response = H.json_post("http://localhost:#{http_port()}/locations", data)
+      response = H.json_post(@base_url <> "/locations", data)
       assert %H.Response{} = response
       assert 204 == response.status_code
     end
 
     test "with invalid data" do
       data = %{name: "Home"}
-      response = H.json_post("http://localhost:#{http_port()}/locations", data)
+      response = H.json_post(@base_url <> "/locations", data)
       assert %H.Response{} = response
       assert 400 == response.status_code
     end
@@ -48,7 +50,7 @@ defmodule Ada.HTTP.IntegrationTest do
     test "with valid data" do
       location = Ada.Repo.insert!(%Ada.Schema.Location{name: "Home", lat: 1.0, lng: 1.0})
       data = %{name: "Office"}
-      response = H.json_put("http://localhost:#{http_port()}/locations/#{location.id}", data)
+      response = H.json_put(@base_url <> "/locations/#{location.id}", data)
       updated_location = Ada.Repo.get!(Ada.Schema.Location, location.id)
       assert %H.Response{} = response
       assert 204 == response.status_code
@@ -58,7 +60,7 @@ defmodule Ada.HTTP.IntegrationTest do
     test "with invalid data" do
       location = Ada.Repo.insert!(%Ada.Schema.Location{name: "Home", lat: 1.0, lng: 1.0})
       data = %{name: 799}
-      response = H.json_put("http://localhost:#{http_port()}/locations/#{location.id}", data)
+      response = H.json_put(@base_url <> "/locations/#{location.id}", data)
       assert %H.Response{} = response
       assert 400 == response.status_code
       assert location == Ada.Repo.get!(Ada.Schema.Location, location.id)
@@ -68,14 +70,14 @@ defmodule Ada.HTTP.IntegrationTest do
   describe "DELETE /locations/:id" do
     test "with existing location" do
       location = Ada.Repo.insert!(%Ada.Schema.Location{name: "Home", lat: 1.0, lng: 1.0})
-      response = H.delete("http://localhost:#{http_port()}/locations/#{location.id}")
+      response = H.delete(@base_url <> "/locations/#{location.id}")
       assert %H.Response{} = response
       assert 204 == response.status_code
       refute Ada.Repo.get(Ada.Schema.Location, location.id)
     end
 
     test "without location" do
-      response = H.delete("http://localhost:#{http_port()}/locations/999")
+      response = H.delete(@base_url <> "/locations/999")
       assert %H.Response{} = response
       assert 404 == response.status_code
     end
@@ -87,7 +89,7 @@ defmodule Ada.HTTP.IntegrationTest do
 
   describe "GET /users" do
     test "with no users" do
-      response = H.json_get("http://localhost:#{http_port()}/users")
+      response = H.json_get(@base_url <> "/users")
       assert %H.Response{} = response
       assert 200 == response.status_code
       assert [] == response.body
@@ -95,7 +97,7 @@ defmodule Ada.HTTP.IntegrationTest do
 
     test "with users" do
       user = Ada.Repo.insert!(%Ada.Schema.User{name: "Ada", email: "ada@example.com"})
-      response = H.json_get("http://localhost:#{http_port()}/users")
+      response = H.json_get(@base_url <> "/users")
       assert %H.Response{} = response
       assert 200 == response.status_code
       assert [response_user] = response.body
@@ -107,14 +109,14 @@ defmodule Ada.HTTP.IntegrationTest do
   describe "POST /users" do
     test "with valid data" do
       data = %{name: "Ada", email: "ada@example.com"}
-      response = H.json_post("http://localhost:#{http_port()}/users", data)
+      response = H.json_post(@base_url <> "/users", data)
       assert %H.Response{} = response
       assert 204 == response.status_code
     end
 
     test "with invalid data" do
       data = %{name: "Ada"}
-      response = H.json_post("http://localhost:#{http_port()}/users", data)
+      response = H.json_post(@base_url <> "/users", data)
       assert %H.Response{} = response
       assert 400 == response.status_code
     end
@@ -124,7 +126,7 @@ defmodule Ada.HTTP.IntegrationTest do
     test "with valid data" do
       user = Ada.Repo.insert!(%Ada.Schema.User{name: "Ada", email: "ada@example.com"})
       data = %{name: "Grace"}
-      response = H.json_put("http://localhost:#{http_port()}/users/#{user.id}", data)
+      response = H.json_put(@base_url <> "/users/#{user.id}", data)
       updated_user = Ada.Repo.get!(Ada.Schema.User, user.id)
       assert %H.Response{} = response
       assert 204 == response.status_code
@@ -134,7 +136,7 @@ defmodule Ada.HTTP.IntegrationTest do
     test "with invalid data" do
       user = Ada.Repo.insert!(%Ada.Schema.User{name: "Ada", email: "ada@example.com"})
       data = %{name: 799}
-      response = H.json_put("http://localhost:#{http_port()}/users/#{user.id}", data)
+      response = H.json_put(@base_url <> "/users/#{user.id}", data)
       assert %H.Response{} = response
       assert 400 == response.status_code
       assert user == Ada.Repo.get!(Ada.Schema.User, user.id)
@@ -144,14 +146,14 @@ defmodule Ada.HTTP.IntegrationTest do
   describe "DELETE /users/:id" do
     test "with existing user" do
       user = Ada.Repo.insert!(%Ada.Schema.User{name: "Ada", email: "ada@example.com"})
-      response = H.delete("http://localhost:#{http_port()}/users/#{user.id}")
+      response = H.delete(@base_url <> "/users/#{user.id}")
       assert %H.Response{} = response
       assert 204 == response.status_code
       refute Ada.Repo.get(Ada.Schema.User, user.id)
     end
 
     test "without user" do
-      response = H.delete("http://localhost:#{http_port()}/users/999")
+      response = H.delete(@base_url <> "/users/999")
       assert %H.Response{} = response
       assert 404 == response.status_code
     end
@@ -163,7 +165,7 @@ defmodule Ada.HTTP.IntegrationTest do
 
   describe "GET /scheduled_tasks" do
     test "with no scheduled_tasks" do
-      response = H.json_get("http://localhost:#{http_port()}/scheduled_tasks")
+      response = H.json_get(@base_url <> "/scheduled_tasks")
       assert %H.Response{} = response
       assert 200 == response.status_code
       assert [] == response.body
@@ -177,7 +179,7 @@ defmodule Ada.HTTP.IntegrationTest do
           frequency: %{}
         })
 
-      response = H.json_get("http://localhost:#{http_port()}/scheduled_tasks")
+      response = H.json_get(@base_url <> "/scheduled_tasks")
       assert %H.Response{} = response
       assert 200 == response.status_code
       assert [response_scheduled_task] = response.body
@@ -196,14 +198,14 @@ defmodule Ada.HTTP.IntegrationTest do
         frequency: %{}
       }
 
-      response = H.json_post("http://localhost:#{http_port()}/scheduled_tasks", data)
+      response = H.json_post(@base_url <> "/scheduled_tasks", data)
       assert %H.Response{} = response
       assert 204 == response.status_code
     end
 
     test "with invalid data" do
       data = %{workflow_name: Ada.Foo}
-      response = H.json_post("http://localhost:#{http_port()}/scheduled_tasks", data)
+      response = H.json_post(@base_url <> "/scheduled_tasks", data)
       assert %H.Response{} = response
       assert 400 == response.status_code
     end
@@ -220,8 +222,7 @@ defmodule Ada.HTTP.IntegrationTest do
 
       data = %{params: %{user_id: 2, location_id: 1}}
 
-      response =
-        H.json_put("http://localhost:#{http_port()}/scheduled_tasks/#{scheduled_task.id}", data)
+      response = H.json_put(@base_url <> "/scheduled_tasks/#{scheduled_task.id}", data)
 
       updated_scheduled_task = Ada.Repo.get!(Ada.Schema.ScheduledTask, scheduled_task.id)
       assert %H.Response{} = response
@@ -239,8 +240,7 @@ defmodule Ada.HTTP.IntegrationTest do
 
       data = %{workflow_name: 799}
 
-      response =
-        H.json_put("http://localhost:#{http_port()}/scheduled_tasks/#{scheduled_task.id}", data)
+      response = H.json_put(@base_url <> "/scheduled_tasks/#{scheduled_task.id}", data)
 
       assert %H.Response{} = response
       assert 400 == response.status_code
@@ -257,21 +257,17 @@ defmodule Ada.HTTP.IntegrationTest do
           frequency: %{}
         })
 
-      response = H.delete("http://localhost:#{http_port()}/scheduled_tasks/#{scheduled_task.id}")
+      response = H.delete(@base_url <> "/scheduled_tasks/#{scheduled_task.id}")
       assert %H.Response{} = response
       assert 204 == response.status_code
       refute Ada.Repo.get(Ada.Schema.ScheduledTask, scheduled_task.id)
     end
 
     test "without scheduled_task" do
-      response = H.delete("http://localhost:#{http_port()}/scheduled_tasks/999")
+      response = H.delete(@base_url <> "/scheduled_tasks/999")
       assert %H.Response{} = response
       assert 404 == response.status_code
     end
-  end
-
-  defp http_port() do
-    System.get_env("HTTP_PORT") || 4001
   end
 
   defp db_cleanup(_config) do
