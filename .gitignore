@@ -19,5 +19,7 @@ erl_crash.dump
 .envrc
 
 /data/*.db
+/data/*.db-shm
+/data/*.db-wal
 
 /priv/static/web-ui
