@@ -11,7 +11,7 @@ before_script:
   - mix archive.install hex nerves_bootstrap --force
   - mix deps.get
 
-mix:
+mix:test:
   script:
     - make clean-and-test
   cache:
