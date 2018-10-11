@@ -1,4 +1,6 @@
 defmodule Ada.Workflow.Register do
+  @own_name Module.split(__MODULE__)
+
   def names do
     {:ok, app_modules} = :application.get_key(:ada, :modules)
     Enum.filter(app_modules, &is_workflow_module?/1)
@@ -12,7 +14,7 @@ defmodule Ada.Workflow.Register do
 
   defp is_workflow_module?(app_module) do
     case Module.split(app_module) do
-      ["Ada", "Workflow", "Register"] -> false
+      @own_name -> false
       ["Ada", "Workflow", _workflow_name] -> true
       _other -> false
     end
