@@ -14,7 +14,7 @@ defmodule Ada.Application do
   end
 
   def start_phase(:ensure_migrations, _type, _args) do
-    Ecto.Migrator.run(Ada.Repo, migrations_path(:ada, Ada.Repo), :up, all: true)
+    Ecto.Migrator.run(Ada.Repo, migrations_path(:ada, Ada.Repo), :up, all: true, log: false)
 
     :ok
   end
