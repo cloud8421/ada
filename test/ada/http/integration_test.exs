@@ -270,6 +270,30 @@ defmodule Ada.HTTP.IntegrationTest do
     end
   end
 
+  ################################################################################
+  ################################## WORKFLOWS ###################################
+  ################################################################################
+
+  describe "GET /workflows" do
+    test "returns a list of available workflows and requirements" do
+      response = H.json_get(@base_url <> "/workflows")
+
+      assert %H.Response{} = response
+      assert 200 == response.status_code
+
+      assert [
+               %{
+                 "name" => "Elixir.Ada.Workflow.NewsByTag",
+                 "requirements" => %{"tag" => "string", "user_id" => "integer"}
+               },
+               %{
+                 "name" => "Elixir.Ada.Workflow.WeatherForecast",
+                 "requirements" => %{"location_id" => "integer", "user_id" => "integer"}
+               }
+             ] == response.body
+    end
+  end
+
   defp db_cleanup(_config) do
     on_exit(fn ->
       Ada.Repo.delete_all(Ada.Schema.User)
