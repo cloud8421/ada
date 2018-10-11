@@ -13,12 +13,22 @@ defmodule Ada.Scheduler do
     |> Stream.run()
   end
 
+  def refresh_tasks do
+    GenServer.call(__MODULE__, :refresh_tasks)
+  end
+
   def init(opts) do
     repo = Keyword.fetch!(opts, :repo)
 
     subscribe!()
 
     {:ok, {repo.all(ScheduledTask), opts}}
+  end
+
+  def handle_call(:refresh_tasks, _from, {_scheduled_tasks, opts}) do
+    repo = Keyword.fetch!(opts, :repo)
+
+    {:reply, :ok, {repo.all(ScheduledTask), opts}}
   end
 
   def handle_info({PubSub.Broadcast, Hour, datetime}, {scheduled_tasks, opts} = state) do
