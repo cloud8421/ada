@@ -6,11 +6,13 @@ defmodule Ada.HTTP.Router do
       {:_,
        [
          {'/locations', Handler.Locations, opts},
-         {'/locations/[:location_id]', Handler.Location, opts},
+         {'/locations/[:resource_id]', Handler.Resource,
+          Keyword.put(opts, :schema, Ada.Schema.Location)},
          {'/users', Handler.Users, opts},
-         {'/users/[:user_id]', Handler.User, opts},
+         {'/users/[:resource_id]', Handler.Resource, Keyword.put(opts, :schema, Ada.Schema.User)},
          {'/scheduled_tasks', Handler.ScheduledTasks, opts},
-         {'/scheduled_tasks/[:scheduled_task_id]', Handler.ScheduledTask, opts},
+         {'/scheduled_tasks/[:resource_id]', Handler.Resource,
+          Keyword.put(opts, :schema, Ada.Schema.ScheduledTask)},
          {'/workflows', Handler.Workflows, opts},
          {"/", :cowboy_static, {:priv_file, :ada, 'static/web-ui/index.html'}},
          {"/[...]", :cowboy_static, {:priv_dir, :ada, 'static/web-ui'}}

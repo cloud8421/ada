@@ -1,4 +1,4 @@
-defmodule Ada.HTTP.Handler.User do
+defmodule Ada.HTTP.Handler.Resource do
   def init(req, ctx) do
     {:cowboy_rest, req, {:no_resource, ctx}}
   end
@@ -8,10 +8,11 @@ defmodule Ada.HTTP.Handler.User do
   end
 
   def resource_exists(req, {_maybe_resource, ctx} = state) do
-    with repo <- Keyword.fetch!(ctx, :repo),
-         {:ok, user_id} <- binding(req, :user_id),
-         {:ok, user} <- find_user(repo, user_id) do
-      {true, req, {user, ctx}}
+    with schema <- Keyword.fetch!(ctx, :schema),
+         repo <- Keyword.fetch!(ctx, :repo),
+         {:ok, resource_id} <- binding(req, :resource_id),
+         {:ok, resource} <- find_resource(repo, schema, resource_id) do
+      {true, req, {resource, ctx}}
     else
       _error ->
         {false, req, state}
@@ -25,10 +26,10 @@ defmodule Ada.HTTP.Handler.User do
     end
   end
 
-  defp find_user(repo, user_id) do
-    case repo.get(Ada.Schema.User, user_id) do
+  defp find_resource(repo, schema, resource_id) do
+    case repo.get(schema, resource_id) do
       nil -> {:error, :not_found}
-      user -> {:ok, user}
+      resource -> {:ok, resource}
     end
   end
 
@@ -44,28 +45,33 @@ defmodule Ada.HTTP.Handler.User do
      ], req, ctx}
   end
 
-  def to_json(req, {user, _ctx} = state) do
-    {Jason.encode!(user), req, state}
+  def to_json(req, {resource, _ctx} = state) do
+    {Jason.encode!(resource), req, state}
   end
 
-  def from_json(req, {user, ctx} = state) do
+  def from_json(req, {:no_resource, _ctx} = state) do
+    {false, req, state}
+  end
+
+  def from_json(req, {resource, ctx} = state) do
     repo = Keyword.fetch!(ctx, :repo)
+    schema = Keyword.fetch!(ctx, :schema)
     {:ok, encoded, req} = :cowboy_req.read_body(req)
 
     with {:ok, decoded} <- Jason.decode(encoded),
-         changeset <- Ada.Schema.User.changeset(user, decoded),
-         {:ok, new_user} <- repo.update(changeset) do
-      {true, req, {new_user, ctx}}
+         changeset <- schema.changeset(resource, decoded),
+         {:ok, new_resource} <- repo.update(changeset) do
+      {true, req, {new_resource, ctx}}
     else
       _error ->
         {false, req, state}
     end
   end
 
-  def delete_resource(req, {user, ctx} = state) do
+  def delete_resource(req, {resource, ctx} = state) do
     repo = Keyword.fetch!(ctx, :repo)
 
-    case repo.delete(user) do
+    case repo.delete(resource) do
       {:ok, _} -> {true, req, {:no_resource, ctx}}
       _error -> {false, req, state}
     end
