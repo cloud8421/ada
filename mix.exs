@@ -14,7 +14,10 @@ defmodule Ada.MixProject do
       build_path: "_build/#{@target}",
       lockfile: "mix.lock.#{@target}",
       start_permanent: Mix.env() == :prod,
-      aliases: [loadconfig: [&bootstrap/1]],
+      aliases: [
+        loadconfig: [&bootstrap/1],
+        "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate"]
+      ],
       deps: deps()
     ]
   end
