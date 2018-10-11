@@ -1,6 +1,8 @@
 defmodule Ada.Schema.ScheduledTask do
   use Ecto.Schema
 
+  @derive {Jason.Encoder, except: [:__struct__, :__meta__]}
+
   alias Ada.Schema.Frequency
 
   @task_version 1

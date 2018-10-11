@@ -1,6 +1,8 @@
 defmodule Ada.Schema.Frequency do
   use Ecto.Schema
 
+  @derive {Jason.Encoder, except: [:__struct__, :__meta__]}
+
   embedded_schema do
     field :type, :string, default: "daily"
     field :hour, :integer, default: 0
