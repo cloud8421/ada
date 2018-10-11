@@ -13,38 +13,32 @@ defmodule Ada.Scheduler do
     |> Stream.run()
   end
 
-  def refresh_tasks do
-    GenServer.call(__MODULE__, :refresh_tasks)
-  end
-
   def init(opts) do
-    repo = Keyword.fetch!(opts, :repo)
-
     subscribe!()
 
-    {:ok, {repo.all(ScheduledTask), opts}}
+    {:ok, opts}
   end
 
-  def handle_call(:refresh_tasks, _from, {_scheduled_tasks, opts}) do
+  def handle_info({PubSub.Broadcast, Hour, datetime}, opts) do
     repo = Keyword.fetch!(opts, :repo)
 
-    {:reply, :ok, {repo.all(ScheduledTask), opts}}
-  end
-
-  def handle_info({PubSub.Broadcast, Hour, datetime}, {scheduled_tasks, opts} = state) do
-    scheduled_tasks
+    ScheduledTask
+    |> repo.all()
     |> find_runnable_tasks(:daily, datetime)
     |> run_async!(opts)
 
-    {:noreply, state}
+    {:noreply, opts}
   end
 
-  def handle_info({PubSub.Broadcast, Minute, datetime}, {scheduled_tasks, opts} = state) do
-    scheduled_tasks
+  def handle_info({PubSub.Broadcast, Minute, datetime}, opts) do
+    repo = Keyword.fetch!(opts, :repo)
+
+    ScheduledTask
+    |> repo.all()
     |> find_runnable_tasks(:hourly, datetime)
     |> run_async!(opts)
 
-    {:noreply, state}
+    {:noreply, opts}
   end
 
   defp find_runnable_tasks(scheduled_tasks, :hourly, datetime) do
