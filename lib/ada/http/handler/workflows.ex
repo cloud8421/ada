@@ -16,15 +16,15 @@ defmodule Ada.HTTP.Handler.Workflows do
   def to_json(req, ctx) do
     body =
       Ada.Workflow.Register.names_and_requirements()
-      |> as_list()
+      |> with_compact_requirements()
       |> Jason.encode!()
 
     {body, req, ctx}
   end
 
-  defp as_list(names_and_requirements) do
+  defp with_compact_requirements(names_and_requirements) do
     Enum.map(names_and_requirements, fn {name, reqs} ->
-      %{name: name, requirements: reqs}
+      %{name: name, requirements: Map.keys(reqs)}
     end)
   end
 end

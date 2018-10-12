@@ -284,11 +284,11 @@ defmodule Ada.HTTP.IntegrationTest do
       assert [
                %{
                  "name" => "Elixir.Ada.Workflow.NewsByTag",
-                 "requirements" => %{"tag" => "string", "user_id" => "integer"}
+                 "requirements" => ["tag", "user_id"]
                },
                %{
                  "name" => "Elixir.Ada.Workflow.WeatherForecast",
-                 "requirements" => %{"location_id" => "integer", "user_id" => "integer"}
+                 "requirements" => ["location_id", "user_id"]
                }
              ] == response.body
     end
