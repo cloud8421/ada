@@ -608,11 +608,7 @@ update msg model =
         ScheduledTasksResponse response ->
             ( { model | scheduledTasks = response }, Cmd.none )
 
-        ExecuteScheduledTaskResponse result ->
-            let
-                dbg =
-                    Debug.log "Task execution result: " result
-            in
+        ExecuteScheduledTaskResponse _ ->
             ( model, Cmd.none )
 
 
