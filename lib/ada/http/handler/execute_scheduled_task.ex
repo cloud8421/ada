@@ -29,7 +29,7 @@ defmodule Ada.HTTP.Handler.ExecuteScheduledTask do
   end
 
   def from_json(req, {scheduled_task, ctx} = state) do
-    case Ada.Schema.ScheduledTask.execute(scheduled_task, ctx) do
+    case Ada.Scheduler.run_one_sync(scheduled_task, ctx) do
       :ok -> {true, req, state}
       {:ok, _value} -> {true, req, state}
       _error -> {false, req, state}

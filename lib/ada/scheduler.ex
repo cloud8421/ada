@@ -1,16 +1,32 @@
 defmodule Ada.Scheduler do
   use GenServer
 
+  require Logger
+
   alias Ada.{PubSub, Schema.ScheduledTask, Time.Hour, Time.Minute}
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def run_async!(scheduled_tasks, opts) do
+  def run_many_async(scheduled_tasks, opts) do
     Ada.TaskSupervisor
-    |> Task.Supervisor.async_stream(scheduled_tasks, ScheduledTask, :execute, [opts])
+    |> Task.Supervisor.async_stream(scheduled_tasks, __MODULE__, :run_now!, [opts])
     |> Stream.run()
+  end
+
+  def run_one_sync(scheduled_task, opts) do
+    case ScheduledTask.execute(scheduled_task, opts) do
+      :ok ->
+        Logger.info(fn -> "evt=st.ok id=#{scheduled_task.id}" end)
+
+      {:ok, _value} ->
+        Logger.info(fn -> "evt=st.ok id=#{scheduled_task.id}" end)
+
+      {:error, reason} = error ->
+        Logger.error(fn -> "evt=st.error id=#{scheduled_task.id} reason=#{inspect(reason)}" end)
+        error
+    end
   end
 
   def init(opts) do
@@ -25,7 +41,7 @@ defmodule Ada.Scheduler do
     ScheduledTask
     |> repo.all()
     |> find_runnable_tasks(:daily, datetime)
-    |> run_async!(opts)
+    |> run_many_async(opts)
 
     {:noreply, opts}
   end
@@ -36,7 +52,7 @@ defmodule Ada.Scheduler do
     ScheduledTask
     |> repo.all()
     |> find_runnable_tasks(:hourly, datetime)
-    |> run_async!(opts)
+    |> run_many_async(opts)
 
     {:noreply, opts}
   end
