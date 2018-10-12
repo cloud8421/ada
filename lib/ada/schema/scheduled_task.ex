@@ -1,8 +1,6 @@
 defmodule Ada.Schema.ScheduledTask do
   use Ecto.Schema
 
-  @derive {Jason.Encoder, except: [:__struct__, :__meta__]}
-
   alias Ada.Schema.Frequency
 
   @task_version 1
@@ -68,6 +66,19 @@ defmodule Ada.Schema.ScheduledTask do
       else
         [workflow_name: "workflow name is invalid"]
       end
+    end
+  end
+
+  defimpl Jason.Encoder do
+    def encode(scheduled_task, opts) do
+      scheduled_task
+      |> Map.drop([:__struct__, :__meta__])
+      |> Map.update!(:params, fn params ->
+        Enum.map(params, fn {name, value} ->
+          %{name: name, value: value}
+        end)
+      end)
+      |> Jason.Encode.map(opts)
     end
   end
 end
