@@ -2,6 +2,8 @@ defmodule Ada.HTTP.Router do
   alias Ada.HTTP.Handler
 
   def dispatch(opts) do
+    ui_path = Keyword.fetch!(opts, :ui_path)
+
     :cowboy_router.compile([
       {:_,
        [
@@ -13,8 +15,8 @@ defmodule Ada.HTTP.Router do
          collection_path('/scheduled_tasks', Ada.Schema.ScheduledTask, opts),
          resource_path('/scheduled_tasks', Ada.Schema.ScheduledTask, opts),
          {'/workflows', Handler.Workflows, opts},
-         {"/", :cowboy_static, {:priv_file, :ada, 'static/web-ui/index.html'}},
-         {"/[...]", :cowboy_static, {:priv_dir, :ada, 'static/web-ui'}}
+         {"/", :cowboy_static, {:priv_file, :ada, ui_path ++ '/index.html'}},
+         {"/[...]", :cowboy_static, {:priv_dir, :ada, ui_path}}
        ]}
     ])
   end

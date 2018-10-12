@@ -35,7 +35,7 @@ defmodule Ada.Application do
       {Ada.Repo, []},
       {Task.Supervisor, name: Ada.TaskSupervisor},
       {Ada.Scheduler, [repo: Ada.Repo]},
-      {Ada.HTTP.Listener, [http_port: http_port(), repo: Ada.Repo]}
+      {Ada.HTTP.Listener, [http_port: http_port(), repo: Ada.Repo, ui_path: ui_path(@target)]}
     ]
   end
 
@@ -59,6 +59,9 @@ defmodule Ada.Application do
 
     Path.join([lib_dir, repo_path, "migrations"])
   end
+
+  defp ui_path("host"), do: 'static/web-ui/build'
+  defp ui_path(_target), do: 'static/web-ui/dist'
 
   defp http_port(:test), do: 4001
 
