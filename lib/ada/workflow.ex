@@ -28,6 +28,13 @@ defmodule Ada.Workflow do
     end
   end
 
+  def normalize_name(workflow_name) when is_atom(workflow_name) do
+    inspect(workflow_name)
+  end
+
+  def normalize_name("Elixir." <> workflow_name), do: workflow_name
+  def normalize_name(workflow_name), do: workflow_name
+
   defp validate_params(workflow_name, params) do
     types = workflow_name.requirements()
 

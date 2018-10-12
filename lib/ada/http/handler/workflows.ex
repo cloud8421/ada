@@ -24,7 +24,7 @@ defmodule Ada.HTTP.Handler.Workflows do
 
   defp with_compact_requirements(names_and_requirements) do
     Enum.map(names_and_requirements, fn {name, reqs} ->
-      %{name: name, requirements: Map.keys(reqs)}
+      %{name: Ada.Workflow.normalize_name(name), requirements: Map.keys(reqs)}
     end)
   end
 end

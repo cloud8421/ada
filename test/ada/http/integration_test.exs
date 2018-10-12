@@ -185,8 +185,7 @@ defmodule Ada.HTTP.IntegrationTest do
       assert [response_scheduled_task] = response.body
       assert Map.get(response_scheduled_task, "id") == scheduled_task.id
 
-      assert Map.get(response_scheduled_task, "workflow_name") ==
-               "Elixir.Ada.Workflow.WeatherForecast"
+      assert Map.get(response_scheduled_task, "workflow_name") == "Ada.Workflow.WeatherForecast"
     end
   end
 
@@ -283,11 +282,11 @@ defmodule Ada.HTTP.IntegrationTest do
 
       assert [
                %{
-                 "name" => "Elixir.Ada.Workflow.NewsByTag",
+                 "name" => "Ada.Workflow.NewsByTag",
                  "requirements" => ["tag", "user_id"]
                },
                %{
-                 "name" => "Elixir.Ada.Workflow.WeatherForecast",
+                 "name" => "Ada.Workflow.WeatherForecast",
                  "requirements" => ["location_id", "user_id"]
                }
              ] == response.body

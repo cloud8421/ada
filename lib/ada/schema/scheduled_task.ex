@@ -73,6 +73,7 @@ defmodule Ada.Schema.ScheduledTask do
     def encode(scheduled_task, opts) do
       scheduled_task
       |> Map.drop([:__struct__, :__meta__])
+      |> Map.update!(:workflow_name, &Ada.Workflow.normalize_name/1)
       |> Map.update!(:params, fn params ->
         Enum.map(params, fn {name, value} ->
           %{name: name, value: value}
