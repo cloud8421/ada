@@ -2,7 +2,8 @@ module Main exposing (main)
 
 import Browser exposing (Document)
 import Dict as Dict
-import Html exposing (code, h1, text)
+import Html exposing (..)
+import Html.Attributes exposing (class)
 import Http as Http
 import Json.Decode as JD
 import Platform.Cmd as Cmd
@@ -81,7 +82,7 @@ type alias Workflow =
 type alias ScheduledTask =
     { id : Int
     , frequency : Frequency
-    , name : String
+    , workflowName : String
     , params : List WorkflowParam
     }
 
@@ -251,6 +252,247 @@ getScheduledTasks =
 
 
 
+-- VIEWS
+
+
+titleBar : Html Msg
+titleBar =
+    section [ class "hero is-dark" ]
+        [ div [ class "hero-body" ]
+            [ div [ class "container" ]
+                [ h1 [ class "subtitle" ]
+                    [ text "Ada Control Center" ]
+                ]
+            ]
+        ]
+
+
+usersSection : WebData (List User) -> Html Msg
+usersSection users =
+    let
+        userRow user =
+            tr []
+                [ td [] [ text <| String.fromInt user.id ]
+                , td [] [ text user.name ]
+                , td [] [ text user.email ]
+                , td [] [ text "Edit, delete" ]
+                ]
+
+        contentArea =
+            case users of
+                NotAsked ->
+                    h2 [] [ text "Users not loaded" ]
+
+                Loading ->
+                    h2 [] [ text "Users loading" ]
+
+                Success items ->
+                    table [ class "table is-fullwidth" ]
+                        [ thead []
+                            [ tr []
+                                [ th [] [ text "ID" ]
+                                , th [] [ text "Name" ]
+                                , th [] [ text "Email" ]
+                                , th [] [ text "Actions" ]
+                                ]
+                            ]
+                        , tbody [] (List.map userRow items)
+                        ]
+
+                Failure reason ->
+                    h2 [] [ text "Some error" ]
+    in
+    section [ class "section" ]
+        [ div [ class "container is-fluid" ]
+            [ contentArea ]
+        ]
+
+
+locationsSection : WebData (List Location) -> Html Msg
+locationsSection locations =
+    let
+        locationRow location =
+            tr []
+                [ td [] [ text <| String.fromInt location.id ]
+                , td [] [ text location.name ]
+                , td [] [ text <| String.fromFloat location.lat ]
+                , td [] [ text <| String.fromFloat location.lng ]
+                , td [] [ text "Edit, delete" ]
+                ]
+
+        contentArea =
+            case locations of
+                NotAsked ->
+                    h2 [] [ text "locations not loaded" ]
+
+                Loading ->
+                    h2 [] [ text "locations loading" ]
+
+                Success items ->
+                    table [ class "table is-fullwidth" ]
+                        [ thead []
+                            [ tr []
+                                [ th [] [ text "ID" ]
+                                , th [] [ text "Name" ]
+                                , th [] [ text "Lat" ]
+                                , th [] [ text "Lng" ]
+                                , th [] [ text "Actions" ]
+                                ]
+                            ]
+                        , tbody [] (List.map locationRow items)
+                        ]
+
+                Failure reason ->
+                    h2 [] [ text "Some error" ]
+    in
+    section [ class "section" ]
+        [ div [ class "container is-fluid" ]
+            [ contentArea ]
+        ]
+
+
+workflowsSection : WebData (List Workflow) -> Html Msg
+workflowsSection workflows =
+    let
+        requirementDesc requirement =
+            case requirement of
+                RequiresUserId ->
+                    "user id"
+
+                RequiresLocationId ->
+                    "location id"
+
+                RequiresNewsTag ->
+                    "news tag"
+
+                UnsupportedRequirement ->
+                    "not supported"
+
+        requirementsLabel requirements =
+            requirements
+                |> List.map requirementDesc
+                |> String.join ", "
+
+        workflowRow workflow =
+            tr []
+                [ td [] [ text workflow.name ]
+                , td [] [ text <| requirementsLabel workflow.requirements ]
+                ]
+
+        contentArea =
+            case workflows of
+                NotAsked ->
+                    h2 [] [ text "workflows not loaded" ]
+
+                Loading ->
+                    h2 [] [ text "workflows loading" ]
+
+                Success items ->
+                    table [ class "table is-fullwidth" ]
+                        [ thead []
+                            [ tr []
+                                [ th [] [ text "Name" ]
+                                , th [] [ text "Requirements" ]
+                                ]
+                            ]
+                        , tbody [] (List.map workflowRow items)
+                        ]
+
+                Failure reason ->
+                    h2 [] [ text "Some error" ]
+    in
+    section [ class "section" ]
+        [ div [ class "container is-fluid" ]
+            [ contentArea ]
+        ]
+
+
+scheduledTasksSection : WebData (List ScheduledTask) -> Html Msg
+scheduledTasksSection scheduledTasks =
+    let
+        frequencyLabel frequency =
+            case frequency of
+                Daily hour minute ->
+                    "Daily at " ++ String.fromInt hour ++ ":" ++ String.fromInt minute
+
+                Hourly minute second ->
+                    "Hourly at " ++ String.fromInt minute ++ ":" ++ String.fromInt second
+
+                UnsupportedFrequency ->
+                    "Frequency not supported"
+
+        paramDesc param =
+            case param of
+                UserId id ->
+                    "User " ++ String.fromInt id
+
+                LocationId id ->
+                    "Location " ++ String.fromInt id
+
+                NewsTag tag ->
+                    "News tag " ++ tag
+
+                UnsupportedParam ->
+                    "Unsupported param"
+
+        paramsLabel params =
+            params
+                |> List.map paramDesc
+                |> String.join ", "
+
+        scheduledTaskRow scheduledTask =
+            tr []
+                [ td [] [ text <| String.fromInt scheduledTask.id ]
+                , td [] [ text scheduledTask.workflowName ]
+                , td [] [ text <| paramsLabel scheduledTask.params ]
+                , td [] [ text <| frequencyLabel scheduledTask.frequency ]
+                , td [] [ text "Edit, delete" ]
+                ]
+
+        contentArea =
+            case scheduledTasks of
+                NotAsked ->
+                    h2 [] [ text "scheduledTasks not loaded" ]
+
+                Loading ->
+                    h2 [] [ text "scheduledTasks loading" ]
+
+                Success items ->
+                    table [ class "table is-fullwidth" ]
+                        [ thead []
+                            [ tr []
+                                [ th [] [ text "ID" ]
+                                , th [] [ text "Workflow Name" ]
+                                , th [] [ text "Params" ]
+                                , th [] [ text "Frequency" ]
+                                , th [] [ text "Actions" ]
+                                ]
+                            ]
+                        , tbody [] (List.map scheduledTaskRow items)
+                        ]
+
+                Failure reason ->
+                    h2 [] [ text "Some error" ]
+    in
+    section [ class "section" ]
+        [ div [ class "container is-fluid" ]
+            [ contentArea ]
+        ]
+
+
+body : Model -> List (Html Msg)
+body model =
+    [ div []
+        [ titleBar
+        , usersSection model.users
+        , locationsSection model.locations
+        , workflowsSection model.workflows
+        , scheduledTasksSection model.scheduledTasks
+        ]
+    ]
+
+
+
 -- APPLICATION WIRING
 
 
@@ -300,12 +542,7 @@ init initialCount =
 view : Model -> Document Msg
 view model =
     { title = "Ada"
-    , body =
-        [ h1 [] [ text "Management UI" ]
-        , code []
-            [ text <| Debug.toString model
-            ]
-        ]
+    , body = body model
     }
 
 
