@@ -4,8 +4,10 @@ import Browser exposing (Document)
 import Dict as Dict
 import Html exposing (..)
 import Html.Attributes exposing (class)
+import Html.Events exposing (onClick)
 import Http as Http
 import Json.Decode as JD
+import Json.Encode as JE
 import Platform.Cmd as Cmd
 import Platform.Sub as Sub
 import RemoteData exposing (..)
@@ -251,6 +253,26 @@ getScheduledTasks =
         |> Cmd.map ScheduledTasksResponse
 
 
+executeScheduledTask : Int -> Cmd Msg
+executeScheduledTask taskId =
+    emptyPut ("/scheduled_tasks/" ++ String.fromInt taskId ++ "/execute")
+        |> RemoteData.sendRequest
+        |> Cmd.map ExecuteScheduledTaskResponse
+
+
+emptyPut : String -> Http.Request ()
+emptyPut url =
+    Http.request
+        { method = "PUT"
+        , headers = []
+        , url = url
+        , body = Http.jsonBody (JE.string "")
+        , expect = Http.expectStringResponse (\_ -> Ok ())
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
 
 -- VIEWS
 
@@ -446,7 +468,10 @@ scheduledTasksSection scheduledTasks =
                 , td [] [ text scheduledTask.workflowName ]
                 , td [] [ text <| paramsLabel scheduledTask.params ]
                 , td [] [ text <| frequencyLabel scheduledTask.frequency ]
-                , td [] [ text "Edit, delete" ]
+                , td
+                    [ onClick (ExecuteScheduledTask scheduledTask.id)
+                    ]
+                    [ text "Run, Edit, delete" ]
                 ]
 
         contentArea =
@@ -502,10 +527,12 @@ type alias Flags =
 
 type Msg
     = NoOp
+    | ExecuteScheduledTask Int
     | UsersResponse (WebData (List User))
     | LocationsResponse (WebData (List Location))
     | WorkflowsResponse (WebData (List Workflow))
     | ScheduledTasksResponse (WebData (List ScheduledTask))
+    | ExecuteScheduledTaskResponse (WebData ())
 
 
 type alias Model =
@@ -552,6 +579,9 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
+        ExecuteScheduledTask taskId ->
+            ( model, executeScheduledTask taskId )
+
         UsersResponse response ->
             ( { model | users = response }, Cmd.none )
 
@@ -563,6 +593,13 @@ update msg model =
 
         ScheduledTasksResponse response ->
             ( { model | scheduledTasks = response }, Cmd.none )
+
+        ExecuteScheduledTaskResponse result ->
+            let
+                dbg =
+                    Debug.log "Task execution result: " result
+            in
+            ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
