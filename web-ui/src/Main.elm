@@ -297,7 +297,11 @@ usersSection users =
                 [ td [] [ text <| String.fromInt user.id ]
                 , td [] [ text user.name ]
                 , td [] [ text user.email ]
-                , td [] [ text "Edit, delete" ]
+                , td
+                    [ class "actions" ]
+                    [ a [ class "button is-link" ] [ text "Edit" ]
+                    , a [ class "button is-danger" ] [ text "Delete" ]
+                    ]
                 ]
 
         contentArea =
@@ -339,7 +343,11 @@ locationsSection locations =
                 , td [] [ text location.name ]
                 , td [] [ text <| String.fromFloat location.lat ]
                 , td [] [ text <| String.fromFloat location.lng ]
-                , td [] [ text "Edit, delete" ]
+                , td
+                    [ class "actions" ]
+                    [ a [ class "button is-link" ] [ text "Edit" ]
+                    , a [ class "button is-danger" ] [ text "Delete" ]
+                    ]
                 ]
 
         contentArea =
@@ -469,9 +477,15 @@ scheduledTasksSection scheduledTasks =
                 , td [] [ text <| paramsLabel scheduledTask.params ]
                 , td [] [ text <| frequencyLabel scheduledTask.frequency ]
                 , td
-                    [ onClick (ExecuteScheduledTask scheduledTask.id)
+                    [ class "actions" ]
+                    [ a
+                        [ class "button is-primary"
+                        , onClick (ExecuteScheduledTask scheduledTask.id)
+                        ]
+                        [ text "Run" ]
+                    , a [ class "button is-link" ] [ text "Edit" ]
+                    , a [ class "button is-danger" ] [ text "Delete" ]
                     ]
-                    [ text "Run, Edit, delete" ]
                 ]
 
         contentArea =
