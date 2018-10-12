@@ -282,7 +282,7 @@ titleBar =
     section [ class "hero is-dark" ]
         [ div [ class "hero-body" ]
             [ div [ class "container" ]
-                [ h1 [ class "subtitle" ]
+                [ h1 [ class "title" ]
                     [ text "Ada Control Center" ]
                 ]
             ]
