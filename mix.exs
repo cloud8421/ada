@@ -16,7 +16,7 @@ defmodule Ada.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: [
         loadconfig: [&bootstrap/1],
-        "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate"]
+        "ecto.reset": ["ecto.drop --quiet", "ecto.create --quiet", "ecto.migrate --quiet"]
       ],
       deps: deps()
     ]
