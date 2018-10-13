@@ -16,6 +16,18 @@ import RemoteData exposing (..)
 -- RESOURCE TYPES
 
 
+type alias Lat =
+    Float
+
+
+type alias Lng =
+    Float
+
+
+type alias Coords =
+    ( Lat, Lng )
+
+
 type alias User =
     { id : Int
     , name : String
@@ -26,8 +38,7 @@ type alias User =
 type alias Location =
     { id : Int
     , name : String
-    , lat : Float
-    , lng : Float
+    , coords : Coords
     }
 
 
@@ -117,13 +128,24 @@ getUsers =
 -- API - LOCATIONS
 
 
-decodeLocation : JD.Decoder Location
-decodeLocation =
-    JD.map4 Location
-        (JD.field "id" JD.int)
-        (JD.field "name" JD.string)
+decodeCoords : JD.Decoder Coords
+decodeCoords =
+    JD.map2 Tuple.pair
         (JD.field "lat" JD.float)
         (JD.field "lng" JD.float)
+
+
+decodeLocation : JD.Decoder Location
+decodeLocation =
+    JD.map3 Location
+        (JD.field "id" JD.int)
+        (JD.field "name" JD.string)
+        decodeCoords
+
+
+
+-- (JD.field "lat" JD.float)
+-- (JD.field "lng" JD.float)
 
 
 decodeLocations : JD.Decoder (List Location)
@@ -337,12 +359,14 @@ usersSection users =
 locationsSection : WebData (List Location) -> Html Msg
 locationsSection locations =
     let
+        coordsLabel ( lat, lng ) =
+            String.fromFloat lat ++ "," ++ String.fromFloat lng
+
         locationRow location =
             tr []
                 [ td [] [ text <| String.fromInt location.id ]
                 , td [] [ text location.name ]
-                , td [] [ text <| String.fromFloat location.lat ]
-                , td [] [ text <| String.fromFloat location.lng ]
+                , td [] [ text <| coordsLabel location.coords ]
                 , td
                     [ class "actions" ]
                     [ a [ class "button is-link" ] [ text "Edit" ]
@@ -364,8 +388,7 @@ locationsSection locations =
                             [ tr []
                                 [ th [] [ text "ID" ]
                                 , th [] [ text "Name" ]
-                                , th [] [ text "Lat" ]
-                                , th [] [ text "Lng" ]
+                                , th [] [ text "Coordinates" ]
                                 , th [] [ text "Actions" ]
                                 ]
                             ]
