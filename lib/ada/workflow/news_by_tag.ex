@@ -5,6 +5,9 @@ defmodule Ada.Workflow.NewsByTag do
   alias Ada.Email
 
   @impl true
+  def human_name, do: "News by tag"
+
+  @impl true
   def requirements do
     %{user_id: :integer, tag: :string}
   end

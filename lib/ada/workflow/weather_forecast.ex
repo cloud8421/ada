@@ -5,6 +5,9 @@ defmodule Ada.Workflow.WeatherForecast do
   alias Ada.Email
 
   @impl true
+  def human_name, do: "Weather forecast"
+
+  @impl true
   def requirements do
     %{user_id: :integer, location_id: :integer}
   end

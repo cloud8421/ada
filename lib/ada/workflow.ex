@@ -3,6 +3,7 @@ defmodule Ada.Workflow do
 
   @type worfklow_result :: {:ok, term()} | {:error, term()}
 
+  @callback human_name() :: String.t()
   @callback requirements() :: %{optional(atom()) => term()}
   @callback run(map(), Keyword.t()) :: worfklow_result()
 

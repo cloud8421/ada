@@ -7,6 +7,9 @@ defmodule Ada.Schema.ScheduledTaskTest do
     @behaviour Ada.Workflow
 
     @impl true
+    def human_name, do: "Test workflow"
+
+    @impl true
     def requirements, do: %{name: :string}
 
     @impl true
