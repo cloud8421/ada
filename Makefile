@@ -2,6 +2,7 @@
 
 deps.get:
 	MIX_TARGET=rpi0 mix deps.get
+	MIX_TARGET=host mix deps.get
 
 firmware:
 	$(MAKE) -C web-ui prod
