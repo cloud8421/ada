@@ -398,7 +398,7 @@ locationsSection locations =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    section [ class "section" ]
+    section [ class "section column" ]
         [ div [ class "container is-fluid" ]
             [ contentArea ]
         ]
@@ -454,7 +454,7 @@ workflowsSection workflows =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    section [ class "section" ]
+    section [ class "section column is-one-quarter" ]
         [ div [ class "container is-fluid" ]
             [ contentArea ]
         ]
@@ -536,7 +536,7 @@ scheduledTasksSection scheduledTasks =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    section [ class "section" ]
+    section [ class "section column is-three-quarters" ]
         [ div [ class "container is-fluid" ]
             [ contentArea ]
         ]
@@ -546,10 +546,14 @@ body : Model -> List (Html Msg)
 body model =
     [ div []
         [ titleBar
-        , usersSection model.users
-        , locationsSection model.locations
-        , workflowsSection model.workflows
-        , scheduledTasksSection model.scheduledTasks
+        , div [ class "columns" ]
+            [ usersSection model.users
+            , locationsSection model.locations
+            ]
+        , div [ class "columns" ]
+            [ workflowsSection model.workflows
+            , scheduledTasksSection model.scheduledTasks
+            ]
         ]
     ]
 
