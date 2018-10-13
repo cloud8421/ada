@@ -84,6 +84,7 @@ type WorkflowRequirement
 
 type alias Workflow =
     { name : String
+    , humanName : String
     , requirements : List WorkflowRequirement
     }
 
@@ -96,6 +97,7 @@ type alias ScheduledTask =
     { id : Int
     , frequency : Frequency
     , workflowName : String
+    , workflowHumanName : String
     , params : List WorkflowParam
     }
 
@@ -187,8 +189,9 @@ requirementDecoder =
 
 decodeWorkflow : JD.Decoder Workflow
 decodeWorkflow =
-    JD.map2 Workflow
+    JD.map3 Workflow
         (JD.field "name" JD.string)
+        (JD.field "human_name" JD.string)
         (JD.field "requirements" (JD.list requirementDecoder))
 
 
@@ -256,10 +259,11 @@ workflowParamDecoder =
 
 decodeScheduledTask : JD.Decoder ScheduledTask
 decodeScheduledTask =
-    JD.map4 ScheduledTask
+    JD.map5 ScheduledTask
         (JD.field "id" JD.int)
         (JD.field "frequency" frequencyDecoder)
         (JD.field "workflow_name" JD.string)
+        (JD.field "workflow_human_name" JD.string)
         (JD.field "params" (JD.list workflowParamDecoder))
 
 
@@ -428,7 +432,7 @@ workflowsSection workflows =
 
         workflowRow workflow =
             tr []
-                [ td [] [ text workflow.name ]
+                [ td [] [ text workflow.humanName ]
                 , td [] [ text <| requirementsLabel workflow.requirements ]
                 ]
 
@@ -496,7 +500,7 @@ scheduledTasksSection scheduledTasks =
         scheduledTaskRow scheduledTask =
             tr []
                 [ td [] [ text <| String.fromInt scheduledTask.id ]
-                , td [] [ text scheduledTask.workflowName ]
+                , td [] [ text scheduledTask.workflowHumanName ]
                 , td [] [ text <| paramsLabel scheduledTask.params ]
                 , td [] [ text <| frequencyLabel scheduledTask.frequency ]
                 , td
