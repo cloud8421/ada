@@ -47,6 +47,7 @@ defmodule Ada.MixProject do
       {:sqlite_ecto2, "~> 2.2"},
       {:jason, "~> 1.1"},
       {:calendar, "~> 0.17.4", runtime: false},
+      {:matrix, "~> 0.3.2"},
       {:nerves, "~> 1.3", runtime: false},
       {:shoehorn, "~> 0.4"},
       {:ring_logger, "~> 0.4"}
