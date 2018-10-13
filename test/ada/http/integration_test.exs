@@ -283,10 +283,12 @@ defmodule Ada.HTTP.IntegrationTest do
       assert [
                %{
                  "name" => "Ada.Workflow.NewsByTag",
+                 "human_name" => "News by tag",
                  "requirements" => ["tag", "user_id"]
                },
                %{
                  "name" => "Ada.Workflow.WeatherForecast",
+                 "human_name" => "Weather forecast",
                  "requirements" => ["location_id", "user_id"]
                }
              ] == response.body

@@ -1,13 +1,13 @@
 defmodule Ada.Workflow.Register do
   @own_name Module.split(__MODULE__)
 
-  def names do
+  def all do
     {:ok, app_modules} = :application.get_key(:ada, :modules)
     Enum.filter(app_modules, &is_workflow_module?/1)
   end
 
-  def names_and_requirements do
-    Enum.reduce(names(), %{}, fn name, acc ->
+  def with_requirements do
+    Enum.reduce(all(), %{}, fn name, acc ->
       Map.put(acc, name, name.requirements())
     end)
   end
