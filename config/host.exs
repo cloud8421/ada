@@ -6,4 +6,6 @@ else
   config :logger, backends: [:console]
 end
 
+config :tzdata, :data_dir, Path.expand("../data/#{Mix.env()}/tz_data", __DIR__)
+
 config :ada, Ada.Repo, database: Path.expand("../data/#{Mix.env()}.db", __DIR__)
