@@ -16,14 +16,19 @@ defmodule Ada.Scheduler do
   end
 
   def run_one_sync(scheduled_task, opts) do
+    PubSub.publish(Ada.ScheduledTask.Start, scheduled_task)
+
     case ScheduledTask.execute(scheduled_task, opts) do
       :ok ->
+        PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
         Logger.info(fn -> "evt=st.ok id=#{scheduled_task.id}" end)
 
       {:ok, _value} ->
+        PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
         Logger.info(fn -> "evt=st.ok id=#{scheduled_task.id}" end)
 
       {:error, reason} = error ->
+        PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
         Logger.error(fn -> "evt=st.error id=#{scheduled_task.id} reason=#{inspect(reason)}" end)
         error
     end

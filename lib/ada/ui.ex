@@ -51,6 +51,22 @@ defmodule Ada.UI do
     :keep_state_and_data
   end
 
+  def handle_event(:info, {Broadcast, Ada.ScheduledTask.Start, scheduled_task}, _state, _data) do
+    Logger.debug(fn ->
+      "UI -> scheduled task: started task #{scheduled_task.id}"
+    end)
+
+    :keep_state_and_data
+  end
+
+  def handle_event(:info, {Broadcast, Ada.ScheduledTask.End, scheduled_task}, _state, _data) do
+    Logger.debug(fn ->
+      "UI -> scheduled task: finished task #{scheduled_task.id}"
+    end)
+
+    :keep_state_and_data
+  end
+
   def handle_event(:info, evt, state, _data) do
     Logger.debug(fn ->
       "UI -> #{state}: unrecognized event: #{inspect(evt)}"
