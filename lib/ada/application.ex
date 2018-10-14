@@ -41,6 +41,7 @@ defmodule Ada.Application do
 
   defp children("host") do
     [
+      {Ada.Display, driver: Ada.Display.DummyDriver}
       # Starts a worker by calling: Ada.Worker.start_link(arg)
       # {Ada.Worker, arg},
     ]
