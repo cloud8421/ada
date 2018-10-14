@@ -10,6 +10,7 @@ defmodule Ada.UI do
   ]
 
   alias Ada.PubSub.Broadcast
+  alias Ada.UI.Clock
 
   ################################################################################
   ################################## PUBLIC API ##################################
@@ -40,13 +41,21 @@ defmodule Ada.UI do
 
     display = Keyword.fetch!(opts, :display)
 
+    DateTime.utc_now()
+    |> Clock.render()
+    |> display.set_content()
+
     {:ok, :clock, display}
   end
 
-  def handle_event(:info, {Broadcast, Ada.Time.Minute, current_time}, :clock, _data) do
+  def handle_event(:info, {Broadcast, Ada.Time.Minute, current_time}, :clock, display) do
     Logger.debug(fn ->
       "UI -> clock: new time #{DateTime.to_iso8601(current_time)}"
     end)
+
+    current_time
+    |> Clock.render()
+    |> display.set_content()
 
     :keep_state_and_data
   end
