@@ -20,7 +20,16 @@ defmodule Ada.Application do
     :ok
   end
 
-  def http_port, do: http_port(@env)
+  def http_port(env \\ @env)
+
+  def http_port(:test), do: 4001
+
+  def http_port(_) do
+    case System.get_env("HTTP_PORT") do
+      nil -> 4000
+      str_value -> String.to_integer(str_value)
+    end
+  end
 
   defp ensure_data_directory! do
     db_file = Application.get_env(:ada, Ada.Repo)[:database]
@@ -30,12 +39,12 @@ defmodule Ada.Application do
 
   defp common_children() do
     [
-      Ada.PubSub.child_spec(),
+      Ada.PubSub,
       Ada.TimeKeeper,
       {Ada.Repo, []},
       {Task.Supervisor, name: Ada.TaskSupervisor},
       {Ada.Scheduler, [repo: Ada.Repo]},
-      {Ada.HTTP.Listener, [http_port: http_port(), repo: Ada.Repo, ui_path: ui_path(@target)]}
+      {Ada.HTTP.Listener, listener_opts(@env, @target)}
     ]
   end
 
@@ -61,15 +70,10 @@ defmodule Ada.Application do
     Path.join([lib_dir, repo_path, "migrations"])
   end
 
+  defp listener_opts(env, target) do
+    [http_port: http_port(env), repo: Ada.Repo, ui_path: ui_path(target)]
+  end
+
   defp ui_path("host"), do: 'static/web-ui/build'
   defp ui_path(_target), do: 'static/web-ui/dist'
-
-  defp http_port(:test), do: 4001
-
-  defp http_port(_) do
-    case System.get_env("HTTP_PORT") do
-      nil -> 4000
-      str_value -> String.to_integer(str_value)
-    end
-  end
 end

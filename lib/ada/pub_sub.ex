@@ -1,6 +1,6 @@
 defmodule Ada.PubSub do
-  def child_spec do
-    {Registry, keys: :duplicate, name: Ada.PubSub}
+  def child_spec(_opts) do
+    Registry.child_spec(keys: :duplicate, name: Ada.PubSub)
   end
 
   def subscribe(topic) do
