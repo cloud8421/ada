@@ -11,6 +11,13 @@ defmodule Ada.Display.Driver.Dummy do
   end
 
   @impl true
+  def set_brightness(brightness) do
+    Logger.debug(fn ->
+      "Dummy Display -> set brightness to #{brightness}"
+    end)
+  end
+
+  @impl true
   def set_default_brightness do
     Logger.debug(fn ->
       "Dummy Display -> set default brightness"
@@ -19,8 +26,6 @@ defmodule Ada.Display.Driver.Dummy do
 
   @impl true
   def set_zero_brightness do
-    Logger.debug(fn ->
-      "Dummy Display -> set zero brightness"
-    end)
+    set_brightness(0)
   end
 end

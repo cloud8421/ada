@@ -26,8 +26,8 @@ defmodule Ada.Display do
     :gen_statem.call(__MODULE__, {:set_content, content})
   end
 
-  def example_cycle do
-    [{' ADA', 1000}, {'ADA ', 1000}]
+  def set_brightness(brightness) when brightness in 0..255 do
+    :gen_statem.call(__MODULE__, {:set_brightness, brightness})
   end
 
   ################################################################################
@@ -73,6 +73,13 @@ defmodule Ada.Display do
     {:keep_state_and_data, {:reply, from, :ok}}
   end
 
+  def off({:call, from}, {:set_brightness, brightness}, data) do
+    :ok = data.driver.set_buffer(data.content)
+    :ok = data.driver.set_brightness(brightness)
+
+    {:next_state, :static, data, {:reply, from, :ok}}
+  end
+
   def off({:call, from}, {:set_content, {:static, buffer}}, data) do
     :ok = data.driver.set_buffer(buffer)
     :ok = data.driver.set_default_brightness()
@@ -100,6 +107,11 @@ defmodule Ada.Display do
   def static({:call, from}, :turn_off, data) do
     :ok = data.driver.set_zero_brightness()
     {:next_state, :off, data, {:reply, from, :ok}}
+  end
+
+  def static({:call, from}, {:set_brightness, brightness}, data) do
+    :ok = data.driver.set_brightness(brightness)
+    {:keep_state_and_data, {:reply, from, :ok}}
   end
 
   def static({:call, from}, {:set_content, {:static, buffer}}, data) do
@@ -137,6 +149,11 @@ defmodule Ada.Display do
   def cyclic({:call, from}, :turn_off, data) do
     :ok = data.driver.set_zero_brightness()
     {:next_state, :off, data, {:reply, from, :ok}}
+  end
+
+  def cyclic({:call, from}, {:set_brightness, brightness}, data) do
+    :ok = data.driver.set_brightness(brightness)
+    {:keep_state_and_data, {:reply, from, :ok}}
   end
 
   def cyclic({:call, from}, {:set_content, {:static, buffer}}, data) do
