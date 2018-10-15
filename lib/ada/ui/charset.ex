@@ -1,4 +1,4 @@
-defmodule Ada.Fw.Charset do
+defmodule Ada.UI.Charset do
   def char(:space),
     do: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
 
