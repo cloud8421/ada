@@ -2,7 +2,7 @@ defmodule Ada.UI.Clock do
   alias Ada.UI.Helpers
 
   def render(datetime) do
-    {:static, extract_digits(datetime)}
+    {:static, {:chars, extract_digits(datetime)}}
   end
 
   defp extract_digits(time) do
