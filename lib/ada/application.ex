@@ -50,7 +50,7 @@ defmodule Ada.Application do
 
   defp children("host") do
     [
-      {Ada.Display, driver: Ada.Display.DummyDriver},
+      {Ada.Display, driver: Ada.Display.Driver.Dummy},
       {Ada.UI, display: Ada.Display}
       # Starts a worker by calling: Ada.Worker.start_link(arg)
       # {Ada.Worker, arg},
