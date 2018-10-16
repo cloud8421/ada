@@ -15,6 +15,7 @@ defmodule Ada.HTTP.Router do
          collection_path('/scheduled_tasks', Ada.Schema.ScheduledTask, opts),
          resource_path('/scheduled_tasks', Ada.Schema.ScheduledTask, opts),
          {'/workflows', Handler.Workflows, opts},
+         {'/display/brightness', Handler.Display.Brightness, opts},
          {"/", :cowboy_static, {:priv_file, :ada, ui_path ++ '/index.html'}},
          {"/[...]", :cowboy_static, {:priv_dir, :ada, ui_path}}
        ]}

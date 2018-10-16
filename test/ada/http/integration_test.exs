@@ -295,6 +295,26 @@ defmodule Ada.HTTP.IntegrationTest do
     end
   end
 
+  ################################################################################
+  ################################### DISPLAY ####################################
+  ################################################################################
+
+  describe "PUT /display/brightness" do
+    test "with valid value" do
+      response = H.json_put(@base_url <> "/display/brightness", %{brightness: 10})
+
+      assert %H.Response{} = response
+      assert 204 == response.status_code
+    end
+
+    test "with invalid value" do
+      response = H.json_put(@base_url <> "/display/brightness", %{brightness: "invalid"})
+
+      assert %H.Response{} = response
+      assert 400 == response.status_code
+    end
+  end
+
   defp db_cleanup(_config) do
     on_exit(fn ->
       Ada.Repo.delete_all(Ada.Schema.User)
