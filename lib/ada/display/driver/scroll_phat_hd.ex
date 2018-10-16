@@ -1,5 +1,6 @@
 defmodule Ada.Display.Driver.ScrollPhatHD do
   use GenServer
+  @behaviour Ada.Display.Driver
 
   @bus "i2c-1"
   @address 0x74
@@ -32,28 +33,24 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def state do
-    GenServer.call(__MODULE__, :state)
-  end
-
-  def show do
-    GenServer.call(__MODULE__, :show)
-  end
-
+  @impl true
   def set_buffer(buffer) do
     GenServer.call(__MODULE__, {:set_buffer, buffer})
   end
 
+  @impl true
+  def set_default_brightness, do: set_brightness(1)
+
+  def set_zero_brightness, do: set_brightness(0)
+
+  @impl true
   def set_brightness(brightness) do
     GenServer.call(__MODULE__, {:set_brightness, brightness})
   end
 
-  def clear do
-    GenServer.call(__MODULE__, :clear)
-  end
-
   # Callbacks
 
+  @impl true
   def init(opts) do
     bus = Keyword.get(opts, :bus, @bus)
     address = Keyword.get(opts, :address, @address)
@@ -62,48 +59,49 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
     reset_i2c(i2c_mod, i2c)
     initialize_display(i2c_mod, i2c)
     buffer = Matrix.new(@width, @height)
-    {:ok, %__MODULE__{buffer: buffer, i2c: i2c, i2c_mod: i2c_mod}}
+    state = show(buffer, %__MODULE__{buffer: buffer, i2c: i2c, i2c_mod: i2c_mod})
+    {:ok, state}
   end
 
-  def handle_call(:state, _from, state) do
-    {:reply, state, state}
+  @impl true
+  def handle_call({:set_buffer, buffer}, _from, state) do
+    new_state =
+      buffer
+      |> transpose_buffer()
+      |> show(state)
+
+    {:reply, :ok, new_state}
   end
 
-  def handle_call(:show, _from, state) do
+  def handle_call({:set_brightness, brightness}, _from, state) do
+    new_state = show(state.buffer, %{state | brightness: brightness})
+    {:reply, :ok, new_state}
+  end
+
+  # Helpers
+
+  defp show(buffer, state) do
     next_frame = next_frame(state.current_frame)
 
     write_bank(state.i2c_mod, state.i2c, next_frame)
 
     output =
-      state.buffer
+      buffer
       |> Matrix.scale(state.brightness)
       |> convert_buffer_to_output()
 
     write_output(state.i2c_mod, state.i2c, output)
 
     write_config_register(state.i2c_mod, state.i2c, @frame_register, next_frame)
-    {:reply, :ok, %{state | current_frame: next_frame}}
+
+    %{state | buffer: buffer, next_frame: next_frame}
   end
 
-  def handle_call({:set_buffer, buffer}, _from, state) do
-    new_buffer =
-      buffer
-      |> Enum.map(&Enum.reverse/1)
-      |> Matrix.transpose()
-
-    {:reply, :ok, %{state | buffer: new_buffer}}
+  defp transpose_buffer(buffer) do
+    buffer
+    |> Enum.map(&Enum.reverse/1)
+    |> Matrix.transpose()
   end
-
-  def handle_call({:set_brightness, brightness}, _from, state) do
-    {:reply, :ok, %{state | brightness: brightness}}
-  end
-
-  def handle_call(:clear, _from, state) do
-    new_buffer = Matrix.new(@width, @height)
-    {:reply, :ok, %{state | buffer: new_buffer}}
-  end
-
-  # Helpers
 
   defp reset_i2c(i2c_mod, i2c) do
     write_bank(i2c_mod, i2c, @config_bank)
