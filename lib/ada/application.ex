@@ -59,6 +59,9 @@ defmodule Ada.Application do
 
   defp children(_target) do
     [
+      {Ada.Display.Driver.ScrollPhatHD, []},
+      {Ada.Display, driver: Ada.Display.Driver.ScrollPhatHD},
+      {Ada.UI, display: Ada.Display}
       # Starts a worker by calling: Ada.Worker.start_link(arg)
       # {Ada.Worker, arg},
     ]

@@ -61,7 +61,8 @@ defmodule Ada.MixProject do
     [
       {:nerves_runtime, "~> 0.6"},
       {:nerves_init_gadget, "~> 0.4"},
-      {:nerves_time, "~> 0.2.0"}
+      {:nerves_time, "~> 0.2.0"},
+      {:elixir_ale, "~> 1.1"}
     ] ++ system(target)
   end
 
