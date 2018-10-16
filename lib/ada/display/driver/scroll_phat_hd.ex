@@ -41,8 +41,6 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
   @impl true
   def set_default_brightness, do: set_brightness(1)
 
-  def set_zero_brightness, do: set_brightness(0)
-
   @impl true
   def set_brightness(brightness) do
     GenServer.call(__MODULE__, {:set_brightness, brightness})

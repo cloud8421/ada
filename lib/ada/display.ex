@@ -105,7 +105,7 @@ defmodule Ada.Display do
   end
 
   def static({:call, from}, :turn_off, data) do
-    :ok = data.driver.set_zero_brightness()
+    :ok = data.driver.set_brightness(0)
     {:next_state, :off, data, {:reply, from, :ok}}
   end
 
@@ -147,7 +147,7 @@ defmodule Ada.Display do
   end
 
   def cyclic({:call, from}, :turn_off, data) do
-    :ok = data.driver.set_zero_brightness()
+    :ok = data.driver.set_brightness(0)
     {:next_state, :off, data, {:reply, from, :ok}}
   end
 

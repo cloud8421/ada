@@ -23,9 +23,4 @@ defmodule Ada.Display.Driver.Dummy do
       "Dummy Display -> set default brightness"
     end)
   end
-
-  @impl true
-  def set_zero_brightness do
-    set_brightness(0)
-  end
 end
