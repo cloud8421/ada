@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser exposing (Document)
 import Dict as Dict
 import Html exposing (..)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, classList)
 import Html.Events exposing (onClick)
 import Http as Http
 import Json.Decode as JD
@@ -493,8 +493,8 @@ formatFrequency frequency =
             "Frequency not supported"
 
 
-scheduledTasksSection : WebData (List ScheduledTask) -> Html Msg
-scheduledTasksSection scheduledTasks =
+scheduledTasksSection : WebData (List ScheduledTask) -> Maybe Int -> Html Msg
+scheduledTasksSection scheduledTasks runningTask =
     let
         paramDesc param =
             case param of
@@ -516,6 +516,10 @@ scheduledTasksSection scheduledTasks =
                 |> String.join ", "
 
         scheduledTaskRow scheduledTask =
+            let
+                runClassList =
+                    [ ( "button", True ), ( "is-primary", True ), ( "is-loading", runningTask == Just scheduledTask.id ) ]
+            in
             tr []
                 [ td [] [ text <| String.fromInt scheduledTask.id ]
                 , td [] [ text scheduledTask.workflowHumanName ]
@@ -524,7 +528,7 @@ scheduledTasksSection scheduledTasks =
                 , td
                     [ class "actions" ]
                     [ a
-                        [ class "button is-primary"
+                        [ classList runClassList
                         , onClick (ExecuteScheduledTask scheduledTask.id)
                         ]
                         [ text "Run" ]
@@ -574,7 +578,7 @@ body model =
             ]
         , div [ class "columns" ]
             [ workflowsSection model.workflows
-            , scheduledTasksSection model.scheduledTasks
+            , scheduledTasksSection model.scheduledTasks model.runningTask
             ]
         ]
     ]
@@ -604,6 +608,7 @@ type alias Model =
     , locations : WebData (List Location)
     , workflows : WebData (List Workflow)
     , scheduledTasks : WebData (List ScheduledTask)
+    , runningTask : Maybe Int
     }
 
 
@@ -624,6 +629,7 @@ init initialCount =
       , locations = NotAsked
       , workflows = NotAsked
       , scheduledTasks = NotAsked
+      , runningTask = Nothing
       }
     , Cmd.batch [ getUsers, getLocations, getWorkflows, getScheduledTasks ]
     )
@@ -643,7 +649,7 @@ update msg model =
             ( model, Cmd.none )
 
         ExecuteScheduledTask taskId ->
-            ( model, executeScheduledTask taskId )
+            ( { model | runningTask = Just taskId }, executeScheduledTask taskId )
 
         UsersResponse response ->
             ( { model | users = response }, Cmd.none )
@@ -658,7 +664,7 @@ update msg model =
             ( { model | scheduledTasks = response }, Cmd.none )
 
         ExecuteScheduledTaskResponse _ ->
-            ( model, Cmd.none )
+            ( { model | runningTask = Nothing }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
