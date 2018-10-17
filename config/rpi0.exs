@@ -12,7 +12,7 @@ config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
 # docs for separating out critical OTP applications such as those
 # involved with firmware updates.
 config :shoehorn,
-  init: [:nerves_runtime, :nerves_init_gadget],
+  init: [:nerves_runtime, :nerves_init_gadget, :nerves_network],
   app: Mix.Project.config()[:app]
 
 # Use Ringlogger as the logger backend and remove :console.
@@ -43,3 +43,14 @@ config :nerves_init_gadget,
   node_name: nil,
   node_host: :mdns_domain,
   ssh_console_port: 22
+
+# Configure network
+
+config :nerves_network, regulatory_domain: "GB"
+
+config :nerves_network, :default,
+  wlan0: [
+    ssid: System.get_env("WIFI_SSID"),
+    psk: System.get_env("WIFI_PASS"),
+    key_mgmt: :"WPA-PSK"
+  ]
