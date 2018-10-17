@@ -26,7 +26,7 @@ defmodule Ada.Application do
 
   def http_port(_) do
     case System.get_env("HTTP_PORT") do
-      nil -> 4000
+      nil -> 80
       str_value -> String.to_integer(str_value)
     end
   end
