@@ -7,6 +7,7 @@ defmodule Ada.Schema.Location do
     field :name, :string, null: false
     field :lat, :float, null: false
     field :lng, :float, null: false
+    field :active, :boolean, default: false
 
     timestamps()
   end
