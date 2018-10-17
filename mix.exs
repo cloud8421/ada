@@ -33,9 +33,6 @@ defmodule Ada.MixProject do
   def application do
     [
       mod: {Ada.Application, []},
-      start_phases: [
-        ensure_migrations: []
-      ],
       extra_applications: [:logger, :runtime_tools, :inets, :ssl]
     ]
   end
