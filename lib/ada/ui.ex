@@ -9,6 +9,8 @@ defmodule Ada.UI do
     Ada.ScheduledTask.End
   ]
 
+  @timezone "Europe/London"
+
   alias Ada.PubSub.Broadcast
   alias Ada.UI.Clock
 
@@ -41,7 +43,7 @@ defmodule Ada.UI do
 
     display = Keyword.fetch!(opts, :display)
 
-    DateTime.utc_now()
+    local_now!()
     |> Clock.render()
     |> display.set_content()
 
@@ -54,6 +56,7 @@ defmodule Ada.UI do
     end)
 
     current_time
+    |> local_now!()
     |> Clock.render()
     |> display.set_content()
 
@@ -90,5 +93,9 @@ defmodule Ada.UI do
 
   defp subscribe(subscriptions) do
     Enum.each(subscriptions, &Ada.PubSub.subscribe/1)
+  end
+
+  defp local_now!(current_time \\ DateTime.utc_now()) do
+    Calendar.DateTime.shift_zone!(current_time, @timezone)
   end
 end

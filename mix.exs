@@ -43,7 +43,7 @@ defmodule Ada.MixProject do
       {:cowboy, "~> 2.5"},
       {:sqlite_ecto2, "~> 2.2"},
       {:jason, "~> 1.1"},
-      {:calendar, "~> 0.17.4", runtime: false},
+      {:calendar, "~> 0.17.4"},
       {:matrix, "~> 0.3.2"},
       {:nerves, "~> 1.3", runtime: false},
       {:shoehorn, "~> 0.4"},

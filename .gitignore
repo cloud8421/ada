@@ -22,5 +22,6 @@ erl_crash.dump
 /data/*.db-shm
 /data/*.db-wal
 /data/dev/tz_data
+/data/test/tz_data
 
 /priv/static/web-ui
