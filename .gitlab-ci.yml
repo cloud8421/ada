@@ -1,12 +1,9 @@
 mix:test:
   image: elixir:latest
   before_script:
-    - mix local.rebar --force
-    - mix local.hex --force
-    - mix archive.install hex nerves_bootstrap --force
-    - mix deps.get
+    - make host.setup
   script:
-    - make clean-and-test
+    - make host.clean-and-test
   cache:
     paths:
       - deps
