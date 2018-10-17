@@ -17,4 +17,8 @@ defmodule Ada.Schema.Location do
     |> Ecto.Changeset.cast(params, [:name, :lat, :lng])
     |> Ecto.Changeset.validate_required([:name, :lat, :lng])
   end
+
+  def activate_changeset(location) do
+    Ecto.Changeset.change(location, %{active: true})
+  end
 end

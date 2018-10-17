@@ -7,6 +7,7 @@ defmodule Ada.HTTP.Router do
     :cowboy_router.compile([
       {:_,
        [
+         {'/locations/[:location_id]/activate', Handler.Location.Activate, opts},
          collection_path('/locations', Ada.Schema.Location, opts),
          resource_path('/locations', Ada.Schema.Location, opts),
          collection_path('/users', Ada.Schema.User, opts),

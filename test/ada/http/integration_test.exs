@@ -83,6 +83,27 @@ defmodule Ada.HTTP.IntegrationTest do
     end
   end
 
+  describe "PUT /locations/:id/activate" do
+    test "with existing location" do
+      home =
+        Ada.Repo.insert!(%Ada.Schema.Location{name: "Home", lat: 1.0, lng: 1.0, active: true})
+
+      office = Ada.Repo.insert!(%Ada.Schema.Location{name: "Office", lat: 1.0, lng: 1.0})
+      response = H.json_put(@base_url <> "/locations/#{office.id}/activate", %{})
+      assert %H.Response{} = response
+      assert 204 == response.status_code
+
+      refute Ada.Repo.get(Ada.Schema.Location, home.id).active
+      assert Ada.Repo.get(Ada.Schema.Location, office.id).active
+    end
+
+    test "without location" do
+      response = H.json_put(@base_url <> "/locations/999/activate", %{})
+      assert %H.Response{} = response
+      assert 400 == response.status_code
+    end
+  end
+
   ################################################################################
   #################################### USERS #####################################
   ################################################################################
