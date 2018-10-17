@@ -38,6 +38,7 @@ type alias User =
 type alias Location =
     { id : Int
     , name : String
+    , active : Bool
     , coords : Coords
     }
 
@@ -139,9 +140,10 @@ decodeCoords =
 
 decodeLocation : JD.Decoder Location
 decodeLocation =
-    JD.map3 Location
+    JD.map4 Location
         (JD.field "id" JD.int)
         (JD.field "name" JD.string)
+        (JD.field "active" JD.bool)
         decodeCoords
 
 
@@ -366,10 +368,17 @@ locationsSection locations =
         coordsLabel ( lat, lng ) =
             String.fromFloat lat ++ "," ++ String.fromFloat lng
 
+        activeLabel active =
+            if active then
+                "active"
+            else
+                "inactive"
+
         locationRow location =
             tr []
                 [ td [] [ text <| String.fromInt location.id ]
                 , td [] [ text location.name ]
+                , td [] [ text <| activeLabel location.active ]
                 , td [] [ text <| coordsLabel location.coords ]
                 , td
                     [ class "actions" ]
@@ -392,6 +401,7 @@ locationsSection locations =
                             [ tr []
                                 [ th [] [ text "ID" ]
                                 , th [] [ text "Name" ]
+                                , th [] [ text "Status" ]
                                 , th [] [ text "Coordinates" ]
                                 , th [] [ text "Actions" ]
                                 ]
