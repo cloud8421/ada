@@ -1,6 +1,4 @@
-.PHONY: deps.get rpi0.firmware rpi0.burn host.clean-and-test host.test host.setup screen
-
-PI_IP = 10.0.1.4
+.PHONY: deps.get rpi0.firmware rpi0.burn rpi0.push host.clean-and-test host.test host.setup ssh
 
 deps.get:
 	MIX_TARGET=rpi0 mix deps.get
@@ -14,9 +12,10 @@ rpi0.burn:
 	$(MAKE) -C web-ui prod
 	MIX_TARGET=rpi0 mix do firmware, firmware.burn
 
-rpi0.update:
+rpi0.push:
 	$(MAKE) -C web-ui prod
-	MIX_TARGET=rpi0 mix do firmware, firmware.push ${PI_IP} --target rpi0
+	MIX_TARGET=rpi0 mix firmware
+	./script/upload.sh ada.local _build/rpi0/dev/nerves/images/ada.fw
 
 host.clean-and-test:
 	MIX_TARGET=host MIX_ENV=test mix do ecto.reset, test
@@ -30,5 +29,5 @@ host.setup:
 	mix archive.install hex nerves_bootstrap --force
 	MIX_TARGET=rpi0 mix deps.get
 
-screen:
-	screen /dev/tty.usbmodem* 115200
+ssh:
+	ssh ada.local
