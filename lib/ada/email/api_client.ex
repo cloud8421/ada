@@ -1,5 +1,6 @@
 defmodule Ada.Email.ApiClient do
   @base_url "https://api.sendgrid.com/v3"
+  @api_token System.get_env("SENDGRID_API_TOKEN")
 
   alias Ada.HTTPClient
 
@@ -69,7 +70,7 @@ defmodule Ada.Email.ApiClient do
   end
 
   defp default_headers do
-    [{"Authorization", "Bearer #{api_key()}"}, {"Content-type", "application/json"}]
+    [{"Authorization", "Bearer #{@api_token}"}, {"Content-type", "application/json"}]
   end
 
   defp add_cc(payload, []), do: payload
@@ -91,6 +92,4 @@ defmodule Ada.Email.ApiClient do
   defp add_reply_to(payload, reply_to) do
     Map.put(payload, :reply_to, %{email: reply_to})
   end
-
-  defp api_key, do: System.get_env("SENDGRID_API_TOKEN")
 end

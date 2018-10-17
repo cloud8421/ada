@@ -2,12 +2,13 @@ defmodule Ada.Source.Weather.ApiClient do
   @base_url "https://api.forecast.io"
   @exclude_opts "flags"
   @unit "si"
+  @api_key System.get_env("FORECAST_IO_API_KEY")
 
   alias Ada.{HTTPClient, Source.Weather.Report, Source.Weather.DataPoint}
 
   def get_by_location(lat, lng) do
     lat_lng = "#{lat},#{lng}"
-    url = Path.join([@base_url, "forecast", api_key(), lat_lng])
+    url = Path.join([@base_url, "forecast", @api_key, lat_lng])
     qs_params = [{"exclude", @exclude_opts}, {"units", @unit}]
 
     with %HTTPClient.Response{status_code: 200, body: body} <- HTTPClient.get(url, [], qs_params),
@@ -63,6 +64,4 @@ defmodule Ada.Source.Weather.ApiClient do
       timestamp: DateTime.from_unix!(timestamp * 1000, :millisecond)
     }
   end
-
-  defp api_key, do: System.get_env("FORECAST_IO_API_KEY")
 end

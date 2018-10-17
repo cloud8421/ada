@@ -1,5 +1,6 @@
 defmodule Ada.Source.News.ApiClient do
   @base_url "http://content.guardianapis.com"
+  @api_key System.get_env("GUARDIAN_API_KEY")
 
   alias Ada.HTTPClient
 
@@ -13,7 +14,7 @@ defmodule Ada.Source.News.ApiClient do
 
   def search_by_tag(tag) do
     url = Path.join([@base_url, "search"])
-    qs_params = %{"tag" => tag, "show-fields" => "body,thumbnail", "api-key" => api_key()}
+    qs_params = %{"tag" => tag, "show-fields" => "body,thumbnail", "api-key" => @api_key}
 
     with %HTTPClient.Response{status_code: 200, body: body} <- HTTPClient.get(url, [], qs_params),
          {:ok, data} <- Jason.decode(body) do
@@ -40,6 +41,4 @@ defmodule Ada.Source.News.ApiClient do
       }
     end)
   end
-
-  defp api_key, do: System.get_env("GUARDIAN_API_KEY")
 end
