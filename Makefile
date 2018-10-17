@@ -1,4 +1,4 @@
-.PHONY: deps.get rpi0.firmware rpi0.burn host.clean-and-test host.test host.setup
+.PHONY: deps.get rpi0.firmware rpi0.burn host.clean-and-test host.test host.setup screen
 
 deps.get:
 	MIX_TARGET=rpi0 mix deps.get
@@ -23,3 +23,6 @@ host.setup:
 	mix local.hex --force
 	mix archive.install hex nerves_bootstrap --force
 	MIX_TARGET=rpi0 mix deps.get
+
+screen:
+	screen /dev/tty.usbmodem* 115200
