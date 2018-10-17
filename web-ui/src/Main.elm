@@ -474,20 +474,28 @@ workflowsSection workflows =
         ]
 
 
+formatFrequency : Frequency -> String
+formatFrequency frequency =
+    let
+        pad value =
+            value
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+    in
+    case frequency of
+        Daily hour minute ->
+            "Every day at " ++ pad hour ++ ":" ++ pad minute
+
+        Hourly minute second ->
+            "Every hour at " ++ pad minute ++ ":" ++ pad second
+
+        UnsupportedFrequency ->
+            "Frequency not supported"
+
+
 scheduledTasksSection : WebData (List ScheduledTask) -> Html Msg
 scheduledTasksSection scheduledTasks =
     let
-        frequencyLabel frequency =
-            case frequency of
-                Daily hour minute ->
-                    "Daily at " ++ String.fromInt hour ++ ":" ++ String.fromInt minute
-
-                Hourly minute second ->
-                    "Hourly at " ++ String.fromInt minute ++ ":" ++ String.fromInt second
-
-                UnsupportedFrequency ->
-                    "Frequency not supported"
-
         paramDesc param =
             case param of
                 UserId id ->
@@ -512,7 +520,7 @@ scheduledTasksSection scheduledTasks =
                 [ td [] [ text <| String.fromInt scheduledTask.id ]
                 , td [] [ text scheduledTask.workflowHumanName ]
                 , td [] [ text <| paramsLabel scheduledTask.params ]
-                , td [] [ text <| frequencyLabel scheduledTask.frequency ]
+                , td [] [ text <| formatFrequency scheduledTask.frequency ]
                 , td
                     [ class "actions" ]
                     [ a
