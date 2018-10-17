@@ -92,7 +92,7 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
 
     write_config_register(state.i2c_mod, state.i2c, @frame_register, next_frame)
 
-    %{state | buffer: buffer, next_frame: next_frame}
+    %{state | buffer: buffer, current_frame: next_frame}
   end
 
   defp transpose_buffer(buffer) do
