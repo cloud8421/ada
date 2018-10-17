@@ -33,17 +33,6 @@ config :nerves_firmware_ssh,
     File.read!(key)
   ]
 
-# Configure nerves_init_gadget.
-# See https://hexdocs.pm/nerves_init_gadget/readme.html for more information.
-
-config :nerves_init_gadget,
-  ifname: "usb0",
-  address_method: :linklocal,
-  mdns_domain: "ada.local",
-  node_name: nil,
-  node_host: :mdns_domain,
-  ssh_console_port: 22
-
 # Configure network
 
 config :nerves_network, regulatory_domain: "GB"
@@ -54,3 +43,14 @@ config :nerves_network, :default,
     psk: System.get_env("WIFI_PASS"),
     key_mgmt: :"WPA-PSK"
   ]
+
+# Configure nerves_init_gadget.
+# See https://hexdocs.pm/nerves_init_gadget/readme.html for more information.
+
+config :nerves_init_gadget,
+  ifname: "wlan0",
+  address_method: :dhcp,
+  mdns_domain: "ada.local",
+  node_name: nil,
+  node_host: :mdns_domain,
+  ssh_console_port: 22
