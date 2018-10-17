@@ -1,5 +1,7 @@
 use Mix.Config
 
+config :ada, http_port: 80
+
 config :tzdata, :data_dir, "/root/storage/tz_data"
 
 config :ada, Ada.Repo, database: "/root/storage/ada-v1.db"

@@ -20,10 +20,7 @@ defmodule Ada.Application do
   def http_port(:test), do: 4001
 
   def http_port(_) do
-    case System.get_env("HTTP_PORT") do
-      nil -> 80
-      str_value -> String.to_integer(str_value)
-    end
+    Application.get_env(:ada, :http_port)
   end
 
   defp common_children() do
