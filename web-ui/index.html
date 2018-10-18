@@ -10,9 +10,12 @@
     <h1>Loading...</h1>
   </main>
 </body>
-<script type="text/javascript" src="{{main_js}}"></script>
-<script type="text/javascript" src="{{boot_js}}"></script>
-<script>
-  if (navigator.serviceWorker && !navigator.serviceWorker.controller) { navigator.serviceWorker.register('{{service_worker_js}}'); }
-</script>
+  <script>
+    window.GMAPSAPIKEY = '{{gmaps_api_key}}';
+  </script>
+  <script type="text/javascript" src="{{main_js}}"></script>
+  <script type="text/javascript" src="{{boot_js}}"></script>
+  <script>
+    if (navigator.serviceWorker && !navigator.serviceWorker.controller) { navigator.serviceWorker.register('{{service_worker_js}}'); }
+  </script>
 </html>

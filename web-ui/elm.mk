@@ -207,7 +207,7 @@ $(BUILD):
 	mkdir -p $@
 
 $(BUILD)/index.html: index.html $(MO)
-	main_js=/main.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js $(MO) index.html > $@
+	main_js=/main.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js gmaps_api_key=$(GOOGLE_MAPS_API_KEY) $(MO) index.html > $@
 
 $(BUILD)/main.js: $(ELM_SRC)/Main.elm $(ELM_SRC_FILES) $(ELM)
 	$(ELM) make $(ELM_SRC)/Main.elm --debug --output $@
@@ -230,7 +230,7 @@ $(DIST):
 	mkdir -p $@
 
 $(DIST)/index.html: index.html $(MO)
-	main_js=/main.min.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js $(MO) index.html > $@
+	main_js=/main.min.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js gmaps_api_key=$(GOOGLE_MAPS_API_KEY) $(MO) index.html > $@
 
 $(DIST)/main.min.js: $(UGLIFYJS) $(DIST)/main.js
 	$(UGLIFYJS) $(DIST)/main.js --compress $(UGLIFYJS_COMPRESS_OPTIONS) | $(UGLIFYJS) --mangle --output=$@

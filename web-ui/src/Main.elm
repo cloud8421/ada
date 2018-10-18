@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser exposing (Document)
 import Dict as Dict
 import Html exposing (..)
-import Html.Attributes exposing (class, classList)
+import Html.Attributes exposing (class, classList, src)
 import Html.Events exposing (onClick)
 import Http as Http
 import Json.Decode as JD
@@ -362,8 +362,28 @@ usersSection users =
         ]
 
 
-locationsSection : WebData (List Location) -> Html Msg
-locationsSection locations =
+gMap : Coords -> String -> Html Msg
+gMap ( lat, lng ) gmapsApiKey =
+    let
+        pair =
+            String.fromFloat lat ++ "," ++ String.fromFloat lng
+
+        mapSrc =
+            "https://maps.googleapis.com/maps/api/staticmap?"
+                ++ "center="
+                ++ pair
+                ++ "&"
+                ++ "zoom=13&size=300x120&maptype=roadmap&"
+                ++ "markers=color:blue%7Clabel:S%7C"
+                ++ pair
+                ++ "&key="
+                ++ gmapsApiKey
+    in
+    img [ src mapSrc ] []
+
+
+locationsSection : WebData (List Location) -> String -> Html Msg
+locationsSection locations gmapsApiKey =
     let
         coordsLabel ( lat, lng ) =
             String.fromFloat lat ++ "," ++ String.fromFloat lng
@@ -379,7 +399,7 @@ locationsSection locations =
                 [ td [] [ text <| String.fromInt location.id ]
                 , td [] [ text location.name ]
                 , td [] [ text <| activeLabel location.active ]
-                , td [] [ text <| coordsLabel location.coords ]
+                , td [] [ gMap location.coords gmapsApiKey ]
                 , td
                     [ class "actions" ]
                     [ a [ class "button is-link" ] [ text "Edit" ]
@@ -574,7 +594,7 @@ body model =
         [ titleBar
         , div [ class "columns" ]
             [ usersSection model.users
-            , locationsSection model.locations
+            , locationsSection model.locations model.gmapsApiKey
             ]
         , div [ class "columns" ]
             [ workflowsSection model.workflows
@@ -589,7 +609,7 @@ body model =
 
 
 type alias Flags =
-    Int
+    String
 
 
 type Msg
@@ -603,7 +623,7 @@ type Msg
 
 
 type alias Model =
-    { count : Int
+    { gmapsApiKey : String
     , users : WebData (List User)
     , locations : WebData (List Location)
     , workflows : WebData (List Workflow)
@@ -623,8 +643,8 @@ main =
 
 
 init : Flags -> ( Model, Cmd Msg )
-init initialCount =
-    ( { count = initialCount
+init gmapsApiKey =
+    ( { gmapsApiKey = gmapsApiKey
       , users = NotAsked
       , locations = NotAsked
       , workflows = NotAsked
