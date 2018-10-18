@@ -13,7 +13,7 @@ defmodule Ada.Scheduler do
 
   def run_many_async(scheduled_tasks, opts) do
     Ada.TaskSupervisor
-    |> Task.Supervisor.async_stream(scheduled_tasks, __MODULE__, :run_now!, [opts])
+    |> Task.Supervisor.async_stream(scheduled_tasks, __MODULE__, :run_one_sync, [opts])
     |> Stream.run()
   end
 
