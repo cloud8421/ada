@@ -566,24 +566,46 @@ formatFrequency frequency =
 scheduledTasksSection : WebData (List ScheduledTask) -> Maybe Int -> Html Msg
 scheduledTasksSection scheduledTasks runningTask =
     let
-        paramDesc param =
+        formatParam param =
             case param of
                 UserId id ->
-                    "User " ++ String.fromInt id
+                    div [ class "control" ]
+                        [ div [ class "tags has-addons" ]
+                            [ span [ class "tag" ]
+                                [ text "user"
+                                ]
+                            , span [ class "tag" ] [ text <| String.fromInt id ]
+                            ]
+                        ]
 
                 LocationId id ->
-                    "Location " ++ String.fromInt id
+                    div [ class "control" ]
+                        [ div [ class "tags has-addons" ]
+                            [ span [ class "tag" ]
+                                [ text "location"
+                                ]
+                            , span [ class "tag" ] [ text <| String.fromInt id ]
+                            ]
+                        ]
 
                 NewsTag tag ->
-                    "News tag " ++ tag
+                    div [ class "control" ]
+                        [ div [ class "tags has-addons" ]
+                            [ span [ class "tag" ]
+                                [ text "news tag"
+                                ]
+                            , span [ class "tag" ] [ text tag ]
+                            ]
+                        ]
 
                 UnsupportedParam ->
-                    "Unsupported param"
-
-        paramsLabel params =
-            params
-                |> List.map paramDesc
-                |> String.join ", "
+                    div [ class "control" ]
+                        [ div [ class "tags" ]
+                            [ span [ class "tag" ]
+                                [ text "unsupported"
+                                ]
+                            ]
+                        ]
 
         scheduledTaskRow scheduledTask =
             let
@@ -593,7 +615,7 @@ scheduledTasksSection scheduledTasks runningTask =
             tr []
                 [ td [] [ text <| String.fromInt scheduledTask.id ]
                 , td [] [ text scheduledTask.workflowHumanName ]
-                , td [] [ text <| paramsLabel scheduledTask.params ]
+                , td [ class "field is-grouped is-grouped-multiline" ] (List.map formatParam scheduledTask.params)
                 , td [] [ text <| formatFrequency scheduledTask.frequency ]
                 , td
                     [ class "actions" ]
