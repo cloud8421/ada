@@ -1,4 +1,4 @@
-mix:test:
+core:test:
   image: elixir:latest
   before_script:
     - make host.setup
@@ -9,7 +9,7 @@ mix:test:
       - deps
       - _build
 
-elm:build:
+ui:build:
   image: buildpack-deps:stretch
   script:
     - cd web-ui && make --jobs=4
