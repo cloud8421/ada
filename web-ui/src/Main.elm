@@ -147,11 +147,6 @@ decodeLocation =
         decodeCoords
 
 
-
--- (JD.field "lat" JD.float)
--- (JD.field "lng" JD.float)
-
-
 decodeLocations : JD.Decoder (List Location)
 decodeLocations =
     JD.list decodeLocation
@@ -162,6 +157,13 @@ getLocations =
     Http.get "/locations" decodeLocations
         |> RemoteData.sendRequest
         |> Cmd.map LocationsResponse
+
+
+activateLocation : Int -> Cmd Msg
+activateLocation locationId =
+    emptyPut ("/locations/" ++ String.fromInt locationId ++ "/activate")
+        |> RemoteData.sendRequest
+        |> Cmd.map ActivateLocationResponse
 
 
 
@@ -309,6 +311,7 @@ type Icon
     = Edit
     | Delete
     | Run
+    | Activate
 
 
 iconButton : Icon -> Html Msg
@@ -324,6 +327,9 @@ iconButton icon =
 
                 Run ->
                     "fa-play"
+
+                Activate ->
+                    "fa-check"
     in
     span [ class "icon is-small" ]
         [ i [ class ("fas " ++ iconClass) ]
@@ -431,6 +437,13 @@ locationsSection locations gmapsApiKey =
                 "inactive"
 
         locationRow location =
+            let
+                disabledAttr =
+                    if location.active then
+                        [ attribute "disabled" "disabled" ]
+                    else
+                        []
+            in
             tr []
                 [ td [] [ text <| String.fromInt location.id ]
                 , td [] [ text location.name ]
@@ -438,7 +451,14 @@ locationsSection locations gmapsApiKey =
                 , td [] [ gMap location.coords gmapsApiKey ]
                 , td
                     [ class "actions" ]
-                    [ a [ class "button is-small is-link" ] [ iconButton Edit ]
+                    [ a
+                        ([ class "button is-small is-primary"
+                         , onClick (ActivateLocation location.id)
+                         ]
+                            ++ disabledAttr
+                        )
+                        [ iconButton Activate ]
+                    , a [ class "button is-small is-link" ] [ iconButton Edit ]
                     , a [ class "button is-small is-danger" ] [ iconButton Delete ]
                     ]
                 ]
@@ -642,11 +662,13 @@ type alias Flags =
 type Msg
     = NoOp
     | ExecuteScheduledTask Int
+    | ActivateLocation Int
     | UsersResponse (WebData (List User))
     | LocationsResponse (WebData (List Location))
     | WorkflowsResponse (WebData (List Workflow))
     | ScheduledTasksResponse (WebData (List ScheduledTask))
     | ExecuteScheduledTaskResponse (WebData ())
+    | ActivateLocationResponse (WebData ())
 
 
 type alias Model =
@@ -698,6 +720,9 @@ update msg model =
         ExecuteScheduledTask taskId ->
             ( { model | runningTask = Just taskId }, executeScheduledTask taskId )
 
+        ActivateLocation locationId ->
+            ( model, activateLocation locationId )
+
         UsersResponse response ->
             ( { model | users = response }, Cmd.none )
 
@@ -712,6 +737,9 @@ update msg model =
 
         ExecuteScheduledTaskResponse _ ->
             ( { model | runningTask = Nothing }, Cmd.none )
+
+        ActivateLocationResponse _ ->
+            ( model, getLocations )
 
 
 subscriptions : Model -> Sub Msg
