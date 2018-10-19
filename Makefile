@@ -27,7 +27,7 @@ host.setup:
 	mix local.rebar --force
 	mix local.hex --force
 	mix archive.install hex nerves_bootstrap --force
-	MIX_TARGET=rpi0 mix deps.get
+	MIX_TARGET=host mix deps.get
 
 ssh:
 	ssh ada.local
