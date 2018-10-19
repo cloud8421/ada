@@ -640,12 +640,12 @@ body model =
     [ div []
         [ titleBar
         , div [ class "columns" ]
-            [ usersSection model.users
+            [ scheduledTasksSection model.scheduledTasks model.runningTask
             , locationsSection model.locations model.gmapsApiKey
             ]
         , div [ class "columns" ]
             [ workflowsSection model.workflows
-            , scheduledTasksSection model.scheduledTasks model.runningTask
+            , usersSection model.users
             ]
         ]
     ]
