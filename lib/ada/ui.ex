@@ -12,7 +12,11 @@ defmodule Ada.UI do
   @timezone "Europe/London"
 
   alias Ada.PubSub.Broadcast
-  alias Ada.UI.Clock
+  alias Ada.UI.{Clock, TaskMon}
+
+  defstruct display: nil,
+            current_time: nil,
+            running_tasks: MapSet.new()
 
   ################################################################################
   ################################## PUBLIC API ##################################
@@ -42,15 +46,16 @@ defmodule Ada.UI do
     :ok = subscribe(@subscriptions)
 
     display = Keyword.fetch!(opts, :display)
+    current_time = local_now!()
 
-    local_now!()
+    current_time
     |> Clock.render()
     |> display.set_content()
 
-    {:ok, :clock, display}
+    {:ok, :clock, %__MODULE__{display: display, current_time: current_time}}
   end
 
-  def handle_event(:info, {Broadcast, Ada.Time.Minute, current_time}, :clock, display) do
+  def handle_event(:info, {Broadcast, Ada.Time.Minute, current_time}, :clock, data) do
     Logger.debug(fn ->
       "UI -> clock: new time #{DateTime.to_iso8601(current_time)}"
     end)
@@ -58,30 +63,67 @@ defmodule Ada.UI do
     current_time
     |> local_now!()
     |> Clock.render()
-    |> display.set_content()
+    |> data.display.set_content()
 
     :keep_state_and_data
   end
 
-  def handle_event(:info, {Broadcast, Ada.ScheduledTask.Start, scheduled_task}, _state, _data) do
+  def handle_event(:info, {Broadcast, Ada.ScheduledTask.Start, scheduled_task}, _state, data) do
     Logger.debug(fn ->
       "UI -> scheduled task: started task #{scheduled_task.id}"
     end)
 
-    :keep_state_and_data
+    new_data =
+      Map.update!(data, :running_tasks, fn current -> MapSet.put(current, scheduled_task.id) end)
+
+    new_data.running_tasks
+    |> TaskMon.render()
+    |> data.display.set_content()
+
+    {:keep_state, new_data}
   end
 
-  def handle_event(:info, {Broadcast, Ada.ScheduledTask.End, scheduled_task}, _state, _data) do
+  def handle_event(:info, {Broadcast, Ada.ScheduledTask.End, scheduled_task}, _state, data) do
     Logger.debug(fn ->
       "UI -> scheduled task: finished task #{scheduled_task.id}"
     end)
 
-    :keep_state_and_data
+    new_data =
+      Map.update!(data, :running_tasks, fn current ->
+        MapSet.delete(current, scheduled_task.id)
+      end)
+
+    new_data.running_tasks
+    |> TaskMon.render()
+    |> data.display.set_content()
+
+    action =
+      if Enum.empty?(new_data.running_tasks) do
+        {:next_event, :internal, :to_clock}
+      else
+        {:timeout, 1000, :to_clock}
+      end
+
+    {:keep_state, new_data, action}
   end
 
-  def handle_event(:info, evt, state, _data) do
+  def handle_event(event_type, :to_clock, _state, data)
+      when event_type in [:internal, :timeout] do
     Logger.debug(fn ->
-      "UI -> #{state}: unrecognized event: #{inspect(evt)}"
+      "UI -> clock: new time #{DateTime.to_iso8601(data.current_time)}"
+    end)
+
+    data.current_time
+    |> local_now!()
+    |> Clock.render()
+    |> data.display.set_content()
+
+    {:next_state, :clock, data}
+  end
+
+  def handle_event(type, evt, state, _data) do
+    Logger.debug(fn ->
+      "UI -> #{state}: ignoring #{type} event: #{inspect(evt)}"
     end)
 
     :keep_state_and_data

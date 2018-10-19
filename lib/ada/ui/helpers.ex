@@ -5,6 +5,9 @@ defmodule Ada.UI.Helpers do
   def pad_with_zero([a]), do: [0, a]
   def pad_with_zero(a), do: a
 
+  def pad_with_space([a]), do: [:space, a]
+  def pad_with_space(a), do: a
+
   def chars_to_matrix(chars) do
     center =
       chars
