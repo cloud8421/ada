@@ -305,6 +305,32 @@ emptyPut url =
 -- VIEWS
 
 
+type Icon
+    = Edit
+    | Delete
+    | Run
+
+
+iconButton : Icon -> Html Msg
+iconButton icon =
+    let
+        iconClass =
+            case icon of
+                Edit ->
+                    "fa-edit"
+
+                Delete ->
+                    "fa-trash"
+
+                Run ->
+                    "fa-play"
+    in
+    span [ class "icon is-small" ]
+        [ i [ class ("fas " ++ iconClass) ]
+            []
+        ]
+
+
 block : String -> Html Msg -> Html Msg
 block blockTitle contents =
     section [ class "section column is-6" ]
@@ -340,8 +366,8 @@ usersSection users =
                 , td [] [ text user.email ]
                 , td
                     [ class "actions" ]
-                    [ a [ class "button is-small is-link" ] [ text "Edit" ]
-                    , a [ class "button is-small is-danger" ] [ text "Delete" ]
+                    [ a [ class "button is-small is-link" ] [ iconButton Edit ]
+                    , a [ class "button is-small is-danger" ] [ iconButton Delete ]
                     ]
                 ]
 
@@ -412,8 +438,8 @@ locationsSection locations gmapsApiKey =
                 , td [] [ gMap location.coords gmapsApiKey ]
                 , td
                     [ class "actions" ]
-                    [ a [ class "button is-small is-link" ] [ text "Edit" ]
-                    , a [ class "button is-small is-danger" ] [ text "Delete" ]
+                    [ a [ class "button is-small is-link" ] [ iconButton Edit ]
+                    , a [ class "button is-small is-danger" ] [ iconButton Delete ]
                     ]
                 ]
 
@@ -555,9 +581,9 @@ scheduledTasksSection scheduledTasks runningTask =
                         [ classList runClassList
                         , onClick (ExecuteScheduledTask scheduledTask.id)
                         ]
-                        [ text "Run" ]
-                    , a [ class "button is-small is-link" ] [ text "Edit" ]
-                    , a [ class "button is-small is-danger" ] [ text "Delete" ]
+                        [ iconButton Run ]
+                    , a [ class "button is-small is-link" ] [ iconButton Edit ]
+                    , a [ class "button is-small is-danger" ] [ iconButton Delete ]
                     ]
                 ]
 
