@@ -195,7 +195,7 @@ defmodule Ada.HTTP.IntegrationTest do
     test "with scheduled_tasks" do
       scheduled_task =
         Ada.Repo.insert!(%Ada.Schema.ScheduledTask{
-          workflow_name: Ada.Workflow.WeatherForecast,
+          workflow_name: Ada.Workflow.SendWeatherForecast,
           params: %{"user_id" => 1, "location_id" => 1},
           frequency: %{}
         })
@@ -206,14 +206,15 @@ defmodule Ada.HTTP.IntegrationTest do
       assert [response_scheduled_task] = response.body
       assert Map.get(response_scheduled_task, "id") == scheduled_task.id
 
-      assert Map.get(response_scheduled_task, "workflow_name") == "Ada.Workflow.WeatherForecast"
+      assert Map.get(response_scheduled_task, "workflow_name") ==
+               "Ada.Workflow.SendWeatherForecast"
     end
   end
 
   describe "POST /scheduled_tasks" do
     test "with valid data" do
       data = %{
-        workflow_name: Ada.Workflow.WeatherForecast,
+        workflow_name: Ada.Workflow.SendWeatherForecast,
         params: %{"user_id" => 1, "location_id" => 1},
         frequency: %{}
       }
@@ -235,7 +236,7 @@ defmodule Ada.HTTP.IntegrationTest do
     test "with valid data" do
       scheduled_task =
         Ada.Repo.insert!(%Ada.Schema.ScheduledTask{
-          workflow_name: Ada.Workflow.WeatherForecast,
+          workflow_name: Ada.Workflow.SendWeatherForecast,
           params: %{"user_id" => 1, "location_id" => 1},
           frequency: %{}
         })
@@ -272,7 +273,7 @@ defmodule Ada.HTTP.IntegrationTest do
     test "with existing scheduled_task" do
       scheduled_task =
         Ada.Repo.insert!(%Ada.Schema.ScheduledTask{
-          workflow_name: Ada.Workflow.WeatherForecast,
+          workflow_name: Ada.Workflow.SendWeatherForecast,
           params: %{"user_id" => 1, "location_id" => 1},
           frequency: %{}
         })
@@ -303,13 +304,13 @@ defmodule Ada.HTTP.IntegrationTest do
 
       assert [
                %{
-                 "name" => "Ada.Workflow.NewsByTag",
-                 "human_name" => "News by tag",
+                 "name" => "Ada.Workflow.SendNewsByTag",
+                 "human_name" => "Send News by tag",
                  "requirements" => ["tag", "user_id"]
                },
                %{
-                 "name" => "Ada.Workflow.WeatherForecast",
-                 "human_name" => "Weather forecast",
+                 "name" => "Ada.Workflow.SendWeatherForecast",
+                 "human_name" => "Send Weather forecast",
                  "requirements" => ["location_id", "user_id"]
                }
              ] == response.body

@@ -1,11 +1,11 @@
-defmodule Ada.Workflow.WeatherForecast do
+defmodule Ada.Workflow.SendWeatherForecast do
   @behaviour Ada.Workflow
   alias Ada.Schema.{Location, User}
   alias Ada.Source.Weather
   alias Ada.Email
 
   @impl true
-  def human_name, do: "Weather forecast"
+  def human_name, do: "Send Weather forecast"
 
   @impl true
   def requirements do

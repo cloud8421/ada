@@ -1,11 +1,11 @@
-defmodule Ada.Workflow.NewsByTag do
+defmodule Ada.Workflow.SendNewsByTag do
   @behaviour Ada.Workflow
   alias Ada.Schema.User
   alias Ada.Source.News
   alias Ada.Email
 
   @impl true
-  def human_name, do: "News by tag"
+  def human_name, do: "Send News by tag"
 
   @impl true
   def requirements do
