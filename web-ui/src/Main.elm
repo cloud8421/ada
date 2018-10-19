@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser exposing (Document)
 import Dict as Dict
 import Html exposing (..)
-import Html.Attributes exposing (class, classList, src)
+import Html.Attributes exposing (attribute, class, classList, href, src)
 import Html.Events exposing (onClick)
 import Http as Http
 import Json.Decode as JD
@@ -305,13 +305,26 @@ emptyPut url =
 -- VIEWS
 
 
+block : String -> Html Msg -> Html Msg
+block blockTitle contents =
+    section [ class "section column is-6" ]
+        [ div [ class "panel" ]
+            [ div [ class "panel-heading" ]
+                [ text blockTitle
+                ]
+            , div [ class "panel-block" ]
+                [ contents
+                ]
+            ]
+        ]
+
+
 titleBar : Html Msg
 titleBar =
-    section [ class "hero is-dark" ]
-        [ div [ class "hero-body" ]
-            [ div [ class "container" ]
-                [ h1 [ class "title" ]
-                    [ text "Ada Control Center" ]
+    nav [ attribute "aria-label" "main navigation", class "navbar", attribute "role" "navigation" ]
+        [ div [ class "navbar-brand" ]
+            [ h1 [ class "navbar-item subtitle" ]
+                [ text "Ada Control Center"
                 ]
             ]
         ]
@@ -327,8 +340,8 @@ usersSection users =
                 , td [] [ text user.email ]
                 , td
                     [ class "actions" ]
-                    [ a [ class "button is-link" ] [ text "Edit" ]
-                    , a [ class "button is-danger" ] [ text "Delete" ]
+                    [ a [ class "button is-small is-link" ] [ text "Edit" ]
+                    , a [ class "button is-small is-danger" ] [ text "Delete" ]
                     ]
                 ]
 
@@ -356,10 +369,7 @@ usersSection users =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    section [ class "section" ]
-        [ div [ class "container is-fluid" ]
-            [ contentArea ]
-        ]
+    block "Users" contentArea
 
 
 gMap : Coords -> String -> Html Msg
@@ -402,8 +412,8 @@ locationsSection locations gmapsApiKey =
                 , td [] [ gMap location.coords gmapsApiKey ]
                 , td
                     [ class "actions" ]
-                    [ a [ class "button is-link" ] [ text "Edit" ]
-                    , a [ class "button is-danger" ] [ text "Delete" ]
+                    [ a [ class "button is-small is-link" ] [ text "Edit" ]
+                    , a [ class "button is-small is-danger" ] [ text "Delete" ]
                     ]
                 ]
 
@@ -432,10 +442,7 @@ locationsSection locations gmapsApiKey =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    section [ class "section column" ]
-        [ div [ class "container is-fluid" ]
-            [ contentArea ]
-        ]
+    block "Locations" contentArea
 
 
 workflowsSection : WebData (List Workflow) -> Html Msg
@@ -488,10 +495,7 @@ workflowsSection workflows =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    section [ class "section column is-one-quarter" ]
-        [ div [ class "container is-fluid" ]
-            [ contentArea ]
-        ]
+    block "Workflows" contentArea
 
 
 formatFrequency : Frequency -> String
@@ -538,7 +542,7 @@ scheduledTasksSection scheduledTasks runningTask =
         scheduledTaskRow scheduledTask =
             let
                 runClassList =
-                    [ ( "button", True ), ( "is-primary", True ), ( "is-loading", runningTask == Just scheduledTask.id ) ]
+                    [ ( "button is-small", True ), ( "is-primary", True ), ( "is-loading", runningTask == Just scheduledTask.id ) ]
             in
             tr []
                 [ td [] [ text <| String.fromInt scheduledTask.id ]
@@ -552,8 +556,8 @@ scheduledTasksSection scheduledTasks runningTask =
                         , onClick (ExecuteScheduledTask scheduledTask.id)
                         ]
                         [ text "Run" ]
-                    , a [ class "button is-link" ] [ text "Edit" ]
-                    , a [ class "button is-danger" ] [ text "Delete" ]
+                    , a [ class "button is-small is-link" ] [ text "Edit" ]
+                    , a [ class "button is-small is-danger" ] [ text "Delete" ]
                     ]
                 ]
 
@@ -582,10 +586,7 @@ scheduledTasksSection scheduledTasks runningTask =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    section [ class "section column is-three-quarters" ]
-        [ div [ class "container is-fluid" ]
-            [ contentArea ]
-        ]
+    block "Scheduled Tasks" contentArea
 
 
 body : Model -> List (Html Msg)
