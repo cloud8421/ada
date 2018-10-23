@@ -3,8 +3,8 @@ module Main exposing (main)
 import Browser exposing (Document)
 import Dict as Dict
 import Html exposing (..)
-import Html.Attributes exposing (attribute, class, classList, href, src)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (attribute, class, classList, href, placeholder, src, type_, value)
+import Html.Events exposing (onClick, onInput)
 import Http as Http
 import Json.Decode as JD
 import Json.Encode as JE
@@ -125,6 +125,20 @@ getUsers =
     Http.get "/users" decodeUsers
         |> RemoteData.sendRequest
         |> Cmd.map UsersResponse
+
+
+createUser : UserParams -> Cmd Msg
+createUser userParams =
+    let
+        encoded =
+            JE.object
+                [ ( "name", JE.string userParams.name )
+                , ( "email", JE.string userParams.email )
+                ]
+    in
+    Http.post "/users" (Http.jsonBody encoded) decodeUser
+        |> RemoteData.sendRequest
+        |> Cmd.map CreateUserResponse
 
 
 
@@ -337,8 +351,8 @@ iconButton icon =
         ]
 
 
-block : String -> Html Msg -> Html Msg
-block blockTitle contents =
+block : String -> Msg -> Html Msg -> Html Msg
+block blockTitle newMsg contents =
     section [ class "section column is-6" ]
         [ div [ class "panel" ]
             [ div [ class "panel-heading" ]
@@ -346,6 +360,13 @@ block blockTitle contents =
                 ]
             , div [ class "panel-block" ]
                 [ contents
+                ]
+            , div [ class "panel-block" ]
+                [ button
+                    [ class "button is-link"
+                    , onClick newMsg
+                    ]
+                    [ text "Add New" ]
                 ]
             ]
         ]
@@ -401,7 +422,7 @@ usersSection users =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    block "Users" contentArea
+    block "Users" OpenEditingModalNewUser contentArea
 
 
 gMap : Coords -> String -> Html Msg
@@ -488,7 +509,7 @@ locationsSection locations gmapsApiKey =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    block "Locations" contentArea
+    block "Locations" OpenEditingModalNewUser contentArea
 
 
 workflowsSection : WebData (List Workflow) -> Html Msg
@@ -541,7 +562,7 @@ workflowsSection workflows =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    block "Workflows" contentArea
+    block "Workflows" OpenEditingModalNewUser contentArea
 
 
 formatFrequency : Frequency -> String
@@ -654,7 +675,100 @@ scheduledTasksSection scheduledTasks runningTask =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    block "Scheduled Tasks" contentArea
+    block "Scheduled Tasks" OpenEditingModalNewUser contentArea
+
+
+editingModalForm : EditForm -> Html Msg
+editingModalForm editForm =
+    case editForm of
+        Closed ->
+            text "Nothing to see here"
+
+        NewUser userParams ->
+            form []
+                [ h1 [ class "title" ] [ text "New User" ]
+                , div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Name" ]
+                    , div [ class "control" ]
+                        [ input
+                            [ class "input"
+                            , placeholder "User name"
+                            , type_ "text"
+                            , value userParams.name
+                            , onInput UpdateUserName
+                            ]
+                            []
+                        ]
+                    ]
+                , div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Email" ]
+                    , div [ class "control has-icons-left has-icons-right" ]
+                        [ input
+                            [ class "input"
+                            , placeholder "Email input"
+                            , type_ "email"
+                            , value userParams.email
+                            , onInput UpdateUserEmail
+                            ]
+                            []
+                        , span [ class "icon is-small is-left" ]
+                            [ i [ class "fas fa-envelope" ]
+                                []
+                            ]
+                        ]
+                    ]
+                , div
+                    [ class "field is-grouped" ]
+                    [ div [ class "control" ]
+                        [ input
+                            [ class "button is-link"
+                            , type_ "button"
+                            , value "Submit"
+                            , onClick SaveUser
+                            ]
+                            []
+                        ]
+                    , div
+                        [ class "control"
+                        ]
+                        [ input
+                            [ class "button is-text"
+                            , type_ "button"
+                            , value "Cancel"
+                            , onClick CloseEditingModal
+                            ]
+                            []
+                        ]
+                    ]
+                ]
+
+        otherwise ->
+            Debug.todo "Not implemented yet"
+
+
+editingModal : Model -> Html Msg
+editingModal model =
+    let
+        modalClasses =
+            [ ( "modal", True ), ( "is-active", model.editForm /= Closed ) ]
+    in
+    div [ classList modalClasses ]
+        [ div [ class "modal-background" ]
+            []
+        , div [ class "modal-content" ]
+            [ div [ class "box" ]
+                [ editingModalForm model.editForm
+                ]
+            ]
+        , button
+            [ onClick CloseEditingModal
+            , attribute "aria-label" "close"
+            , class "modal-close is-large"
+            ]
+            []
+        ]
 
 
 body : Model -> List (Html Msg)
@@ -669,8 +783,52 @@ body model =
             [ workflowsSection model.workflows
             , usersSection model.users
             ]
+        , editingModal model
         ]
     ]
+
+
+
+-- EDITING
+
+
+type alias ScheduledTaskParams =
+    { frequency : Frequency
+    , workflowName : String
+    , params : List WorkflowParam
+    }
+
+
+type alias LocationParams =
+    { name : String
+    , location : Coords
+    }
+
+
+type alias UserParams =
+    { name : String
+    , email : String
+    }
+
+
+type EditForm
+    = Closed
+    | NewScheduledTask ScheduledTaskParams
+    | EditScheduledTask ScheduledTask
+    | NewUser UserParams
+    | EditUser User
+    | NewLocation LocationParams
+    | EditLocation Location
+
+
+saveUser : EditForm -> Cmd Msg
+saveUser editForm =
+    case editForm of
+        NewUser userParams ->
+            createUser userParams
+
+        otherwise ->
+            Cmd.none
 
 
 
@@ -691,6 +849,12 @@ type Msg
     | ScheduledTasksResponse (WebData (List ScheduledTask))
     | ExecuteScheduledTaskResponse (WebData ())
     | ActivateLocationResponse (WebData ())
+    | CloseEditingModal
+    | OpenEditingModalNewUser
+    | UpdateUserName String
+    | UpdateUserEmail String
+    | SaveUser
+    | CreateUserResponse (WebData User)
 
 
 type alias Model =
@@ -700,6 +864,7 @@ type alias Model =
     , workflows : WebData (List Workflow)
     , scheduledTasks : WebData (List ScheduledTask)
     , runningTask : Maybe Int
+    , editForm : EditForm
     }
 
 
@@ -721,6 +886,7 @@ init gmapsApiKey =
       , workflows = NotAsked
       , scheduledTasks = NotAsked
       , runningTask = Nothing
+      , editForm = Closed
       }
     , Cmd.batch [ getUsers, getLocations, getWorkflows, getScheduledTasks ]
     )
@@ -762,6 +928,48 @@ update msg model =
 
         ActivateLocationResponse _ ->
             ( model, getLocations )
+
+        CloseEditingModal ->
+            ( { model | editForm = Closed }, Cmd.none )
+
+        OpenEditingModalNewUser ->
+            ( { model | editForm = NewUser { name = "e.g. Ada", email = "e.g. ada@example.com" } }, Cmd.none )
+
+        UpdateUserName newName ->
+            let
+                newEditForm =
+                    case model.editForm of
+                        NewUser userParams ->
+                            NewUser { userParams | name = newName }
+
+                        EditUser user ->
+                            EditUser { user | name = newName }
+
+                        otherwise ->
+                            model.editForm
+            in
+            ( { model | editForm = newEditForm }, Cmd.none )
+
+        UpdateUserEmail newEmail ->
+            let
+                newEditForm =
+                    case model.editForm of
+                        NewUser userParams ->
+                            NewUser { userParams | email = newEmail }
+
+                        EditUser user ->
+                            EditUser { user | email = newEmail }
+
+                        otherwise ->
+                            model.editForm
+            in
+            ( { model | editForm = newEditForm }, Cmd.none )
+
+        SaveUser ->
+            ( model, saveUser model.editForm )
+
+        CreateUserResponse _ ->
+            ( { model | editForm = Closed }, getUsers )
 
 
 subscriptions : Model -> Sub Msg
