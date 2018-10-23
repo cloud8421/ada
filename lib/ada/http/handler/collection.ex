@@ -38,11 +38,17 @@ defmodule Ada.HTTP.Handler.Collection do
 
     with {:ok, decoded} <- Jason.decode(encoded),
          changeset <- schema.changeset(struct(schema), decoded),
-         {:ok, _location} <- repo.insert(changeset) do
-      {true, req, ctx}
+         {:ok, persisted} <- repo.insert(changeset) do
+      {true, set_resp_body(req, persisted), ctx}
     else
       _error ->
         {false, req, ctx}
     end
+  end
+
+  defp set_resp_body(req, resource) do
+    resource
+    |> Jason.encode!()
+    |> :cowboy_req.set_resp_body(req)
   end
 end

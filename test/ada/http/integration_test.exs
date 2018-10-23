@@ -35,7 +35,11 @@ defmodule Ada.HTTP.IntegrationTest do
       data = %{name: "Home", lat: 0.12, lng: 0.13}
       response = H.json_post(@base_url <> "/locations", data)
       assert %H.Response{} = response
-      assert 204 == response.status_code
+      assert 200 == response.status_code
+      assert Map.get(response.body, "id")
+      assert Map.get(response.body, "name") == "Home"
+      assert Map.get(response.body, "lat") == 0.12
+      assert Map.get(response.body, "lng") == 0.13
     end
 
     test "with invalid data" do
@@ -132,7 +136,10 @@ defmodule Ada.HTTP.IntegrationTest do
       data = %{name: "Ada", email: "ada@example.com"}
       response = H.json_post(@base_url <> "/users", data)
       assert %H.Response{} = response
-      assert 204 == response.status_code
+      assert 200 == response.status_code
+      assert Map.get(response.body, "id")
+      assert Map.get(response.body, "name") == "Ada"
+      assert Map.get(response.body, "email") == "ada@example.com"
     end
 
     test "with invalid data" do
@@ -221,7 +228,9 @@ defmodule Ada.HTTP.IntegrationTest do
 
       response = H.json_post(@base_url <> "/scheduled_tasks", data)
       assert %H.Response{} = response
-      assert 204 == response.status_code
+      assert 200 == response.status_code
+      assert Map.get(response.body, "id")
+      assert Map.get(response.body, "workflow_name") == "Ada.Workflow.SendWeatherForecast"
     end
 
     test "with invalid data" do
