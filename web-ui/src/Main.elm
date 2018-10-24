@@ -168,7 +168,7 @@ updateUser user =
         url =
             "/users/" ++ String.fromInt user.id
     in
-    noContentPut url (Http.jsonBody encoded)
+    putNoContent url (Http.jsonBody encoded)
         |> RemoteData.sendRequest
         |> Cmd.map UpdateUserResponse
 
@@ -218,7 +218,7 @@ getLocations =
 
 activateLocation : Int -> Cmd Msg
 activateLocation locationId =
-    emptyPut ("/locations/" ++ String.fromInt locationId ++ "/activate")
+    putNoBodyNoContent ("/locations/" ++ String.fromInt locationId ++ "/activate")
         |> RemoteData.sendRequest
         |> Cmd.map ActivateLocationResponse
 
@@ -342,13 +342,13 @@ getScheduledTasks =
 
 executeScheduledTask : Int -> Cmd Msg
 executeScheduledTask taskId =
-    emptyPut ("/scheduled_tasks/" ++ String.fromInt taskId ++ "/execute")
+    putNoBodyNoContent ("/scheduled_tasks/" ++ String.fromInt taskId ++ "/execute")
         |> RemoteData.sendRequest
         |> Cmd.map ExecuteScheduledTaskResponse
 
 
-emptyPut : String -> Http.Request ()
-emptyPut url =
+putNoBodyNoContent : String -> Http.Request ()
+putNoBodyNoContent url =
     Http.request
         { method = "PUT"
         , headers = []
@@ -360,8 +360,8 @@ emptyPut url =
         }
 
 
-noContentPut : String -> Http.Body -> Http.Request ()
-noContentPut url httpBody =
+putNoContent : String -> Http.Body -> Http.Request ()
+putNoContent url httpBody =
     Http.request
         { method = "PUT"
         , headers = []
