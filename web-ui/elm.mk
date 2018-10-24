@@ -85,13 +85,11 @@ APPLICATION_TARGETS := index.html \
 	$(ELM_SRC) \
 	$(ELM_SRC)/Main.elm \
 	boot.js \
-	service-worker.js \
 	$(SCSS_SRC)/main.scss
 
 BUILD_TARGETS := $(BUILD) \
 	$(BUILD)/main.js \
 	$(BUILD)/boot.js \
-	$(BUILD)/service-worker.js \
 	$(BUILD)/main.css \
 	$(BUILD)/index.html
 
@@ -99,7 +97,6 @@ DIST_TARGETS := $(UGLIFYJS) \
 	$(DIST) \
 	$(DIST)/main.min.js \
 	$(DIST)/boot.js \
-	$(DIST)/service-worker.js \
 	$(DIST)/main.css \
 	$(DIST)/index.html
 
@@ -192,9 +189,6 @@ $(ELM_SRC)/Main.elm:
 boot.js:
 	$(call lazy_tpl,"$$boot_js")
 
-service-worker.js:
-	$(call lazy_tpl,"$$service_worker_js")
-
 $(SCSS_SRC):
 	mkdir -p $@
 
@@ -207,15 +201,12 @@ $(BUILD):
 	mkdir -p $@
 
 $(BUILD)/index.html: index.html $(MO)
-	main_js=/main.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js gmaps_api_key=$(GOOGLE_MAPS_API_KEY) $(MO) index.html > $@
+	main_js=/main.js boot_js=/boot.js main_css=/main.css gmaps_api_key=$(GOOGLE_MAPS_API_KEY) $(MO) index.html > $@
 
 $(BUILD)/main.js: $(ELM_SRC)/Main.elm $(ELM_SRC_FILES) $(ELM)
 	$(ELM) make $(ELM_SRC)/Main.elm --debug --output $@
 
 $(BUILD)/boot.js: boot.js
-	cp $< $@
-
-$(BUILD)/service-worker.js: service-worker.js
 	cp $< $@
 
 $(BUILD)/main.css: $(SCSS_SRC)/main.scss $(SCSS_SRC_FILES) $(WT)
@@ -230,7 +221,7 @@ $(DIST):
 	mkdir -p $@
 
 $(DIST)/index.html: index.html $(MO)
-	main_js=/main.min.js boot_js=/boot.js main_css=/main.css service_worker_js=/service-worker.js gmaps_api_key=$(GOOGLE_MAPS_API_KEY) $(MO) index.html > $@
+	main_js=/main.min.js boot_js=/boot.js main_css=/main.css gmaps_api_key=$(GOOGLE_MAPS_API_KEY) $(MO) index.html > $@
 
 $(DIST)/main.min.js: $(UGLIFYJS) $(DIST)/main.js
 	$(UGLIFYJS) $(DIST)/main.js --compress $(UGLIFYJS_COMPRESS_OPTIONS) | $(UGLIFYJS) --mangle --output=$@
@@ -239,9 +230,6 @@ $(DIST)/main.js: $(ELM_SRC)/Main.elm $(ELM_SRC_FILES) $(ELM)
 	$(ELM) make $(ELM_SRC)/Main.elm --optimize --output $@
 
 $(DIST)/boot.js: boot.js
-	cp $< $@
-
-$(DIST)/service-worker.js: service-worker.js
 	cp $< $@
 
 $(DIST)/main.css: $(SCSS_SRC)/main.scss $(SCSS_SRC_FILES) $(WT)
@@ -312,9 +300,6 @@ define index_html
 </body>
 <script type="text/javascript" src="{{main_js}}"></script>
 <script type="text/javascript" src="{{boot_js}}"></script>
-<script>
-  if (navigator.serviceWorker && !navigator.serviceWorker.controller) { navigator.serviceWorker.register('{{service_worker_js}}'); }
-</script>
 </html>
 endef
 export index_html
@@ -392,44 +377,6 @@ body {
 }
 endef
 export main_scss
-
-define service_worker_js
-// Taken from: https://adactio.com/journal/13540
-//
-// HTML files: try the network first, then the cache.
-// Other files: try the cache first, then the network.
-// Both: cache a fresh version if possible.
-// (beware: the cache will grow and grow; there's no cleanup)
-
-const cacheName = 'v1.files';
-
-addEventListener('fetch',  fetchEvent => {
-  const request = fetchEvent.request;
-  if (request.method !== 'GET') {
-    return;
-  }
-  fetchEvent.respondWith(async function() {
-    const responseFromFetch = fetch(request);
-    fetchEvent.waitUntil(async function() {
-      const responseCopy = (await responseFromFetch).clone();
-      const myCache = await caches.open(cacheName);
-      await myCache.put(request, responseCopy);
-    }());
-    if (request.headers.get('Accept').includes('text/html')) {
-      try {
-        return await responseFromFetch;
-      }
-      catch(error) {
-        return caches.match(request);
-      }
-    } else {
-      const responseFromCache = await caches.match(request);
-      return responseFromCache || responseFromFetch;
-    }
-  }());
-});
-endef
-export service_worker_js
 
 define modd_config
 {{elm_src}}/**/*.elm {
