@@ -12,6 +12,16 @@ type Icon
     | Activate
 
 
+titleBar : String -> Html msg
+titleBar title =
+    nav [ attribute "aria-label" "main navigation", class "navbar", attribute "role" "navigation" ]
+        [ div [ class "navbar-brand" ]
+            [ h1 [ class "navbar-item subtitle" ]
+                [ text title ]
+            ]
+        ]
+
+
 actionButton : Icon -> msg -> Html msg
 actionButton icon msg =
     a

@@ -390,17 +390,6 @@ delete url =
 -- VIEWS
 
 
-titleBar : Html Msg
-titleBar =
-    nav [ attribute "aria-label" "main navigation", class "navbar", attribute "role" "navigation" ]
-        [ div [ class "navbar-brand" ]
-            [ h1 [ class "navbar-item subtitle" ]
-                [ text "Ada Control Center"
-                ]
-            ]
-        ]
-
-
 usersSection : WebData Users -> Html Msg
 usersSection users =
     let
@@ -802,7 +791,7 @@ editingModal model =
 body : Model -> List (Html Msg)
 body model =
     [ div []
-        [ titleBar
+        [ Bulma.titleBar "Ada Control Center"
         , div [ class "columns" ]
             [ scheduledTasksSection model.scheduledTasks model.runningTask
             , locationsSection model.locations model.gmapsApiKey
