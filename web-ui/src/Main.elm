@@ -580,43 +580,16 @@ scheduledTasksSection scheduledTasks runningTask =
         formatParam param =
             case param of
                 UserId id ->
-                    div [ class "control" ]
-                        [ div [ class "tags has-addons" ]
-                            [ span [ class "tag" ]
-                                [ text "user"
-                                ]
-                            , span [ class "tag" ] [ text <| String.fromInt id ]
-                            ]
-                        ]
+                    Bulma.tagWithAddons "user" (String.fromInt id)
 
                 LocationId id ->
-                    div [ class "control" ]
-                        [ div [ class "tags has-addons" ]
-                            [ span [ class "tag" ]
-                                [ text "location"
-                                ]
-                            , span [ class "tag" ] [ text <| String.fromInt id ]
-                            ]
-                        ]
+                    Bulma.tagWithAddons "location" (String.fromInt id)
 
                 NewsTag tag ->
-                    div [ class "control" ]
-                        [ div [ class "tags has-addons" ]
-                            [ span [ class "tag" ]
-                                [ text "news tag"
-                                ]
-                            , span [ class "tag" ] [ text tag ]
-                            ]
-                        ]
+                    Bulma.tagWithAddons "news tag" tag
 
                 UnsupportedParam ->
-                    div [ class "control" ]
-                        [ div [ class "tags" ]
-                            [ span [ class "tag" ]
-                                [ text "unsupported"
-                                ]
-                            ]
-                        ]
+                    Bulma.tag "unsupported"
 
         scheduledTaskRow scheduledTask =
             let

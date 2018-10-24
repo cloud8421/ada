@@ -82,3 +82,24 @@ block blockTitle newMsg contents =
                 ]
             ]
         ]
+
+
+tagWithAddons : String -> String -> Html msg
+tagWithAddons name value =
+    div [ class "control" ]
+        [ div [ class "tags has-addons" ]
+            [ span [ class "tag" ]
+                [ text name ]
+            , span [ class "tag" ] [ text value ]
+            ]
+        ]
+
+
+tag : String -> Html msg
+tag name =
+    div [ class "control" ]
+        [ div [ class "tags" ]
+            [ span [ class "tag" ]
+                [ text name ]
+            ]
+        ]
