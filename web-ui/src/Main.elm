@@ -831,7 +831,7 @@ editingModalForm editForm =
                 ]
 
         otherwise ->
-            Debug.todo "Not implemented yet"
+            div [] [ text "Not implemented yet" ]
 
 
 editingModal : Model -> Html Msg
