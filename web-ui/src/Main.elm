@@ -662,7 +662,10 @@ scheduledTasksSection scheduledTasks runningTask =
             tr []
                 [ td [] [ text <| String.fromInt scheduledTask.id ]
                 , td [] [ text scheduledTask.workflowHumanName ]
-                , td [ class "field is-grouped is-grouped-multiline" ] (List.map formatParam scheduledTask.params)
+                , td [ class "field is-grouped is-grouped-multiline" ]
+                    [ div [ class "field is-grouped is-grouped-multiline" ]
+                        (List.map formatParam scheduledTask.params)
+                    ]
                 , td [] [ text <| formatFrequency scheduledTask.frequency ]
                 , td
                     [ class "actions" ]
