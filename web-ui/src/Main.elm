@@ -172,6 +172,17 @@ updateUser user =
         |> Cmd.map UpdateUserResponse
 
 
+deleteUser : UserId -> Cmd Msg
+deleteUser userId =
+    let
+        url =
+            "/users/" ++ String.fromInt userId
+    in
+    delete url
+        |> RemoteData.sendRequest
+        |> Cmd.map (DeleteUserResponse userId)
+
+
 
 -- API - LOCATIONS
 
@@ -361,6 +372,19 @@ noContentPut url httpBody =
         }
 
 
+delete : String -> Http.Request ()
+delete url =
+    Http.request
+        { method = "DELETE"
+        , headers = []
+        , url = url
+        , body = Http.jsonBody (JE.string "")
+        , expect = Http.expectStringResponse (\_ -> Ok ())
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
 
 -- VIEWS
 
@@ -442,7 +466,11 @@ usersSection users =
                         , onClick (OpenEditingModalEditUser user)
                         ]
                         [ iconButton Edit ]
-                    , a [ class "button is-small is-danger" ] [ iconButton Delete ]
+                    , a
+                        [ class "button is-small is-danger"
+                        , onClick (DeleteUser user.id)
+                        ]
+                        [ iconButton Delete ]
                     ]
                 ]
 
@@ -966,8 +994,10 @@ type Msg
     | UpdateUserName String
     | UpdateUserEmail String
     | SaveUser
+    | DeleteUser UserId
     | CreateUserResponse (WebData User)
     | UpdateUserResponse (WebData ())
+    | DeleteUserResponse UserId (WebData ())
 
 
 type alias Model =
@@ -1084,6 +1114,9 @@ update msg model =
         SaveUser ->
             ( model, saveUser model.editForm )
 
+        DeleteUser userId ->
+            ( model, deleteUser userId )
+
         CreateUserResponse _ ->
             ( { model | editForm = Closed }, getUsers )
 
@@ -1094,6 +1127,16 @@ update msg model =
                         | users = RemoteData.map (Dict.insert user.id user) model.users
                         , editForm = Closed
                       }
+                    , Cmd.none
+                    )
+
+                otherwise ->
+                    ( model, Cmd.none )
+
+        DeleteUserResponse userId response ->
+            case response of
+                Success () ->
+                    ( { model | users = RemoteData.map (Dict.remove userId) model.users }
                     , Cmd.none
                     )
 
