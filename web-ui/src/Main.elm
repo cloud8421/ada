@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Browser exposing (Document)
+import Bulma as Bulma
 import Dict as Dict
 import Html exposing (..)
 import Html.Attributes exposing (attribute, class, classList, href, placeholder, src, type_, value)
@@ -389,57 +390,6 @@ delete url =
 -- VIEWS
 
 
-type Icon
-    = Edit
-    | Delete
-    | Run
-    | Activate
-
-
-iconButton : Icon -> Html Msg
-iconButton icon =
-    let
-        iconClass =
-            case icon of
-                Edit ->
-                    "fa-edit"
-
-                Delete ->
-                    "fa-trash"
-
-                Run ->
-                    "fa-play"
-
-                Activate ->
-                    "fa-check"
-    in
-    span [ class "icon is-small" ]
-        [ i [ class ("fas " ++ iconClass) ]
-            []
-        ]
-
-
-block : String -> Msg -> Html Msg -> Html Msg
-block blockTitle newMsg contents =
-    section [ class "section column is-6" ]
-        [ div [ class "panel" ]
-            [ div [ class "panel-heading" ]
-                [ text blockTitle
-                ]
-            , div [ class "panel-block" ]
-                [ contents
-                ]
-            , div [ class "panel-block" ]
-                [ button
-                    [ class "button is-link"
-                    , onClick newMsg
-                    ]
-                    [ text "Add New" ]
-                ]
-            ]
-        ]
-
-
 titleBar : Html Msg
 titleBar =
     nav [ attribute "aria-label" "main navigation", class "navbar", attribute "role" "navigation" ]
@@ -465,12 +415,12 @@ usersSection users =
                         [ class "button is-small is-link"
                         , onClick (OpenEditingModalEditUser user)
                         ]
-                        [ iconButton Edit ]
+                        [ Bulma.iconButton Bulma.Edit ]
                     , a
                         [ class "button is-small is-danger"
                         , onClick (DeleteUser user.id)
                         ]
-                        [ iconButton Delete ]
+                        [ Bulma.iconButton Bulma.Delete ]
                     ]
                 ]
 
@@ -498,7 +448,7 @@ usersSection users =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    block "Users" OpenEditingModalNewUser contentArea
+    Bulma.block "Users" OpenEditingModalNewUser contentArea
 
 
 gMap : Coords -> String -> Html Msg
@@ -554,9 +504,9 @@ locationsSection locations gmapsApiKey =
                          ]
                             ++ disabledAttr
                         )
-                        [ iconButton Activate ]
-                    , a [ class "button is-small is-link" ] [ iconButton Edit ]
-                    , a [ class "button is-small is-danger" ] [ iconButton Delete ]
+                        [ Bulma.iconButton Bulma.Activate ]
+                    , a [ class "button is-small is-link" ] [ Bulma.iconButton Bulma.Edit ]
+                    , a [ class "button is-small is-danger" ] [ Bulma.iconButton Bulma.Delete ]
                     ]
                 ]
 
@@ -585,7 +535,7 @@ locationsSection locations gmapsApiKey =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    block "Locations" OpenEditingModalNewUser contentArea
+    Bulma.block "Locations" OpenEditingModalNewUser contentArea
 
 
 workflowsSection : WebData (List Workflow) -> Html Msg
@@ -638,7 +588,7 @@ workflowsSection workflows =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    block "Workflows" OpenEditingModalNewUser contentArea
+    Bulma.block "Workflows" OpenEditingModalNewUser contentArea
 
 
 formatFrequency : Frequency -> String
@@ -720,9 +670,9 @@ scheduledTasksSection scheduledTasks runningTask =
                         [ classList runClassList
                         , onClick (ExecuteScheduledTask scheduledTask.id)
                         ]
-                        [ iconButton Run ]
-                    , a [ class "button is-small is-link" ] [ iconButton Edit ]
-                    , a [ class "button is-small is-danger" ] [ iconButton Delete ]
+                        [ Bulma.iconButton Bulma.Run ]
+                    , a [ class "button is-small is-link" ] [ Bulma.iconButton Bulma.Edit ]
+                    , a [ class "button is-small is-danger" ] [ Bulma.iconButton Bulma.Delete ]
                     ]
                 ]
 
@@ -751,7 +701,7 @@ scheduledTasksSection scheduledTasks runningTask =
                 Failure reason ->
                     h2 [] [ text "Some error" ]
     in
-    block "Scheduled Tasks" OpenEditingModalNewUser contentArea
+    Bulma.block "Scheduled Tasks" OpenEditingModalNewUser contentArea
 
 
 editingModalForm : EditForm -> Html Msg
