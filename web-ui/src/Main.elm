@@ -28,11 +28,19 @@ type alias Coords =
     ( Lat, Lng )
 
 
+type alias UserId =
+    Int
+
+
 type alias User =
-    { id : Int
+    { id : UserId
     , name : String
     , email : String
     }
+
+
+type alias Users =
+    Dict.Dict UserId User
 
 
 type alias Location =
@@ -122,8 +130,14 @@ decodeUsers =
 
 getUsers : Cmd Msg
 getUsers =
+    let
+        listToDict items =
+            List.map (\i -> ( i.id, i )) items
+                |> Dict.fromList
+    in
     Http.get "/users" decodeUsers
         |> RemoteData.sendRequest
+        |> Cmd.map (RemoteData.map listToDict)
         |> Cmd.map UsersResponse
 
 
@@ -139,6 +153,23 @@ createUser userParams =
     Http.post "/users" (Http.jsonBody encoded) decodeUser
         |> RemoteData.sendRequest
         |> Cmd.map CreateUserResponse
+
+
+updateUser : User -> Cmd Msg
+updateUser user =
+    let
+        encoded =
+            JE.object
+                [ ( "name", JE.string user.name )
+                , ( "email", JE.string user.email )
+                ]
+
+        url =
+            "/users/" ++ String.fromInt user.id
+    in
+    noContentPut url (Http.jsonBody encoded)
+        |> RemoteData.sendRequest
+        |> Cmd.map UpdateUserResponse
 
 
 
@@ -317,6 +348,19 @@ emptyPut url =
         }
 
 
+noContentPut : String -> Http.Body -> Http.Request ()
+noContentPut url httpBody =
+    Http.request
+        { method = "PUT"
+        , headers = []
+        , url = url
+        , body = httpBody
+        , expect = Http.expectStringResponse (\_ -> Ok ())
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
 
 -- VIEWS
 
@@ -383,7 +427,7 @@ titleBar =
         ]
 
 
-usersSection : WebData (List User) -> Html Msg
+usersSection : WebData Users -> Html Msg
 usersSection users =
     let
         userRow user =
@@ -393,7 +437,11 @@ usersSection users =
                 , td [] [ text user.email ]
                 , td
                     [ class "actions" ]
-                    [ a [ class "button is-small is-link" ] [ iconButton Edit ]
+                    [ a
+                        [ class "button is-small is-link"
+                        , onClick (OpenEditingModalEditUser user)
+                        ]
+                        [ iconButton Edit ]
                     , a [ class "button is-small is-danger" ] [ iconButton Delete ]
                     ]
                 ]
@@ -416,7 +464,7 @@ usersSection users =
                                 , th [] [ text "Actions" ]
                                 ]
                             ]
-                        , tbody [] (List.map userRow items)
+                        , tbody [] (List.map userRow (Dict.values items))
                         ]
 
                 Failure reason ->
@@ -744,6 +792,66 @@ editingModalForm editForm =
                     ]
                 ]
 
+        EditUser user ->
+            form []
+                [ h1 [ class "title" ] [ text "Edit User" ]
+                , div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Name" ]
+                    , div [ class "control" ]
+                        [ input
+                            [ class "input"
+                            , placeholder "User name"
+                            , type_ "text"
+                            , value user.name
+                            , onInput UpdateUserName
+                            ]
+                            []
+                        ]
+                    ]
+                , div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Email" ]
+                    , div [ class "control has-icons-left has-icons-right" ]
+                        [ input
+                            [ class "input"
+                            , placeholder "Email input"
+                            , type_ "email"
+                            , value user.email
+                            , onInput UpdateUserEmail
+                            ]
+                            []
+                        , span [ class "icon is-small is-left" ]
+                            [ i [ class "fas fa-envelope" ]
+                                []
+                            ]
+                        ]
+                    ]
+                , div
+                    [ class "field is-grouped" ]
+                    [ div [ class "control" ]
+                        [ input
+                            [ class "button is-link"
+                            , type_ "button"
+                            , value "Submit"
+                            , onClick SaveUser
+                            ]
+                            []
+                        ]
+                    , div
+                        [ class "control"
+                        ]
+                        [ input
+                            [ class "button is-text"
+                            , type_ "button"
+                            , value "Cancel"
+                            , onClick CloseEditingModal
+                            ]
+                            []
+                        ]
+                    ]
+                ]
+
         otherwise ->
             Debug.todo "Not implemented yet"
 
@@ -827,6 +935,9 @@ saveUser editForm =
         NewUser userParams ->
             createUser userParams
 
+        EditUser user ->
+            updateUser user
+
         otherwise ->
             Cmd.none
 
@@ -843,7 +954,7 @@ type Msg
     = NoOp
     | ExecuteScheduledTask Int
     | ActivateLocation Int
-    | UsersResponse (WebData (List User))
+    | UsersResponse (WebData Users)
     | LocationsResponse (WebData (List Location))
     | WorkflowsResponse (WebData (List Workflow))
     | ScheduledTasksResponse (WebData (List ScheduledTask))
@@ -851,15 +962,17 @@ type Msg
     | ActivateLocationResponse (WebData ())
     | CloseEditingModal
     | OpenEditingModalNewUser
+    | OpenEditingModalEditUser User
     | UpdateUserName String
     | UpdateUserEmail String
     | SaveUser
     | CreateUserResponse (WebData User)
+    | UpdateUserResponse (WebData ())
 
 
 type alias Model =
     { gmapsApiKey : String
-    , users : WebData (List User)
+    , users : WebData (Dict.Dict Int User)
     , locations : WebData (List Location)
     , workflows : WebData (List Workflow)
     , scheduledTasks : WebData (List ScheduledTask)
@@ -935,6 +1048,9 @@ update msg model =
         OpenEditingModalNewUser ->
             ( { model | editForm = NewUser { name = "e.g. Ada", email = "e.g. ada@example.com" } }, Cmd.none )
 
+        OpenEditingModalEditUser user ->
+            ( { model | editForm = EditUser user }, Cmd.none )
+
         UpdateUserName newName ->
             let
                 newEditForm =
@@ -970,6 +1086,19 @@ update msg model =
 
         CreateUserResponse _ ->
             ( { model | editForm = Closed }, getUsers )
+
+        UpdateUserResponse _ ->
+            case model.editForm of
+                EditUser user ->
+                    ( { model
+                        | users = RemoteData.map (Dict.insert user.id user) model.users
+                        , editForm = Closed
+                      }
+                    , Cmd.none
+                    )
+
+                otherwise ->
+                    ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
