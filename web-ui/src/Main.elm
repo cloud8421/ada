@@ -417,7 +417,7 @@ usersSection users =
                 , td
                     [ class "actions" ]
                     [ Bulma.actionButton Bulma.Edit (OpenEditingModalEditUser user)
-                    , Bulma.actionButton Bulma.Delete (DeleteUser user.id)
+                    , Bulma.dangerActionButton Bulma.Delete (DeleteUser user.id)
                     ]
                 ]
 

@@ -22,6 +22,15 @@ titleBar title =
         ]
 
 
+dangerActionButton : Icon -> msg -> Html msg
+dangerActionButton icon msg =
+    a
+        [ class "button is-small is-danger"
+        , onClick msg
+        ]
+        [ iconButton icon ]
+
+
 actionButton : Icon -> msg -> Html msg
 actionButton icon msg =
     a
