@@ -390,6 +390,22 @@ delete url =
 -- VIEWS
 
 
+webDataTable : WebData items -> (items -> Html Msg) -> Html Msg
+webDataTable webData successContent =
+    case webData of
+        NotAsked ->
+            h2 [] [ text "Resource not loaded" ]
+
+        Loading ->
+            h2 [] [ text "Resource loading" ]
+
+        Success items ->
+            successContent items
+
+        Failure _ ->
+            h2 [] [ text "Resource failed to load" ]
+
+
 usersSection : WebData Users -> Html Msg
 usersSection users =
     let
@@ -405,31 +421,20 @@ usersSection users =
                     ]
                 ]
 
-        contentArea =
-            case users of
-                NotAsked ->
-                    h2 [] [ text "Users not loaded" ]
-
-                Loading ->
-                    h2 [] [ text "Users loading" ]
-
-                Success items ->
-                    table [ class "table is-fullwidth" ]
-                        [ thead []
-                            [ tr []
-                                [ th [] [ text "ID" ]
-                                , th [] [ text "Name" ]
-                                , th [] [ text "Email" ]
-                                , th [] [ text "Actions" ]
-                                ]
-                            ]
-                        , tbody [] (List.map userRow (Dict.values items))
+        contentArea items =
+            table [ class "table is-fullwidth" ]
+                [ thead []
+                    [ tr []
+                        [ th [] [ text "ID" ]
+                        , th [] [ text "Name" ]
+                        , th [] [ text "Email" ]
+                        , th [] [ text "Actions" ]
                         ]
-
-                Failure reason ->
-                    h2 [] [ text "Some error" ]
+                    ]
+                , tbody [] (List.map userRow (Dict.values items))
+                ]
     in
-    Bulma.block "Users" OpenEditingModalNewUser contentArea
+    Bulma.block "Users" OpenEditingModalNewUser (webDataTable users contentArea)
 
 
 gMap : Coords -> String -> Html Msg
@@ -491,32 +496,21 @@ locationsSection locations gmapsApiKey =
                     ]
                 ]
 
-        contentArea =
-            case locations of
-                NotAsked ->
-                    h2 [] [ text "locations not loaded" ]
-
-                Loading ->
-                    h2 [] [ text "locations loading" ]
-
-                Success items ->
-                    table [ class "table is-fullwidth" ]
-                        [ thead []
-                            [ tr []
-                                [ th [] [ text "ID" ]
-                                , th [] [ text "Name" ]
-                                , th [] [ text "Status" ]
-                                , th [] [ text "Coordinates" ]
-                                , th [] [ text "Actions" ]
-                                ]
-                            ]
-                        , tbody [] (List.map locationRow items)
+        contentArea items =
+            table [ class "table is-fullwidth" ]
+                [ thead []
+                    [ tr []
+                        [ th [] [ text "ID" ]
+                        , th [] [ text "Name" ]
+                        , th [] [ text "Status" ]
+                        , th [] [ text "Coordinates" ]
+                        , th [] [ text "Actions" ]
                         ]
-
-                Failure reason ->
-                    h2 [] [ text "Some error" ]
+                    ]
+                , tbody [] (List.map locationRow items)
+                ]
     in
-    Bulma.block "Locations" OpenEditingModalNewUser contentArea
+    Bulma.block "Locations" OpenEditingModalNewUser (webDataTable locations contentArea)
 
 
 workflowsSection : WebData (List Workflow) -> Html Msg
@@ -547,29 +541,18 @@ workflowsSection workflows =
                 , td [] [ text <| requirementsLabel workflow.requirements ]
                 ]
 
-        contentArea =
-            case workflows of
-                NotAsked ->
-                    h2 [] [ text "workflows not loaded" ]
-
-                Loading ->
-                    h2 [] [ text "workflows loading" ]
-
-                Success items ->
-                    table [ class "table is-fullwidth" ]
-                        [ thead []
-                            [ tr []
-                                [ th [] [ text "Name" ]
-                                , th [] [ text "Requirements" ]
-                                ]
-                            ]
-                        , tbody [] (List.map workflowRow items)
+        contentArea items =
+            table [ class "table is-fullwidth" ]
+                [ thead []
+                    [ tr []
+                        [ th [] [ text "Name" ]
+                        , th [] [ text "Requirements" ]
                         ]
-
-                Failure reason ->
-                    h2 [] [ text "Some error" ]
+                    ]
+                , tbody [] (List.map workflowRow items)
+                ]
     in
-    Bulma.block "Workflows" OpenEditingModalNewUser contentArea
+    Bulma.block "Workflows" OpenEditingModalNewUser (webDataTable workflows contentArea)
 
 
 formatFrequency : Frequency -> String
@@ -660,32 +643,21 @@ scheduledTasksSection scheduledTasks runningTask =
                     ]
                 ]
 
-        contentArea =
-            case scheduledTasks of
-                NotAsked ->
-                    h2 [] [ text "scheduledTasks not loaded" ]
-
-                Loading ->
-                    h2 [] [ text "scheduledTasks loading" ]
-
-                Success items ->
-                    table [ class "table is-fullwidth" ]
-                        [ thead []
-                            [ tr []
-                                [ th [] [ text "ID" ]
-                                , th [] [ text "Workflow Name" ]
-                                , th [] [ text "Params" ]
-                                , th [] [ text "Frequency" ]
-                                , th [] [ text "Actions" ]
-                                ]
-                            ]
-                        , tbody [] (List.map scheduledTaskRow items)
+        contentArea items =
+            table [ class "table is-fullwidth" ]
+                [ thead []
+                    [ tr []
+                        [ th [] [ text "ID" ]
+                        , th [] [ text "Workflow Name" ]
+                        , th [] [ text "Params" ]
+                        , th [] [ text "Frequency" ]
+                        , th [] [ text "Actions" ]
                         ]
-
-                Failure reason ->
-                    h2 [] [ text "Some error" ]
+                    ]
+                , tbody [] (List.map scheduledTaskRow items)
+                ]
     in
-    Bulma.block "Scheduled Tasks" OpenEditingModalNewUser contentArea
+    Bulma.block "Scheduled Tasks" OpenEditingModalNewUser (webDataTable scheduledTasks contentArea)
 
 
 editingModalForm : EditForm -> Html Msg
