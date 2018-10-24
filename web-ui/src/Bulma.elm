@@ -12,6 +12,15 @@ type Icon
     | Activate
 
 
+actionButton : Icon -> msg -> Html msg
+actionButton icon msg =
+    a
+        [ class "button is-small is-link"
+        , onClick msg
+        ]
+        [ iconButton icon ]
+
+
 iconButton : Icon -> Html msg
 iconButton icon =
     let

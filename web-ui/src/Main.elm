@@ -411,16 +411,8 @@ usersSection users =
                 , td [] [ text user.email ]
                 , td
                     [ class "actions" ]
-                    [ a
-                        [ class "button is-small is-link"
-                        , onClick (OpenEditingModalEditUser user)
-                        ]
-                        [ Bulma.iconButton Bulma.Edit ]
-                    , a
-                        [ class "button is-small is-danger"
-                        , onClick (DeleteUser user.id)
-                        ]
-                        [ Bulma.iconButton Bulma.Delete ]
+                    [ Bulma.actionButton Bulma.Edit (OpenEditingModalEditUser user)
+                    , Bulma.actionButton Bulma.Delete (DeleteUser user.id)
                     ]
                 ]
 
