@@ -706,129 +706,76 @@ scheduledTasksSection scheduledTasks runningTask =
 
 editingModalForm : EditForm -> Html Msg
 editingModalForm editForm =
+    let
+        userForm title resource =
+            form []
+                [ h1 [ class "title" ] [ text title ]
+                , div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Name" ]
+                    , div [ class "control" ]
+                        [ input
+                            [ class "input"
+                            , placeholder "User name"
+                            , type_ "text"
+                            , value resource.name
+                            , onInput UpdateUserName
+                            ]
+                            []
+                        ]
+                    ]
+                , div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Email" ]
+                    , div [ class "control has-icons-left has-icons-right" ]
+                        [ input
+                            [ class "input"
+                            , placeholder "Email input"
+                            , type_ "email"
+                            , value resource.email
+                            , onInput UpdateUserEmail
+                            ]
+                            []
+                        , span [ class "icon is-small is-left" ]
+                            [ i [ class "fas fa-envelope" ]
+                                []
+                            ]
+                        ]
+                    ]
+                , div
+                    [ class "field is-grouped" ]
+                    [ div [ class "control" ]
+                        [ input
+                            [ class "button is-link"
+                            , type_ "button"
+                            , value "Submit"
+                            , onClick SaveUser
+                            ]
+                            []
+                        ]
+                    , div
+                        [ class "control"
+                        ]
+                        [ input
+                            [ class "button is-text"
+                            , type_ "button"
+                            , value "Cancel"
+                            , onClick CloseEditingModal
+                            ]
+                            []
+                        ]
+                    ]
+                ]
+    in
     case editForm of
         Closed ->
             text "Nothing to see here"
 
         NewUser userParams ->
-            form []
-                [ h1 [ class "title" ] [ text "New User" ]
-                , div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Name" ]
-                    , div [ class "control" ]
-                        [ input
-                            [ class "input"
-                            , placeholder "User name"
-                            , type_ "text"
-                            , value userParams.name
-                            , onInput UpdateUserName
-                            ]
-                            []
-                        ]
-                    ]
-                , div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Email" ]
-                    , div [ class "control has-icons-left has-icons-right" ]
-                        [ input
-                            [ class "input"
-                            , placeholder "Email input"
-                            , type_ "email"
-                            , value userParams.email
-                            , onInput UpdateUserEmail
-                            ]
-                            []
-                        , span [ class "icon is-small is-left" ]
-                            [ i [ class "fas fa-envelope" ]
-                                []
-                            ]
-                        ]
-                    ]
-                , div
-                    [ class "field is-grouped" ]
-                    [ div [ class "control" ]
-                        [ input
-                            [ class "button is-link"
-                            , type_ "button"
-                            , value "Submit"
-                            , onClick SaveUser
-                            ]
-                            []
-                        ]
-                    , div
-                        [ class "control"
-                        ]
-                        [ input
-                            [ class "button is-text"
-                            , type_ "button"
-                            , value "Cancel"
-                            , onClick CloseEditingModal
-                            ]
-                            []
-                        ]
-                    ]
-                ]
+            userForm "New User" userParams
 
         EditUser user ->
-            form []
-                [ h1 [ class "title" ] [ text "Edit User" ]
-                , div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Name" ]
-                    , div [ class "control" ]
-                        [ input
-                            [ class "input"
-                            , placeholder "User name"
-                            , type_ "text"
-                            , value user.name
-                            , onInput UpdateUserName
-                            ]
-                            []
-                        ]
-                    ]
-                , div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Email" ]
-                    , div [ class "control has-icons-left has-icons-right" ]
-                        [ input
-                            [ class "input"
-                            , placeholder "Email input"
-                            , type_ "email"
-                            , value user.email
-                            , onInput UpdateUserEmail
-                            ]
-                            []
-                        , span [ class "icon is-small is-left" ]
-                            [ i [ class "fas fa-envelope" ]
-                                []
-                            ]
-                        ]
-                    ]
-                , div
-                    [ class "field is-grouped" ]
-                    [ div [ class "control" ]
-                        [ input
-                            [ class "button is-link"
-                            , type_ "button"
-                            , value "Submit"
-                            , onClick SaveUser
-                            ]
-                            []
-                        ]
-                    , div
-                        [ class "control"
-                        ]
-                        [ input
-                            [ class "button is-text"
-                            , type_ "button"
-                            , value "Cancel"
-                            , onClick CloseEditingModal
-                            ]
-                            []
-                        ]
-                    ]
-                ]
+            userForm "Edit User" user
 
         otherwise ->
             div [] [ text "Not implemented yet" ]
