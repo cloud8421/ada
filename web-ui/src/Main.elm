@@ -14,6 +14,7 @@ import Platform.Sub as Sub
 import RemoteData exposing (..)
 
 
+
 -- RESOURCE TYPES
 
 
@@ -482,6 +483,7 @@ locationsSection locations gmapsApiKey =
         activeLabel active =
             if active then
                 "active"
+
             else
                 "inactive"
 
@@ -490,6 +492,7 @@ locationsSection locations gmapsApiKey =
                 disabledAttr =
                     if location.active then
                         [ attribute "disabled" "disabled" ]
+
                     else
                         []
             in

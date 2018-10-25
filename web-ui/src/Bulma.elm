@@ -1,4 +1,4 @@
-module Bulma exposing (..)
+module Bulma exposing (Icon(..), actionButton, block, dangerActionButton, iconButton, tableHead, tag, tagWithAddons, titleBar)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
