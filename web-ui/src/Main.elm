@@ -800,8 +800,8 @@ type Msg
 
 type alias Model =
     { gmapsApiKey : String
-    , users : WebData (Dict.Dict Int User)
     , locations : WebData (List Location)
+    , users : WebData Users
     , workflows : WebData (List Workflow)
     , scheduledTasks : WebData (List ScheduledTask)
     , runningTask : Maybe Int
