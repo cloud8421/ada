@@ -111,13 +111,21 @@ type alias Workflow =
 -- SCHEDULED TASKS
 
 
+type alias ScheduledTaskId =
+    Int
+
+
 type alias ScheduledTask =
-    { id : Int
+    { id : ScheduledTaskId
     , frequency : Frequency
     , workflowName : String
     , workflowHumanName : String
     , params : List WorkflowParam
     }
+
+
+type alias ScheduledTasks =
+    Dict.Dict ScheduledTaskId ScheduledTask
 
 
 
@@ -350,6 +358,7 @@ getScheduledTasks : Cmd Msg
 getScheduledTasks =
     Http.get "/scheduled_tasks" decodeScheduledTasks
         |> RemoteData.sendRequest
+        |> Cmd.map (RemoteData.map collectionToDict)
         |> Cmd.map ScheduledTasksResponse
 
 
@@ -567,7 +576,7 @@ formatFrequency frequency =
             "Frequency not supported"
 
 
-scheduledTasksSection : WebData (List ScheduledTask) -> Maybe Int -> Html Msg
+scheduledTasksSection : WebData ScheduledTasks -> Maybe Int -> Html Msg
 scheduledTasksSection scheduledTasks runningTask =
     let
         formatParam param =
@@ -612,7 +621,7 @@ scheduledTasksSection scheduledTasks runningTask =
         contentArea items =
             table [ class "table is-fullwidth" ]
                 [ Bulma.tableHead [ "ID", "Workflow Name", "Params", "Frequency", "Actions" ]
-                , tbody [] (List.map scheduledTaskRow items)
+                , tbody [] (List.map scheduledTaskRow (Dict.values items))
                 ]
     in
     Bulma.block "Scheduled Tasks" OpenEditingModalNewUser (webDataTable scheduledTasks contentArea)
@@ -796,7 +805,7 @@ type Msg
     | UsersResponse (WebData Users)
     | LocationsResponse (WebData Locations)
     | WorkflowsResponse (WebData (List Workflow))
-    | ScheduledTasksResponse (WebData (List ScheduledTask))
+    | ScheduledTasksResponse (WebData ScheduledTasks)
     | ExecuteScheduledTaskResponse (WebData ())
     | ActivateLocationResponse (WebData ())
     | CloseEditingModal
@@ -816,7 +825,7 @@ type alias Model =
     , users : WebData Users
     , locations : WebData Locations
     , workflows : WebData (List Workflow)
-    , scheduledTasks : WebData (List ScheduledTask)
+    , scheduledTasks : WebData ScheduledTasks
     , runningTask : Maybe Int
     , editForm : EditForm
     }
