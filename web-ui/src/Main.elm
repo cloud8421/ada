@@ -5,7 +5,7 @@ import Bulma as Bulma
 import Dict as Dict
 import Html exposing (..)
 import Html.Attributes exposing (attribute, class, classList, href, placeholder, src, type_, value)
-import Html.Events exposing (onClick, onInput)
+import Html.Events exposing (on, onClick, onInput)
 import Http as Http
 import Json.Decode as JD
 import Json.Encode as JE
@@ -244,6 +244,56 @@ activateLocation locationId =
     putNoBodyNoContent ("/locations/" ++ String.fromInt locationId ++ "/activate")
         |> RemoteData.sendRequest
         |> Cmd.map ActivateLocationResponse
+
+
+createLocation : LocationParams -> Cmd Msg
+createLocation locationParams =
+    let
+        ( lat, lng ) =
+            locationParams.coords
+
+        encoded =
+            JE.object
+                [ ( "name", JE.string locationParams.name )
+                , ( "lat", JE.float lat )
+                , ( "lng", JE.float lng )
+                ]
+    in
+    Http.post "/locations" (Http.jsonBody encoded) decodeLocation
+        |> RemoteData.sendRequest
+        |> Cmd.map CreateLocationResponse
+
+
+updateLocation : Location -> Cmd Msg
+updateLocation location =
+    let
+        ( lat, lng ) =
+            location.coords
+
+        encoded =
+            JE.object
+                [ ( "name", JE.string location.name )
+                , ( "lat", JE.float lat )
+                , ( "lng", JE.float lng )
+                ]
+
+        url =
+            "/locations/" ++ String.fromInt location.id
+    in
+    putNoContent url (Http.jsonBody encoded)
+        |> RemoteData.sendRequest
+        |> Cmd.map UpdateLocationResponse
+
+
+deleteLocation : LocationId -> Cmd Msg
+deleteLocation locationId =
+    let
+        url =
+            "/locations/" ++ String.fromInt locationId
+    in
+    delete url
+        |> RemoteData.sendRequest
+        |> Cmd.map (DeleteLocationResponse locationId)
 
 
 
@@ -510,8 +560,8 @@ locationsSection locations gmapsApiKey =
                             ++ disabledAttr
                         )
                         [ Bulma.iconButton Bulma.Activate ]
-                    , a [ class "button is-small is-link" ] [ Bulma.iconButton Bulma.Edit ]
-                    , a [ class "button is-small is-danger" ] [ Bulma.iconButton Bulma.Delete ]
+                    , Bulma.actionButton Bulma.Edit (OpenEditingModalEditLocation location)
+                    , Bulma.dangerActionButton Bulma.Delete (DeleteLocation location.id)
                     ]
                 ]
 
@@ -521,7 +571,7 @@ locationsSection locations gmapsApiKey =
                 , tbody [] (List.map locationRow (Dict.values items))
                 ]
     in
-    Bulma.block "Locations" OpenEditingModalNewUser (webDataTable locations contentArea)
+    Bulma.block "Locations" OpenEditingModalNewLocation (webDataTable locations contentArea)
 
 
 workflowsSection : WebData (List Workflow) -> Html Msg
@@ -631,78 +681,178 @@ scheduledTasksSection scheduledTasks runningTask =
     Bulma.block "Scheduled Tasks" OpenEditingModalNewUser (webDataTable scheduledTasks contentArea)
 
 
-editingModalForm : EditForm -> Html Msg
-editingModalForm editForm =
-    let
-        userForm title resource =
-            form []
-                [ h1 [ class "title" ] [ text title ]
-                , div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Name" ]
-                    , div [ class "control" ]
-                        [ input
-                            [ class "input"
-                            , placeholder "User name"
-                            , type_ "text"
-                            , value resource.name
-                            , onInput UpdateUserName
-                            ]
-                            []
-                        ]
+userEditingForm : String -> { a | name : String, email : String } -> Html Msg
+userEditingForm title resource =
+    form []
+        [ h1 [ class "title" ] [ text title ]
+        , div [ class "field" ]
+            [ label [ class "label" ]
+                [ text "Name" ]
+            , div [ class "control" ]
+                [ input
+                    [ class "input"
+                    , placeholder "User name"
+                    , type_ "text"
+                    , value resource.name
+                    , onInput UpdateUserName
                     ]
-                , div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Email" ]
-                    , div [ class "control has-icons-left has-icons-right" ]
-                        [ input
-                            [ class "input"
-                            , placeholder "Email input"
-                            , type_ "email"
-                            , value resource.email
-                            , onInput UpdateUserEmail
-                            ]
-                            []
-                        , span [ class "icon is-small is-left" ]
-                            [ i [ class "fas fa-envelope" ]
-                                []
-                            ]
-                        ]
+                    []
+                ]
+            ]
+        , div [ class "field" ]
+            [ label [ class "label" ]
+                [ text "Email" ]
+            , div [ class "control has-icons-left has-icons-right" ]
+                [ input
+                    [ class "input"
+                    , placeholder "Email input"
+                    , type_ "email"
+                    , value resource.email
+                    , onInput UpdateUserEmail
                     ]
-                , div
-                    [ class "field is-grouped" ]
-                    [ div [ class "control" ]
-                        [ input
-                            [ class "button is-link"
-                            , type_ "button"
-                            , value "Submit"
-                            , onClick SaveUser
-                            ]
-                            []
-                        ]
-                    , div
-                        [ class "control"
-                        ]
-                        [ input
-                            [ class "button is-text"
-                            , type_ "button"
-                            , value "Cancel"
-                            , onClick CloseEditingModal
-                            ]
-                            []
-                        ]
+                    []
+                , span [ class "icon is-small is-left" ]
+                    [ i [ class "fas fa-envelope" ]
+                        []
                     ]
                 ]
+            ]
+        , div
+            [ class "field is-grouped" ]
+            [ div [ class "control" ]
+                [ input
+                    [ class "button is-link"
+                    , type_ "button"
+                    , value "Submit"
+                    , onClick SaveUser
+                    ]
+                    []
+                ]
+            , div
+                [ class "control"
+                ]
+                [ input
+                    [ class "button is-text"
+                    , type_ "button"
+                    , value "Cancel"
+                    , onClick CloseEditingModal
+                    ]
+                    []
+                ]
+            ]
+        ]
+
+
+locationEditingForm : String -> { a | name : String, coords : Coords } -> Html Msg
+locationEditingForm title resource =
+    let
+        latString =
+            resource.coords |> Tuple.first |> String.fromFloat
+
+        lngString =
+            resource.coords |> Tuple.second |> String.fromFloat
+
+        targetValueFloat =
+            JD.at [ "target", "valueAsNumber" ] JD.float
+
+        onInputFloat tagger =
+            on "input" (JD.map tagger targetValueFloat)
     in
+    form []
+        [ h1 [ class "title" ] [ text title ]
+        , div [ class "field" ]
+            [ label [ class "label" ]
+                [ text "Name" ]
+            , div [ class "control" ]
+                [ input
+                    [ class "input"
+                    , placeholder "Location name"
+                    , type_ "text"
+                    , value resource.name
+                    , onInput UpdateLocationName
+                    ]
+                    []
+                ]
+            ]
+        , div [ class "field" ]
+            [ label [ class "label" ]
+                [ text "Lat" ]
+            , div [ class "control has-icons-left has-icons-right" ]
+                [ input
+                    [ class "input"
+                    , placeholder "lat"
+                    , type_ "number"
+                    , value latString
+                    , onInputFloat (\v -> UpdateLocationCoords ( v, Tuple.second resource.coords ))
+                    ]
+                    []
+                , span [ class "icon is-small is-left" ]
+                    [ i [ class "fas fa-map" ]
+                        []
+                    ]
+                ]
+            ]
+        , div [ class "field" ]
+            [ label [ class "label" ]
+                [ text "Lng" ]
+            , div [ class "control has-icons-left has-icons-right" ]
+                [ input
+                    [ class "input"
+                    , placeholder "lng"
+                    , type_ "number"
+                    , value lngString
+                    , onInputFloat (\v -> UpdateLocationCoords ( Tuple.first resource.coords, v ))
+                    ]
+                    []
+                , span [ class "icon is-small is-left" ]
+                    [ i [ class "fas fa-map" ]
+                        []
+                    ]
+                ]
+            ]
+        , div
+            [ class "field is-grouped" ]
+            [ div [ class "control" ]
+                [ input
+                    [ class "button is-link"
+                    , type_ "button"
+                    , value "Submit"
+                    , onClick SaveLocation
+                    ]
+                    []
+                ]
+            , div
+                [ class "control"
+                ]
+                [ input
+                    [ class "button is-text"
+                    , type_ "button"
+                    , value "Cancel"
+                    , onClick CloseEditingModal
+                    ]
+                    []
+                ]
+            ]
+        ]
+
+
+editingModalForm : EditForm -> Html Msg
+editingModalForm editForm =
     case editForm of
         Closed ->
             text "Nothing to see here"
 
         NewUser userParams ->
-            userForm "New User" userParams
+            userEditingForm "New User" userParams
 
         EditUser user ->
-            userForm "Edit User" user
+            userEditingForm "Edit User" user
+
+        NewLocation locationParams ->
+            locationEditingForm "New Location" locationParams
+
+        EditLocation location ->
+            locationEditingForm "Edit Location" location
 
         otherwise ->
             div [] [ text "Not implemented yet" ]
@@ -761,7 +911,7 @@ type alias ScheduledTaskParams =
 
 type alias LocationParams =
     { name : String
-    , location : Coords
+    , coords : Coords
     }
 
 
@@ -794,6 +944,19 @@ saveUser editForm =
             Cmd.none
 
 
+saveLocation : EditForm -> Cmd Msg
+saveLocation editForm =
+    case editForm of
+        NewLocation locationParams ->
+            createLocation locationParams
+
+        EditLocation location ->
+            updateLocation location
+
+        otherwise ->
+            Cmd.none
+
+
 
 -- APPLICATION WIRING
 
@@ -815,13 +978,22 @@ type Msg
     | CloseEditingModal
     | OpenEditingModalNewUser
     | OpenEditingModalEditUser User
+    | OpenEditingModalNewLocation
+    | OpenEditingModalEditLocation Location
     | UpdateUserName String
     | UpdateUserEmail String
+    | UpdateLocationName String
+    | UpdateLocationCoords Coords
     | SaveUser
+    | SaveLocation
     | DeleteUser UserId
+    | DeleteLocation LocationId
     | CreateUserResponse (WebData User)
     | UpdateUserResponse (WebData ())
     | DeleteUserResponse UserId (WebData ())
+    | DeleteLocationResponse LocationId (WebData ())
+    | CreateLocationResponse (WebData Location)
+    | UpdateLocationResponse (WebData ())
 
 
 type alias Model =
@@ -905,6 +1077,12 @@ update msg model =
         OpenEditingModalEditUser user ->
             ( { model | editForm = EditUser user }, Cmd.none )
 
+        OpenEditingModalNewLocation ->
+            ( { model | editForm = NewLocation { name = "e.g. Home", coords = ( 0, 0 ) } }, Cmd.none )
+
+        OpenEditingModalEditLocation location ->
+            ( { model | editForm = EditLocation location }, Cmd.none )
+
         UpdateUserName newName ->
             let
                 newEditForm =
@@ -935,11 +1113,47 @@ update msg model =
             in
             ( { model | editForm = newEditForm }, Cmd.none )
 
+        UpdateLocationName newName ->
+            let
+                newEditForm =
+                    case model.editForm of
+                        NewLocation locationParams ->
+                            NewLocation { locationParams | name = newName }
+
+                        EditLocation location ->
+                            EditLocation { location | name = newName }
+
+                        otherwise ->
+                            model.editForm
+            in
+            ( { model | editForm = newEditForm }, Cmd.none )
+
+        UpdateLocationCoords newCoords ->
+            let
+                newEditForm =
+                    case model.editForm of
+                        NewLocation locationParams ->
+                            NewLocation { locationParams | coords = newCoords }
+
+                        EditLocation location ->
+                            EditLocation { location | coords = newCoords }
+
+                        otherwise ->
+                            model.editForm
+            in
+            ( { model | editForm = newEditForm }, Cmd.none )
+
         SaveUser ->
             ( model, saveUser model.editForm )
 
+        SaveLocation ->
+            ( model, saveLocation model.editForm )
+
         DeleteUser userId ->
             ( model, deleteUser userId )
+
+        DeleteLocation locationId ->
+            ( model, deleteLocation locationId )
 
         CreateUserResponse _ ->
             ( { model | editForm = Closed }, getUsers )
@@ -961,6 +1175,32 @@ update msg model =
             case response of
                 Success () ->
                     ( { model | users = RemoteData.map (Dict.remove userId) model.users }
+                    , Cmd.none
+                    )
+
+                otherwise ->
+                    ( model, Cmd.none )
+
+        CreateLocationResponse _ ->
+            ( { model | editForm = Closed }, getLocations )
+
+        UpdateLocationResponse _ ->
+            case model.editForm of
+                EditLocation location ->
+                    ( { model
+                        | locations = RemoteData.map (Dict.insert location.id location) model.locations
+                        , editForm = Closed
+                      }
+                    , Cmd.none
+                    )
+
+                otherwise ->
+                    ( model, Cmd.none )
+
+        DeleteLocationResponse locationId response ->
+            case response of
+                Success () ->
+                    ( { model | locations = RemoteData.map (Dict.remove locationId) model.locations }
                     , Cmd.none
                     )
 
