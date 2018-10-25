@@ -44,12 +44,20 @@ type alias Users =
     Dict.Dict UserId User
 
 
+type alias LocationId =
+    Int
+
+
 type alias Location =
-    { id : Int
+    { id : LocationId
     , name : String
     , active : Bool
     , coords : Coords
     }
+
+
+type alias Locations =
+    Dict.Dict LocationId Location
 
 
 
@@ -113,6 +121,15 @@ type alias ScheduledTask =
 
 
 
+-- UTIL
+
+
+collectionToDict items =
+    List.map (\i -> ( i.id, i )) items
+        |> Dict.fromList
+
+
+
 -- API - USERS
 
 
@@ -131,14 +148,9 @@ decodeUsers =
 
 getUsers : Cmd Msg
 getUsers =
-    let
-        listToDict items =
-            List.map (\i -> ( i.id, i )) items
-                |> Dict.fromList
-    in
     Http.get "/users" decodeUsers
         |> RemoteData.sendRequest
-        |> Cmd.map (RemoteData.map listToDict)
+        |> Cmd.map (RemoteData.map collectionToDict)
         |> Cmd.map UsersResponse
 
 
@@ -213,6 +225,7 @@ getLocations : Cmd Msg
 getLocations =
     Http.get "/locations" decodeLocations
         |> RemoteData.sendRequest
+        |> Cmd.map (RemoteData.map collectionToDict)
         |> Cmd.map LocationsResponse
 
 
@@ -450,7 +463,7 @@ gMap ( lat, lng ) gmapsApiKey =
     img [ src mapSrc ] []
 
 
-locationsSection : WebData (List Location) -> String -> Html Msg
+locationsSection : WebData Locations -> String -> Html Msg
 locationsSection locations gmapsApiKey =
     let
         coordsLabel ( lat, lng ) =
@@ -492,7 +505,7 @@ locationsSection locations gmapsApiKey =
         contentArea items =
             table [ class "table is-fullwidth" ]
                 [ Bulma.tableHead [ "ID", "Name", "Status", "Coordinates", "Actions" ]
-                , tbody [] (List.map locationRow items)
+                , tbody [] (List.map locationRow (Dict.values items))
                 ]
     in
     Bulma.block "Locations" OpenEditingModalNewUser (webDataTable locations contentArea)
@@ -781,7 +794,7 @@ type Msg
     | ExecuteScheduledTask Int
     | ActivateLocation Int
     | UsersResponse (WebData Users)
-    | LocationsResponse (WebData (List Location))
+    | LocationsResponse (WebData Locations)
     | WorkflowsResponse (WebData (List Workflow))
     | ScheduledTasksResponse (WebData (List ScheduledTask))
     | ExecuteScheduledTaskResponse (WebData ())
@@ -800,8 +813,8 @@ type Msg
 
 type alias Model =
     { gmapsApiKey : String
-    , locations : WebData (List Location)
     , users : WebData Users
+    , locations : WebData Locations
     , workflows : WebData (List Workflow)
     , scheduledTasks : WebData (List ScheduledTask)
     , runningTask : Maybe Int
