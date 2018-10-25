@@ -1155,8 +1155,18 @@ update msg model =
         DeleteLocation locationId ->
             ( model, deleteLocation locationId )
 
-        CreateUserResponse _ ->
-            ( { model | editForm = Closed }, getUsers )
+        CreateUserResponse response ->
+            case response of
+                Success user ->
+                    ( { model
+                        | users = RemoteData.map (Dict.insert user.id user) model.users
+                        , editForm = Closed
+                      }
+                    , Cmd.none
+                    )
+
+                otherwise ->
+                    ( model, Cmd.none )
 
         UpdateUserResponse _ ->
             case model.editForm of
@@ -1181,8 +1191,18 @@ update msg model =
                 otherwise ->
                     ( model, Cmd.none )
 
-        CreateLocationResponse _ ->
-            ( { model | editForm = Closed }, getLocations )
+        CreateLocationResponse response ->
+            case response of
+                Success location ->
+                    ( { model
+                        | locations = RemoteData.map (Dict.insert location.id location) model.locations
+                        , editForm = Closed
+                      }
+                    , Cmd.none
+                    )
+
+                otherwise ->
+                    ( model, Cmd.none )
 
         UpdateLocationResponse _ ->
             case model.editForm of
