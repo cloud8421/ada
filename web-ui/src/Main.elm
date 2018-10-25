@@ -132,6 +132,7 @@ type alias ScheduledTasks =
 -- UTIL
 
 
+collectionToDict : List { a | id : comparable } -> Dict.Dict comparable { a | id : comparable }
 collectionToDict items =
     List.map (\i -> ( i.id, i )) items
         |> Dict.fromList
