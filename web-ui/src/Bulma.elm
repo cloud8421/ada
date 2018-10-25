@@ -103,3 +103,9 @@ tag name =
                 [ text name ]
             ]
         ]
+
+
+tableHead : List String -> Html msg
+tableHead columnNames =
+    thead []
+        [ tr [] (List.map (\cn -> th [] [ text cn ]) columnNames) ]

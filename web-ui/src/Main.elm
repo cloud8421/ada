@@ -423,14 +423,7 @@ usersSection users =
 
         contentArea items =
             table [ class "table is-fullwidth" ]
-                [ thead []
-                    [ tr []
-                        [ th [] [ text "ID" ]
-                        , th [] [ text "Name" ]
-                        , th [] [ text "Email" ]
-                        , th [] [ text "Actions" ]
-                        ]
-                    ]
+                [ Bulma.tableHead [ "ID", "Name", "Email", "Actions" ]
                 , tbody [] (List.map userRow (Dict.values items))
                 ]
     in
@@ -498,15 +491,7 @@ locationsSection locations gmapsApiKey =
 
         contentArea items =
             table [ class "table is-fullwidth" ]
-                [ thead []
-                    [ tr []
-                        [ th [] [ text "ID" ]
-                        , th [] [ text "Name" ]
-                        , th [] [ text "Status" ]
-                        , th [] [ text "Coordinates" ]
-                        , th [] [ text "Actions" ]
-                        ]
-                    ]
+                [ Bulma.tableHead [ "ID", "Name", "Status", "Coordinates", "Actions" ]
                 , tbody [] (List.map locationRow items)
                 ]
     in
@@ -543,12 +528,7 @@ workflowsSection workflows =
 
         contentArea items =
             table [ class "table is-fullwidth" ]
-                [ thead []
-                    [ tr []
-                        [ th [] [ text "Name" ]
-                        , th [] [ text "Requirements" ]
-                        ]
-                    ]
+                [ Bulma.tableHead [ "Name", "Requirements" ]
                 , tbody [] (List.map workflowRow items)
                 ]
     in
@@ -618,15 +598,7 @@ scheduledTasksSection scheduledTasks runningTask =
 
         contentArea items =
             table [ class "table is-fullwidth" ]
-                [ thead []
-                    [ tr []
-                        [ th [] [ text "ID" ]
-                        , th [] [ text "Workflow Name" ]
-                        , th [] [ text "Params" ]
-                        , th [] [ text "Frequency" ]
-                        , th [] [ text "Actions" ]
-                        ]
-                    ]
+                [ Bulma.tableHead [ "ID", "Workflow Name", "Params", "Frequency", "Actions" ]
                 , tbody [] (List.map scheduledTaskRow items)
                 ]
     in
