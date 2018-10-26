@@ -1,5 +1,3 @@
+@import "sass/swatch/_variables";
 @import "bulma";
-
-.actions .button {
-  margin-right: 0.5em;
-}
+@import "sass/swatch/_overrides";
