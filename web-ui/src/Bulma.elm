@@ -1,4 +1,4 @@
-module Bulma exposing (Icon(..), actionButton, block, dangerActionButton, iconButton, tableHead, tag, tagWithAddons, titleBar)
+module Bulma exposing (Icon(..), actionButton, block, dangerActionButton, iconButton, lightTag, tableHead, tag, tagWithAddons, titleBar)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -106,6 +106,16 @@ tag name =
     div [ class "control" ]
         [ div [ class "tags" ]
             [ span [ class "tag is-primary" ]
+                [ text name ]
+            ]
+        ]
+
+
+lightTag : String -> Html msg
+lightTag name =
+    div [ class "control" ]
+        [ div [ class "tags" ]
+            [ span [ class "tag is-light" ]
                 [ text name ]
             ]
         ]

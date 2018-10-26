@@ -531,12 +531,12 @@ locationsSection locations gmapsApiKey =
         coordsLabel ( lat, lng ) =
             String.fromFloat lat ++ "," ++ String.fromFloat lng
 
-        activeLabel active =
+        activeTag active =
             if active then
-                "active"
+                Bulma.tag "active"
 
             else
-                "inactive"
+                Bulma.lightTag "inactive"
 
         locationRow location =
             let
@@ -550,7 +550,7 @@ locationsSection locations gmapsApiKey =
             tr []
                 [ td [] [ text <| String.fromInt location.id ]
                 , td [] [ text location.name ]
-                , td [] [ text <| activeLabel location.active ]
+                , td [] [ activeTag location.active ]
                 , td [] [ gMap location.coords gmapsApiKey ]
                 , td []
                     [ div [ class "field has-addons" ]
