@@ -502,7 +502,7 @@ usersSection users =
                 , tbody [] (List.map userRow (Dict.values items))
                 ]
     in
-    Bulma.block "Users" OpenEditingModalNewUser (webDataTable users contentArea)
+    Bulma.blockWithNew "Users" OpenEditingModalNewUser (webDataTable users contentArea)
 
 
 gMap : Coords -> String -> Html Msg
@@ -575,7 +575,7 @@ locationsSection locations gmapsApiKey =
                 , tbody [] (List.map locationRow (Dict.values items))
                 ]
     in
-    Bulma.block "Locations" OpenEditingModalNewLocation (webDataTable locations contentArea)
+    Bulma.blockWithNew "Locations" OpenEditingModalNewLocation (webDataTable locations contentArea)
 
 
 workflowsSection : WebData (List Workflow) -> Html Msg
@@ -610,7 +610,7 @@ workflowsSection workflows =
                 , tbody [] (List.map workflowRow items)
                 ]
     in
-    Bulma.block "Workflows" OpenEditingModalNewUser (webDataTable workflows contentArea)
+    Bulma.block "Workflows" (webDataTable workflows contentArea)
 
 
 formatFrequency : Frequency -> String
@@ -709,7 +709,7 @@ scheduledTasksSection model =
                 , tbody [] (List.map scheduledTaskRow (Dict.values items))
                 ]
     in
-    Bulma.block "Scheduled Tasks" OpenEditingModalNewUser (webDataTable model.scheduledTasks contentArea)
+    Bulma.blockWithNew "Scheduled Tasks" OpenEditingModalNewUser (webDataTable model.scheduledTasks contentArea)
 
 
 userEditingForm : String -> { a | name : String, email : String } -> Html Msg

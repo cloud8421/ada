@@ -1,4 +1,4 @@
-module Bulma exposing (Icon(..), actionButton, block, dangerActionButton, iconButton, lightTag, tableHead, tag, tagWithAddons, titleBar)
+module Bulma exposing (Icon(..), actionButton, block, blockWithNew, dangerActionButton, iconButton, lightTag, tableHead, tag, tagWithAddons, titleBar)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -69,8 +69,22 @@ iconButton icon =
         ]
 
 
-block : String -> msg -> Html msg -> Html msg
-block blockTitle newMsg contents =
+block : String -> Html msg -> Html msg
+block blockTitle contents =
+    section [ class "section column is-6" ]
+        [ div [ class "panel" ]
+            [ div [ class "panel-heading" ]
+                [ text blockTitle
+                ]
+            , div [ class "panel-block" ]
+                [ contents
+                ]
+            ]
+        ]
+
+
+blockWithNew : String -> msg -> Html msg -> Html msg
+blockWithNew blockTitle newMsg contents =
     section [ class "section column is-6" ]
         [ div [ class "panel" ]
             [ div [ class "panel-heading" ]
