@@ -14,10 +14,12 @@ type Icon
 
 titleBar : String -> Html msg
 titleBar title =
-    nav [ attribute "aria-label" "main navigation", class "navbar", attribute "role" "navigation" ]
-        [ div [ class "navbar-brand" ]
-            [ h1 [ class "navbar-item subtitle" ]
-                [ text title ]
+    section [ class "hero is-primary" ]
+        [ div [ class "hero-body" ]
+            [ div [ class "container" ]
+                [ h1 [ class "title" ]
+                    [ text title ]
+                ]
             ]
         ]
 
