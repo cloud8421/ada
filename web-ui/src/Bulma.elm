@@ -24,20 +24,24 @@ titleBar title =
 
 dangerActionButton : Icon -> msg -> Html msg
 dangerActionButton icon msg =
-    a
-        [ class "button is-danger"
-        , onClick msg
+    p [ class "control" ]
+        [ a
+            [ class "button is-danger"
+            , onClick msg
+            ]
+            [ iconButton icon ]
         ]
-        [ iconButton icon ]
 
 
 actionButton : Icon -> msg -> Html msg
 actionButton icon msg =
-    a
-        [ class "button is-link"
-        , onClick msg
+    p [ class "control" ]
+        [ a
+            [ class "button is-link"
+            , onClick msg
+            ]
+            [ iconButton icon ]
         ]
-        [ iconButton icon ]
 
 
 iconButton : Icon -> Html msg

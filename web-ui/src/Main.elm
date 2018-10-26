@@ -554,13 +554,15 @@ locationsSection locations gmapsApiKey =
                 , td [] [ gMap location.coords gmapsApiKey ]
                 , td []
                     [ div [ class "field has-addons" ]
-                        [ a
-                            ([ class "button is-primary"
-                             , onClick (ActivateLocation location.id)
-                             ]
-                                ++ disabledAttr
-                            )
-                            [ Bulma.iconButton Bulma.Activate ]
+                        [ p [ class "control" ]
+                            [ a
+                                ([ class "button is-primary"
+                                 , onClick (ActivateLocation location.id)
+                                 ]
+                                    ++ disabledAttr
+                                )
+                                [ Bulma.iconButton Bulma.Activate ]
+                            ]
                         , Bulma.actionButton Bulma.Edit (OpenEditingModalEditLocation location)
                         , Bulma.dangerActionButton Bulma.Delete (DeleteLocation location.id)
                         ]
@@ -684,13 +686,19 @@ scheduledTasksSection model =
                 , td [] [ text <| formatFrequency scheduledTask.frequency ]
                 , td []
                     [ div [ class "field has-addons" ]
-                        [ a
-                            [ classList runClassList
-                            , onClick (ExecuteScheduledTask scheduledTask.id)
+                        [ p [ class "control" ]
+                            [ a
+                                [ classList runClassList
+                                , onClick (ExecuteScheduledTask scheduledTask.id)
+                                ]
+                                [ Bulma.iconButton Bulma.Run ]
                             ]
-                            [ Bulma.iconButton Bulma.Run ]
-                        , a [ class "button is-link" ] [ Bulma.iconButton Bulma.Edit ]
-                        , a [ class "button is-danger" ] [ Bulma.iconButton Bulma.Delete ]
+                        , p [ class "control" ]
+                            [ a [ class "button is-link" ] [ Bulma.iconButton Bulma.Edit ]
+                            ]
+                        , p [ class "control" ]
+                            [ a [ class "button is-danger" ] [ Bulma.iconButton Bulma.Delete ]
+                            ]
                         ]
                     ]
                 ]
