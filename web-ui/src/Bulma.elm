@@ -25,7 +25,7 @@ titleBar title =
 dangerActionButton : Icon -> msg -> Html msg
 dangerActionButton icon msg =
     a
-        [ class "button is-small is-danger"
+        [ class "button is-danger"
         , onClick msg
         ]
         [ iconButton icon ]
@@ -34,7 +34,7 @@ dangerActionButton icon msg =
 actionButton : Icon -> msg -> Html msg
 actionButton icon msg =
     a
-        [ class "button is-small is-link"
+        [ class "button is-link"
         , onClick msg
         ]
         [ iconButton icon ]
@@ -57,7 +57,7 @@ iconButton icon =
                 Activate ->
                     "fa-check"
     in
-    span [ class "icon is-small" ]
+    span [ class "icon" ]
         [ i [ class ("fas " ++ iconClass) ]
             []
         ]
@@ -99,7 +99,7 @@ tag : String -> Html msg
 tag name =
     div [ class "control" ]
         [ div [ class "tags" ]
-            [ span [ class "tag" ]
+            [ span [ class "tag is-primary" ]
                 [ text name ]
             ]
         ]

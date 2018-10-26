@@ -488,10 +488,11 @@ usersSection users =
                 [ td [] [ text <| String.fromInt user.id ]
                 , td [] [ text user.name ]
                 , td [] [ text user.email ]
-                , td
-                    [ class "actions" ]
-                    [ Bulma.actionButton Bulma.Edit (OpenEditingModalEditUser user)
-                    , Bulma.dangerActionButton Bulma.Delete (DeleteUser user.id)
+                , td []
+                    [ div [ class "field has-addons" ]
+                        [ Bulma.actionButton Bulma.Edit (OpenEditingModalEditUser user)
+                        , Bulma.dangerActionButton Bulma.Delete (DeleteUser user.id)
+                        ]
                     ]
                 ]
 
@@ -551,17 +552,18 @@ locationsSection locations gmapsApiKey =
                 , td [] [ text location.name ]
                 , td [] [ text <| activeLabel location.active ]
                 , td [] [ gMap location.coords gmapsApiKey ]
-                , td
-                    [ class "actions" ]
-                    [ a
-                        ([ class "button is-small is-primary"
-                         , onClick (ActivateLocation location.id)
-                         ]
-                            ++ disabledAttr
-                        )
-                        [ Bulma.iconButton Bulma.Activate ]
-                    , Bulma.actionButton Bulma.Edit (OpenEditingModalEditLocation location)
-                    , Bulma.dangerActionButton Bulma.Delete (DeleteLocation location.id)
+                , td []
+                    [ div [ class "field has-addons" ]
+                        [ a
+                            ([ class "button is-primary"
+                             , onClick (ActivateLocation location.id)
+                             ]
+                                ++ disabledAttr
+                            )
+                            [ Bulma.iconButton Bulma.Activate ]
+                        , Bulma.actionButton Bulma.Edit (OpenEditingModalEditLocation location)
+                        , Bulma.dangerActionButton Bulma.Delete (DeleteLocation location.id)
+                        ]
                     ]
                 ]
 
@@ -577,29 +579,27 @@ locationsSection locations gmapsApiKey =
 workflowsSection : WebData (List Workflow) -> Html Msg
 workflowsSection workflows =
     let
-        requirementDesc requirement =
+        formatRequirement requirement =
             case requirement of
                 RequiresUserId ->
-                    "user id"
+                    Bulma.tag "user id"
 
                 RequiresLocationId ->
-                    "location id"
+                    Bulma.tag "location id"
 
                 RequiresNewsTag ->
-                    "news tag"
+                    Bulma.tag "news tag"
 
                 UnsupportedRequirement ->
-                    "not supported"
-
-        requirementsLabel requirements =
-            requirements
-                |> List.map requirementDesc
-                |> String.join ", "
+                    Bulma.tag "not supported"
 
         workflowRow workflow =
             tr []
                 [ td [] [ text workflow.humanName ]
-                , td [] [ text <| requirementsLabel workflow.requirements ]
+                , td [ class "field is-grouped is-grouped-multiline" ]
+                    [ div [ class "field is-grouped is-grouped-multiline" ]
+                        (List.map formatRequirement workflow.requirements)
+                    ]
                 ]
 
         contentArea items =
@@ -669,7 +669,7 @@ scheduledTasksSection model =
                     model.runningTask == Just scheduledTask.id
 
                 runClassList =
-                    [ ( "button is-small", True )
+                    [ ( "button", True )
                     , ( "is-primary", True )
                     , ( "is-loading", isRunning )
                     ]
@@ -677,20 +677,21 @@ scheduledTasksSection model =
             tr []
                 [ td [] [ text <| String.fromInt scheduledTask.id ]
                 , td [] [ text scheduledTask.workflowHumanName ]
-                , td [ class "field is-grouped is-grouped-multiline" ]
+                , td []
                     [ div [ class "field is-grouped is-grouped-multiline" ]
                         (List.map formatParam scheduledTask.params)
                     ]
                 , td [] [ text <| formatFrequency scheduledTask.frequency ]
-                , td
-                    [ class "actions" ]
-                    [ a
-                        [ classList runClassList
-                        , onClick (ExecuteScheduledTask scheduledTask.id)
+                , td []
+                    [ div [ class "field has-addons" ]
+                        [ a
+                            [ classList runClassList
+                            , onClick (ExecuteScheduledTask scheduledTask.id)
+                            ]
+                            [ Bulma.iconButton Bulma.Run ]
+                        , a [ class "button is-link" ] [ Bulma.iconButton Bulma.Edit ]
+                        , a [ class "button is-danger" ] [ Bulma.iconButton Bulma.Delete ]
                         ]
-                        [ Bulma.iconButton Bulma.Run ]
-                    , a [ class "button is-small is-link" ] [ Bulma.iconButton Bulma.Edit ]
-                    , a [ class "button is-small is-danger" ] [ Bulma.iconButton Bulma.Delete ]
                     ]
                 ]
 
