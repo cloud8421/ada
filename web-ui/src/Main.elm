@@ -630,16 +630,32 @@ formatFrequency frequency =
             "Frequency not supported"
 
 
-scheduledTasksSection : WebData ScheduledTasks -> Maybe Int -> Html Msg
-scheduledTasksSection scheduledTasks runningTask =
+find : WebData (Dict.Dict Int v) -> Int -> Maybe v
+find collection id =
+    case collection of
+        Success items ->
+            Dict.get id items
+
+        otherwise ->
+            Nothing
+
+
+scheduledTasksSection : Model -> Html Msg
+scheduledTasksSection model =
     let
         formatParam param =
             case param of
                 UserId id ->
-                    Bulma.tagWithAddons "user" (String.fromInt id)
+                    find model.users id
+                        |> Maybe.map .name
+                        |> Maybe.withDefault "Not available"
+                        |> Bulma.tagWithAddons "user"
 
                 LocationId id ->
-                    Bulma.tagWithAddons "location" (String.fromInt id)
+                    find model.locations id
+                        |> Maybe.map .name
+                        |> Maybe.withDefault "Not available"
+                        |> Bulma.tagWithAddons "location"
 
                 NewsTag tag ->
                     Bulma.tagWithAddons "news tag" tag
@@ -649,8 +665,14 @@ scheduledTasksSection scheduledTasks runningTask =
 
         scheduledTaskRow scheduledTask =
             let
+                isRunning =
+                    model.runningTask == Just scheduledTask.id
+
                 runClassList =
-                    [ ( "button is-small", True ), ( "is-primary", True ), ( "is-loading", runningTask == Just scheduledTask.id ) ]
+                    [ ( "button is-small", True )
+                    , ( "is-primary", True )
+                    , ( "is-loading", isRunning )
+                    ]
             in
             tr []
                 [ td [] [ text <| String.fromInt scheduledTask.id ]
@@ -678,7 +700,7 @@ scheduledTasksSection scheduledTasks runningTask =
                 , tbody [] (List.map scheduledTaskRow (Dict.values items))
                 ]
     in
-    Bulma.block "Scheduled Tasks" OpenEditingModalNewUser (webDataTable scheduledTasks contentArea)
+    Bulma.block "Scheduled Tasks" OpenEditingModalNewUser (webDataTable model.scheduledTasks contentArea)
 
 
 userEditingForm : String -> { a | name : String, email : String } -> Html Msg
@@ -886,7 +908,7 @@ body model =
     [ div []
         [ Bulma.titleBar "Ada Control Center"
         , div [ class "columns" ]
-            [ scheduledTasksSection model.scheduledTasks model.runningTask
+            [ scheduledTasksSection model
             , locationsSection model.locations model.gmapsApiKey
             ]
         , div [ class "columns" ]

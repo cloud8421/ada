@@ -88,7 +88,7 @@ tagWithAddons : String -> String -> Html msg
 tagWithAddons name value =
     div [ class "control" ]
         [ div [ class "tags has-addons" ]
-            [ span [ class "tag" ]
+            [ span [ class "tag is-primary" ]
                 [ text name ]
             , span [ class "tag" ] [ text value ]
             ]
