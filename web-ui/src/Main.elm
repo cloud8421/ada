@@ -9,6 +9,7 @@ import Html.Events exposing (on, onClick, onInput)
 import Http as Http
 import Json.Decode as JD
 import Json.Encode as JE
+import Map exposing (..)
 import Platform.Cmd as Cmd
 import Platform.Sub as Sub
 import RemoteData exposing (..)
@@ -508,29 +509,15 @@ usersSection users =
 gMap : Location -> String -> Html Msg
 gMap location gmapsApiKey =
     let
-        ( lat, lng ) =
-            location.coords
-
-        pair =
-            String.fromFloat lat ++ "," ++ String.fromFloat lng
-
-        name =
-            String.left 1 location.name
-
-        mapSrc =
-            "https://maps.googleapis.com/maps/api/staticmap?"
-                ++ "center="
-                ++ pair
-                ++ "&"
-                ++ "zoom=13&size=300x120&maptype=roadmap&"
-                ++ "markers=color:blue%7Clabel:"
-                ++ name
-                ++ "%7C"
-                ++ pair
-                ++ "&key="
-                ++ gmapsApiKey
+        map =
+            { apiKey = gmapsApiKey
+            , coords = location.coords
+            , markerText = String.left 1 location.name
+            , width = 300
+            , height = 120
+            }
     in
-    img [ src mapSrc ] []
+    img [ src (Map.toGmapsUrl map) ] []
 
 
 locationsSection : WebData Locations -> String -> Html Msg
