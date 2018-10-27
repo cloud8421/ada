@@ -809,6 +809,9 @@ locationEditingForm title resource gmapsApiKey =
                             [ class "input"
                             , placeholder "lat"
                             , type_ "number"
+                            , attribute "min" "-90"
+                            , attribute "max" "90"
+                            , attribute "step" "0.0001"
                             , value latString
                             , onInputFloat (\v -> UpdateLocationCoords ( v, Tuple.second resource.coords ))
                             ]
@@ -827,6 +830,9 @@ locationEditingForm title resource gmapsApiKey =
                             [ class "input"
                             , placeholder "lng"
                             , type_ "number"
+                            , attribute "min" "-180"
+                            , attribute "max" "180"
+                            , attribute "step" "0.0001"
                             , value lngString
                             , onInputFloat (\v -> UpdateLocationCoords ( Tuple.first resource.coords, v ))
                             ]
