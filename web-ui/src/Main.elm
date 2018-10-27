@@ -505,11 +505,17 @@ usersSection users =
     Bulma.blockWithNew "Users" OpenEditingModalNewUser (webDataTable users contentArea)
 
 
-gMap : Coords -> String -> Html Msg
-gMap ( lat, lng ) gmapsApiKey =
+gMap : Location -> String -> Html Msg
+gMap location gmapsApiKey =
     let
+        ( lat, lng ) =
+            location.coords
+
         pair =
             String.fromFloat lat ++ "," ++ String.fromFloat lng
+
+        name =
+            String.left 1 location.name
 
         mapSrc =
             "https://maps.googleapis.com/maps/api/staticmap?"
@@ -517,7 +523,9 @@ gMap ( lat, lng ) gmapsApiKey =
                 ++ pair
                 ++ "&"
                 ++ "zoom=13&size=300x120&maptype=roadmap&"
-                ++ "markers=color:blue%7Clabel:S%7C"
+                ++ "markers=color:blue%7Clabel:"
+                ++ name
+                ++ "%7C"
                 ++ pair
                 ++ "&key="
                 ++ gmapsApiKey
@@ -551,7 +559,7 @@ locationsSection locations gmapsApiKey =
                 [ td [] [ text <| String.fromInt location.id ]
                 , td [] [ text location.name ]
                 , td [] [ activeTag location.active ]
-                , td [] [ gMap location.coords gmapsApiKey ]
+                , td [] [ gMap location gmapsApiKey ]
                 , td []
                     [ div [ class "field has-addons" ]
                         [ p [ class "control" ]
