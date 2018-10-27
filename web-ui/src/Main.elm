@@ -584,16 +584,16 @@ workflowsSection workflows =
         formatRequirement requirement =
             case requirement of
                 RequiresUserId ->
-                    Bulma.tag "user id"
+                    Bulma.tag "User"
 
                 RequiresLocationId ->
-                    Bulma.tag "location id"
+                    Bulma.tag "Location"
 
                 RequiresNewsTag ->
-                    Bulma.tag "news tag"
+                    Bulma.tag "News tag"
 
                 UnsupportedRequirement ->
-                    Bulma.tag "not supported"
+                    Bulma.dangerTag "Not supported"
 
         workflowRow workflow =
             tr []
@@ -651,19 +651,19 @@ scheduledTasksSection model =
                     find model.users id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
-                        |> Bulma.tagWithAddons "user"
+                        |> Bulma.tagWithAddons "User"
 
                 LocationId id ->
                     find model.locations id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
-                        |> Bulma.tagWithAddons "location"
+                        |> Bulma.tagWithAddons "Location"
 
                 NewsTag tag ->
-                    Bulma.tagWithAddons "news tag" tag
+                    Bulma.tagWithAddons "News tag" tag
 
                 UnsupportedParam ->
-                    Bulma.tag "unsupported"
+                    Bulma.dangerTag "Unsupported"
 
         scheduledTaskRow scheduledTask =
             let
