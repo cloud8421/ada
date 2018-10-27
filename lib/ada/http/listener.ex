@@ -10,7 +10,10 @@ defmodule Ada.HTTP.Listener do
            __MODULE__,
            [port: http_port],
            %{
-             env: %{dispatch: Ada.HTTP.Router.dispatch(ctx)}
+             env: %{
+               dispatch: Ada.HTTP.Router.dispatch(ctx)
+             },
+             stream_handlers: [:cowboy_compress_h, :cowboy_stream_h]
            }
          ]},
       type: :worker
