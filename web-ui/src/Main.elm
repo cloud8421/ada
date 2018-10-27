@@ -506,15 +506,15 @@ usersSection users =
     Bulma.blockWithNew "Users" OpenEditingModalNewUser (webDataTable users contentArea)
 
 
-gMap : Location -> String -> Html Msg
-gMap location gmapsApiKey =
+gMap : Location -> String -> Int -> Int -> Html Msg
+gMap location gmapsApiKey width height =
     let
         map =
             { apiKey = gmapsApiKey
             , coords = location.coords
             , markerText = String.left 1 location.name
-            , width = 300
-            , height = 120
+            , width = width
+            , height = height
             }
     in
     img [ src (Map.toGmapsUrl map) ] []
@@ -546,7 +546,7 @@ locationsSection locations gmapsApiKey =
                 [ td [] [ text <| String.fromInt location.id ]
                 , td [] [ text location.name ]
                 , td [] [ activeTag location.active ]
-                , td [] [ gMap location gmapsApiKey ]
+                , td [] [ gMap location gmapsApiKey 300 120 ]
                 , td []
                     [ div [ class "field has-addons" ]
                         [ p [ class "control" ]
@@ -769,8 +769,8 @@ userEditingForm title resource =
         ]
 
 
-locationEditingForm : String -> { a | name : String, coords : Coords } -> Html Msg
-locationEditingForm title resource =
+locationEditingForm : String -> { a | name : String, coords : Coords } -> String -> Html Msg
+locationEditingForm title resource gmapsApiKey =
     let
         latString =
             resource.coords |> Tuple.first |> String.fromFloat
@@ -783,87 +783,107 @@ locationEditingForm title resource =
 
         onInputFloat tagger =
             on "input" (JD.map tagger targetValueFloat)
+
+        editArea =
+            form []
+                [ h1 [ class "title" ] [ text title ]
+                , div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Name" ]
+                    , div [ class "control" ]
+                        [ input
+                            [ class "input"
+                            , placeholder "Location name"
+                            , type_ "text"
+                            , value resource.name
+                            , onInput UpdateLocationName
+                            ]
+                            []
+                        ]
+                    ]
+                , div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Lat" ]
+                    , div [ class "control has-icons-left has-icons-right" ]
+                        [ input
+                            [ class "input"
+                            , placeholder "lat"
+                            , type_ "number"
+                            , value latString
+                            , onInputFloat (\v -> UpdateLocationCoords ( v, Tuple.second resource.coords ))
+                            ]
+                            []
+                        , span [ class "icon is-small is-left" ]
+                            [ i [ class "fas fa-map" ]
+                                []
+                            ]
+                        ]
+                    ]
+                , div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Lng" ]
+                    , div [ class "control has-icons-left has-icons-right" ]
+                        [ input
+                            [ class "input"
+                            , placeholder "lng"
+                            , type_ "number"
+                            , value lngString
+                            , onInputFloat (\v -> UpdateLocationCoords ( Tuple.first resource.coords, v ))
+                            ]
+                            []
+                        , span [ class "icon is-small is-left" ]
+                            [ i [ class "fas fa-map" ]
+                                []
+                            ]
+                        ]
+                    ]
+                , div
+                    [ class "field is-grouped" ]
+                    [ div [ class "control" ]
+                        [ input
+                            [ class "button is-link"
+                            , type_ "button"
+                            , value "Submit"
+                            , onClick SaveLocation
+                            ]
+                            []
+                        ]
+                    , div
+                        [ class "control"
+                        ]
+                        [ input
+                            [ class "button is-text"
+                            , type_ "button"
+                            , value "Cancel"
+                            , onClick CloseEditingModal
+                            ]
+                            []
+                        ]
+                    ]
+                ]
+
+        previewMap =
+            { apiKey = gmapsApiKey
+            , coords = resource.coords
+            , markerText = String.left 1 resource.name
+            , width = 287
+            , height = 287
+            }
     in
-    form []
-        [ h1 [ class "title" ] [ text title ]
-        , div [ class "field" ]
-            [ label [ class "label" ]
-                [ text "Name" ]
-            , div [ class "control" ]
-                [ input
-                    [ class "input"
-                    , placeholder "Location name"
-                    , type_ "text"
-                    , value resource.name
-                    , onInput UpdateLocationName
-                    ]
-                    []
-                ]
-            ]
-        , div [ class "field" ]
-            [ label [ class "label" ]
-                [ text "Lat" ]
-            , div [ class "control has-icons-left has-icons-right" ]
-                [ input
-                    [ class "input"
-                    , placeholder "lat"
-                    , type_ "number"
-                    , value latString
-                    , onInputFloat (\v -> UpdateLocationCoords ( v, Tuple.second resource.coords ))
-                    ]
-                    []
-                , span [ class "icon is-small is-left" ]
-                    [ i [ class "fas fa-map" ]
-                        []
-                    ]
-                ]
-            ]
-        , div [ class "field" ]
-            [ label [ class "label" ]
-                [ text "Lng" ]
-            , div [ class "control has-icons-left has-icons-right" ]
-                [ input
-                    [ class "input"
-                    , placeholder "lng"
-                    , type_ "number"
-                    , value lngString
-                    , onInputFloat (\v -> UpdateLocationCoords ( Tuple.first resource.coords, v ))
-                    ]
-                    []
-                , span [ class "icon is-small is-left" ]
-                    [ i [ class "fas fa-map" ]
-                        []
-                    ]
-                ]
+    div [ class "columns" ]
+        [ div [ class "column" ]
+            [ editArea
             ]
         , div
-            [ class "field is-grouped" ]
-            [ div [ class "control" ]
-                [ input
-                    [ class "button is-link"
-                    , type_ "button"
-                    , value "Submit"
-                    , onClick SaveLocation
-                    ]
-                    []
-                ]
-            , div
-                [ class "control"
-                ]
-                [ input
-                    [ class "button is-text"
-                    , type_ "button"
-                    , value "Cancel"
-                    , onClick CloseEditingModal
-                    ]
-                    []
-                ]
+            [ class "column" ]
+            [ h2 [ class "subtitle" ] [ text "Preview" ]
+            , img [ src (Map.toGmapsUrl previewMap) ] []
             ]
         ]
 
 
-editingModalForm : EditForm -> Html Msg
-editingModalForm editForm =
+editingModalForm : EditForm -> String -> Html Msg
+editingModalForm editForm gmapsApiKey =
     case editForm of
         Closed ->
             text "Nothing to see here"
@@ -875,10 +895,10 @@ editingModalForm editForm =
             userEditingForm "Edit User" user
 
         NewLocation locationParams ->
-            locationEditingForm "New Location" locationParams
+            locationEditingForm "New Location" locationParams gmapsApiKey
 
         EditLocation location ->
-            locationEditingForm "Edit Location" location
+            locationEditingForm "Edit Location" location gmapsApiKey
 
         otherwise ->
             div [] [ text "Not implemented yet" ]
@@ -895,7 +915,7 @@ editingModal model =
             []
         , div [ class "modal-content" ]
             [ div [ class "box" ]
-                [ editingModalForm model.editForm
+                [ editingModalForm model.editForm model.gmapsApiKey
                 ]
             ]
         , button
