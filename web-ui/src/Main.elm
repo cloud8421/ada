@@ -608,20 +608,21 @@ workflowsSection workflows =
     Bulma.block "Workflows" (webDataTable workflows contentArea)
 
 
+timePad : Int -> String
+timePad value =
+    value
+        |> String.fromInt
+        |> String.padLeft 2 '0'
+
+
 formatFrequency : Frequency -> String
 formatFrequency frequency =
-    let
-        pad value =
-            value
-                |> String.fromInt
-                |> String.padLeft 2 '0'
-    in
     case frequency of
         Daily hour minute ->
-            "Every day at " ++ pad hour ++ ":" ++ pad minute
+            "Every day at " ++ timePad hour ++ ":" ++ timePad minute
 
         Hourly minute second ->
-            "Every hour at " ++ pad minute ++ ":" ++ pad second
+            "Every hour at " ++ timePad minute ++ ":" ++ timePad second
 
         UnsupportedFrequency ->
             "Frequency not supported"
