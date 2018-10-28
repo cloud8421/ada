@@ -897,8 +897,16 @@ scheduledTaskEditingForm title resource workflows =
                 otherwise ->
                     []
 
-        workflowOption ( humanName, name ) =
-            option [ value name ] [ text humanName ]
+        workflowOption selectedWorkflowName ( humanName, name ) =
+            let
+                optionAttrs =
+                    if name == selectedWorkflowName then
+                        [ attribute "selected" "selected" ]
+
+                    else
+                        []
+            in
+            option ([ value name ] ++ optionAttrs) [ text humanName ]
 
         onChange tagger =
             on "change" (JD.map tagger targetValue)
@@ -976,7 +984,7 @@ scheduledTaskEditingForm title resource workflows =
                     , div [ class "control" ]
                         [ div [ class "select" ]
                             [ select [ onChange UpdateScheduledTaskWorkflowName ]
-                                (List.map workflowOption workflowMetas)
+                                (List.map (workflowOption resource.workflowName) workflowMetas)
                             ]
                         ]
                     ]
