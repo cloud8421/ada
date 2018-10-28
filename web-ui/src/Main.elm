@@ -905,6 +905,45 @@ scheduledTaskEditingForm title resource workflows =
         onChange tagger =
             on "change" (JD.map tagger targetValue)
 
+        parseHour timeString =
+            case String.split ":" timeString of
+                [ hourString, _ ] ->
+                    case String.toInt hourString of
+                        Just hour ->
+                            JD.succeed hour
+
+                        Nothing ->
+                            JD.fail "Invalid hour string"
+
+                otherwise ->
+                    JD.fail "Invalid time string"
+
+        parseMinute timeString =
+            case String.split ":" timeString of
+                [ _, minuteString ] ->
+                    case String.toInt minuteString of
+                        Just minute ->
+                            JD.succeed minute
+
+                        Nothing ->
+                            JD.fail "Invalid minute string"
+
+                otherwise ->
+                    JD.fail "Invalid time string"
+
+        targetValueAsFrequency =
+            JD.oneOf
+                [ JD.map2 Daily
+                    (targetValue |> JD.andThen parseHour)
+                    (targetValue |> JD.andThen parseMinute)
+                , JD.map2 Hourly
+                    (JD.at [ "target", "valueAsNumber" ] JD.int)
+                    (JD.succeed 0)
+                ]
+
+        onInputTime tagger =
+            on "input" (JD.map tagger targetValueAsFrequency)
+
         frequencyInput frequency =
             case frequency of
                 Daily hour minute ->
@@ -912,6 +951,7 @@ scheduledTaskEditingForm title resource workflows =
                         [ type_ "time"
                         , class "input"
                         , value (timePad hour ++ ":" ++ timePad minute)
+                        , onInputTime UpdateScheduledTaskFrequency
                         ]
                         []
 
@@ -920,6 +960,7 @@ scheduledTaskEditingForm title resource workflows =
                         [ type_ "number"
                         , class "input"
                         , value (String.fromInt minute)
+                        , onInputTime UpdateScheduledTaskFrequency
                         ]
                         []
 
@@ -950,9 +991,9 @@ scheduledTaskEditingForm title resource workflows =
                 , div [ class "field has-addons" ]
                     [ p [ class "control" ]
                         [ span [ class "select" ]
-                            [ select []
-                                [ option [] [ text "daily" ]
-                                , option [] [ text "hourly" ]
+                            [ select [ onChange ResetScheduledTaskFrequency ]
+                                [ option [ value "daily" ] [ text "Daily" ]
+                                , option [ value "hourly" ] [ text "Hourly" ]
                                 ]
                             ]
                         ]
@@ -1143,6 +1184,8 @@ type Msg
     | UpdateLocationName String
     | UpdateLocationCoords Coords
     | UpdateScheduledTaskWorkflowName String
+    | UpdateScheduledTaskFrequency Frequency
+    | ResetScheduledTaskFrequency String
     | SaveUser
     | SaveLocation
     | SaveScheduledTask
@@ -1324,6 +1367,47 @@ update msg model =
 
                         EditScheduledTask scheduledTask ->
                             EditScheduledTask { scheduledTask | workflowName = newWorkflowName }
+
+                        otherwise ->
+                            model.editForm
+            in
+            ( { model | editForm = newEditForm }, Cmd.none )
+
+        UpdateScheduledTaskFrequency newFrequency ->
+            let
+                newEditForm =
+                    case model.editForm of
+                        NewScheduledTask scheduleTaskParams ->
+                            NewScheduledTask { scheduleTaskParams | frequency = newFrequency }
+
+                        EditScheduledTask scheduledTask ->
+                            EditScheduledTask { scheduledTask | frequency = newFrequency }
+
+                        otherwise ->
+                            model.editForm
+            in
+            ( { model | editForm = newEditForm }, Cmd.none )
+
+        ResetScheduledTaskFrequency typeString ->
+            let
+                newFrequency =
+                    case typeString of
+                        "daily" ->
+                            Daily 9 0
+
+                        "hourly" ->
+                            Hourly 30 0
+
+                        otherwise ->
+                            UnsupportedFrequency
+
+                newEditForm =
+                    case model.editForm of
+                        NewScheduledTask scheduleTaskParams ->
+                            NewScheduledTask { scheduleTaskParams | frequency = newFrequency }
+
+                        EditScheduledTask scheduledTask ->
+                            EditScheduledTask { scheduledTask | frequency = newFrequency }
 
                         otherwise ->
                             model.editForm
