@@ -5,7 +5,7 @@ import Bulma as Bulma
 import Dict as Dict
 import Html exposing (..)
 import Html.Attributes exposing (attribute, class, classList, href, placeholder, src, type_, value)
-import Html.Events exposing (on, onClick, onInput)
+import Html.Events exposing (on, onClick, onInput, targetValue)
 import Http as Http
 import Json.Decode as JD
 import Json.Encode as JE
@@ -705,7 +705,7 @@ scheduledTasksSection model =
                 , tbody [] (List.map scheduledTaskRow (Dict.values items))
                 ]
     in
-    Bulma.blockWithNew "Scheduled Tasks" OpenEditingModalNewUser (webDataTable model.scheduledTasks contentArea)
+    Bulma.blockWithNew "Scheduled Tasks" OpenEditingModalNewScheduledTask (webDataTable model.scheduledTasks contentArea)
 
 
 userEditingForm : String -> { a | name : String, email : String } -> Html Msg
@@ -889,9 +889,107 @@ locationEditingForm title resource gmapsApiKey =
         ]
 
 
-editingModalForm : EditForm -> String -> Html Msg
-editingModalForm editForm gmapsApiKey =
-    case editForm of
+scheduledTaskEditingForm title resource workflows =
+    let
+        workflowMetas =
+            case workflows of
+                Success items ->
+                    List.map (\i -> ( i.humanName, i.name )) items
+
+                otherwise ->
+                    []
+
+        workflowOption ( humanName, name ) =
+            option [ value name ] [ text humanName ]
+
+        onChange tagger =
+            on "change" (JD.map tagger targetValue)
+
+        frequencyInput frequency =
+            case frequency of
+                Daily hour minute ->
+                    input
+                        [ type_ "time"
+                        , class "input"
+                        , value (timePad hour ++ ":" ++ timePad minute)
+                        ]
+                        []
+
+                Hourly minute _ ->
+                    input
+                        [ type_ "number"
+                        , class "input"
+                        , value (String.fromInt minute)
+                        ]
+                        []
+
+                UnsupportedFrequency ->
+                    p [] [ text "Unsupported frequency value" ]
+    in
+    form []
+        [ h1 [ class "title" ] [ text title ]
+        , div
+            [ class "columns" ]
+            [ div [ class "column" ]
+                [ div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Workflow Name" ]
+                    , div [ class "control" ]
+                        [ div [ class "select" ]
+                            [ select [ onChange UpdateScheduledTaskWorkflowName ]
+                                (List.map workflowOption workflowMetas)
+                            ]
+                        ]
+                    ]
+                ]
+            , div [ class "column" ]
+                [ div [ class "field" ]
+                    [ label [ class "label" ]
+                        [ text "Frequency" ]
+                    ]
+                , div [ class "field has-addons" ]
+                    [ p [ class "control" ]
+                        [ span [ class "select" ]
+                            [ select []
+                                [ option [] [ text "daily" ]
+                                , option [] [ text "hourly" ]
+                                ]
+                            ]
+                        ]
+                    , p [ class "control" ]
+                        [ frequencyInput resource.frequency ]
+                    ]
+                ]
+            ]
+        , div
+            [ class "field is-grouped" ]
+            [ div [ class "control" ]
+                [ input
+                    [ class "button is-link"
+                    , type_ "button"
+                    , value "Submit"
+                    , onClick SaveScheduledTask
+                    ]
+                    []
+                ]
+            , div
+                [ class "control"
+                ]
+                [ input
+                    [ class "button is-text"
+                    , type_ "button"
+                    , value "Cancel"
+                    , onClick CloseEditingModal
+                    ]
+                    []
+                ]
+            ]
+        ]
+
+
+editingModalForm : Model -> Html Msg
+editingModalForm model =
+    case model.editForm of
         Closed ->
             text "Nothing to see here"
 
@@ -902,10 +1000,13 @@ editingModalForm editForm gmapsApiKey =
             userEditingForm "Edit User" user
 
         NewLocation locationParams ->
-            locationEditingForm "New Location" locationParams gmapsApiKey
+            locationEditingForm "New Location" locationParams model.gmapsApiKey
 
         EditLocation location ->
-            locationEditingForm "Edit Location" location gmapsApiKey
+            locationEditingForm "Edit Location" location model.gmapsApiKey
+
+        NewScheduledTask scheduleTaskParams ->
+            scheduledTaskEditingForm "New Scheduled Task" scheduleTaskParams model.workflows
 
         otherwise ->
             div [] [ text "Not implemented yet" ]
@@ -921,9 +1022,7 @@ editingModal model =
         [ div [ class "modal-background" ]
             []
         , div [ class "modal-content" ]
-            [ div [ class "box" ]
-                [ editingModalForm model.editForm model.gmapsApiKey
-                ]
+            [ div [ class "box" ] [ editingModalForm model ]
             ]
         , button
             [ onClick CloseEditingModal
@@ -1010,6 +1109,11 @@ saveLocation editForm =
             Cmd.none
 
 
+saveScheduledTask : EditForm -> Cmd Msg
+saveScheduledTask editForm =
+    Cmd.none
+
+
 
 -- APPLICATION WIRING
 
@@ -1033,12 +1137,15 @@ type Msg
     | OpenEditingModalEditUser User
     | OpenEditingModalNewLocation
     | OpenEditingModalEditLocation Location
+    | OpenEditingModalNewScheduledTask
     | UpdateUserName String
     | UpdateUserEmail String
     | UpdateLocationName String
     | UpdateLocationCoords Coords
+    | UpdateScheduledTaskWorkflowName String
     | SaveUser
     | SaveLocation
+    | SaveScheduledTask
     | DeleteUser UserId
     | DeleteLocation LocationId
     | CreateUserResponse (WebData User)
@@ -1136,6 +1243,18 @@ update msg model =
         OpenEditingModalEditLocation location ->
             ( { model | editForm = EditLocation location }, Cmd.none )
 
+        OpenEditingModalNewScheduledTask ->
+            ( { model
+                | editForm =
+                    NewScheduledTask
+                        { frequency = Daily 9 0
+                        , workflowName = "Choose name"
+                        , params = []
+                        }
+              }
+            , Cmd.none
+            )
+
         UpdateUserName newName ->
             let
                 newEditForm =
@@ -1196,11 +1315,29 @@ update msg model =
             in
             ( { model | editForm = newEditForm }, Cmd.none )
 
+        UpdateScheduledTaskWorkflowName newWorkflowName ->
+            let
+                newEditForm =
+                    case model.editForm of
+                        NewScheduledTask scheduleTaskParams ->
+                            NewScheduledTask { scheduleTaskParams | workflowName = newWorkflowName }
+
+                        EditScheduledTask scheduledTask ->
+                            EditScheduledTask { scheduledTask | workflowName = newWorkflowName }
+
+                        otherwise ->
+                            model.editForm
+            in
+            ( { model | editForm = newEditForm }, Cmd.none )
+
         SaveUser ->
             ( model, saveUser model.editForm )
 
         SaveLocation ->
             ( model, saveLocation model.editForm )
+
+        SaveScheduledTask ->
+            ( model, saveScheduledTask model.editForm )
 
         DeleteUser userId ->
             ( model, deleteUser userId )
