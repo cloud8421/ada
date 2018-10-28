@@ -689,9 +689,7 @@ scheduledTasksSection model =
                                 ]
                                 [ Bulma.iconButton Bulma.Run ]
                             ]
-                        , p [ class "control" ]
-                            [ a [ class "button is-link" ] [ Bulma.iconButton Bulma.Edit ]
-                            ]
+                        , Bulma.actionButton Bulma.Edit (OpenEditingModalEditScheduledTask scheduledTask)
                         , p [ class "control" ]
                             [ a [ class "button is-danger" ] [ Bulma.iconButton Bulma.Delete ]
                             ]
@@ -1049,8 +1047,8 @@ editingModalForm model =
         NewScheduledTask scheduleTaskParams ->
             scheduledTaskEditingForm "New Scheduled Task" scheduleTaskParams model.workflows
 
-        otherwise ->
-            div [] [ text "Not implemented yet" ]
+        EditScheduledTask scheduledTask ->
+            scheduledTaskEditingForm "Edit Scheduled Task" scheduledTask model.workflows
 
 
 editingModal : Model -> Html Msg
@@ -1179,6 +1177,7 @@ type Msg
     | OpenEditingModalNewLocation
     | OpenEditingModalEditLocation Location
     | OpenEditingModalNewScheduledTask
+    | OpenEditingModalEditScheduledTask ScheduledTask
     | UpdateUserName String
     | UpdateUserEmail String
     | UpdateLocationName String
@@ -1297,6 +1296,9 @@ update msg model =
               }
             , Cmd.none
             )
+
+        OpenEditingModalEditScheduledTask scheduledTask ->
+            ( { model | editForm = EditScheduledTask scheduledTask }, Cmd.none )
 
         UpdateUserName newName ->
             let
