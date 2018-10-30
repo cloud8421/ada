@@ -15,7 +15,6 @@ import Platform.Sub as Sub
 import RemoteData exposing (..)
 
 
-
 -- RESOURCE TYPES
 
 
@@ -529,7 +528,6 @@ locationsSection locations gmapsApiKey =
         activeTag active =
             if active then
                 Bulma.tag "active"
-
             else
                 Bulma.lightTag "inactive"
 
@@ -538,7 +536,6 @@ locationsSection locations gmapsApiKey =
                 disabledAttr =
                     if location.active then
                         [ attribute "disabled" "disabled" ]
-
                     else
                         []
             in
@@ -573,29 +570,31 @@ locationsSection locations gmapsApiKey =
     Bulma.blockWithNew "Locations" OpenEditingModalNewLocation (webDataTable locations contentArea)
 
 
+requirementTag : WorkflowRequirement -> Html Msg
+requirementTag requirement =
+    case requirement of
+        RequiresUserId ->
+            Bulma.tag "User"
+
+        RequiresLocationId ->
+            Bulma.tag "Location"
+
+        RequiresNewsTag ->
+            Bulma.tag "News tag"
+
+        UnsupportedRequirement ->
+            Bulma.dangerTag "Not supported"
+
+
 workflowsSection : WebData (List Workflow) -> Html Msg
 workflowsSection workflows =
     let
-        formatRequirement requirement =
-            case requirement of
-                RequiresUserId ->
-                    Bulma.tag "User"
-
-                RequiresLocationId ->
-                    Bulma.tag "Location"
-
-                RequiresNewsTag ->
-                    Bulma.tag "News tag"
-
-                UnsupportedRequirement ->
-                    Bulma.dangerTag "Not supported"
-
         workflowRow workflow =
             tr []
                 [ td [] [ text workflow.humanName ]
                 , td [ class "field is-grouped is-grouped-multiline" ]
                     [ div [ class "field is-grouped is-grouped-multiline" ]
-                        (List.map formatRequirement workflow.requirements)
+                        (List.map requirementTag workflow.requirements)
                     ]
                 ]
 
@@ -902,7 +901,6 @@ scheduledTaskEditingForm title resource workflows =
                 optionAttrs =
                     if name == selectedWorkflowName then
                         [ attribute "selected" "selected" ]
-
                     else
                         []
             in
