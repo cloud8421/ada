@@ -101,11 +101,19 @@ type WorkflowRequirement
     | UnsupportedRequirement
 
 
+type alias WorfklowName =
+    String
+
+
 type alias Workflow =
-    { name : String
+    { name : WorfklowName
     , humanName : String
     , requirements : List WorkflowRequirement
     }
+
+
+type alias Workflows =
+    Dict.Dict WorfklowName Workflow
 
 
 
@@ -133,9 +141,15 @@ type alias ScheduledTasks =
 -- UTIL
 
 
-collectionToDict : List { a | id : comparable } -> Dict.Dict comparable { a | id : comparable }
-collectionToDict items =
+groupById : List { a | id : comparable } -> Dict.Dict comparable { a | id : comparable }
+groupById items =
     List.map (\i -> ( i.id, i )) items
+        |> Dict.fromList
+
+
+groupByName : List { a | name : comparable } -> Dict.Dict comparable { a | name : comparable }
+groupByName items =
+    List.map (\i -> ( i.name, i )) items
         |> Dict.fromList
 
 
@@ -160,7 +174,7 @@ getUsers : Cmd Msg
 getUsers =
     Http.get "/users" decodeUsers
         |> RemoteData.sendRequest
-        |> Cmd.map (RemoteData.map collectionToDict)
+        |> Cmd.map (RemoteData.map groupById)
         |> Cmd.map UsersResponse
 
 
@@ -235,7 +249,7 @@ getLocations : Cmd Msg
 getLocations =
     Http.get "/locations" decodeLocations
         |> RemoteData.sendRequest
-        |> Cmd.map (RemoteData.map collectionToDict)
+        |> Cmd.map (RemoteData.map groupById)
         |> Cmd.map LocationsResponse
 
 
@@ -338,6 +352,7 @@ getWorkflows : Cmd Msg
 getWorkflows =
     Http.get "/workflows" decodeWorkflows
         |> RemoteData.sendRequest
+        |> Cmd.map (RemoteData.map groupByName)
         |> Cmd.map WorkflowsResponse
 
 
@@ -410,7 +425,7 @@ getScheduledTasks : Cmd Msg
 getScheduledTasks =
     Http.get "/scheduled_tasks" decodeScheduledTasks
         |> RemoteData.sendRequest
-        |> Cmd.map (RemoteData.map collectionToDict)
+        |> Cmd.map (RemoteData.map groupById)
         |> Cmd.map ScheduledTasksResponse
 
 
@@ -586,7 +601,7 @@ requirementTag requirement =
             Bulma.dangerTag "Not supported"
 
 
-workflowsSection : WebData (List Workflow) -> Html Msg
+workflowsSection : WebData Workflows -> Html Msg
 workflowsSection workflows =
     let
         workflowRow workflow =
@@ -601,7 +616,7 @@ workflowsSection workflows =
         contentArea items =
             table [ class "table is-fullwidth" ]
                 [ Bulma.tableHead [ "Name", "Requirements" ]
-                , tbody [] (List.map workflowRow items)
+                , tbody [] (List.map workflowRow (Dict.values items))
                 ]
     in
     Bulma.block "Workflows" (webDataTable workflows contentArea)
@@ -891,7 +906,9 @@ scheduledTaskEditingForm title resource workflows =
         workflowMetas =
             case workflows of
                 Success items ->
-                    List.map (\i -> ( i.humanName, i.name )) items
+                    items
+                        |> Dict.values
+                        |> List.map (\i -> ( i.humanName, i.name ))
 
                 otherwise ->
                     []
@@ -1173,7 +1190,7 @@ type Msg
     | ActivateLocation Int
     | UsersResponse (WebData Users)
     | LocationsResponse (WebData Locations)
-    | WorkflowsResponse (WebData (List Workflow))
+    | WorkflowsResponse (WebData Workflows)
     | ScheduledTasksResponse (WebData ScheduledTasks)
     | ExecuteScheduledTaskResponse (WebData ())
     | ActivateLocationResponse (WebData ())
@@ -1208,7 +1225,7 @@ type alias Model =
     { gmapsApiKey : String
     , users : WebData Users
     , locations : WebData Locations
-    , workflows : WebData (List Workflow)
+    , workflows : WebData Workflows
     , scheduledTasks : WebData ScheduledTasks
     , runningTask : Maybe Int
     , editForm : EditForm
