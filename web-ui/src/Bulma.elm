@@ -1,4 +1,20 @@
-module Bulma exposing (Icon(..), actionButton, block, blockWithNew, dangerActionButton, dangerTag, iconButton, lightTag, tableHead, tag, tagWithAddons, titleBar)
+module Bulma
+    exposing
+        ( Icon(..)
+        , actionButton
+        , block
+        , blockWithNew
+        , dangerActionButton
+        , dangerTag
+        , iconButton
+        , lightTag
+        , tableHead
+        , tag
+        , tagWithAddon
+        , tags
+        , tagsWithAddons
+        , titleBar
+        )
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -104,44 +120,60 @@ blockWithNew blockTitle newMsg contents =
         ]
 
 
-tagWithAddons : String -> String -> Html msg
-tagWithAddons name value =
+tagWithAddon : String -> String -> List (Html msg)
+tagWithAddon name value =
+    [ span [ class "tag is-primary" ]
+        [ text name ]
+    , span [ class "tag" ] [ text value ]
+    ]
+
+
+tagsWithAddons : List ( String, String ) -> Html msg
+tagsWithAddons pairs =
     div [ class "control" ]
-        [ div [ class "tags has-addons" ]
-            [ span [ class "tag is-primary" ]
-                [ text name ]
-            , span [ class "tag" ] [ text value ]
-            ]
+        [ div [ class "tags has-addons" ] (List.concatMap (\( n, v ) -> tagWithAddon n v) pairs)
         ]
 
 
 tag : String -> Html msg
 tag name =
+    span [ class "tag is-primary" ]
+        [ text name ]
+
+
+tags : List String -> Html msg
+tags names =
     div [ class "control" ]
         [ div [ class "tags" ]
-            [ span [ class "tag is-primary" ]
-                [ text name ]
-            ]
+            (List.map tag names)
         ]
 
 
 lightTag : String -> Html msg
 lightTag name =
+    span [ class "tag is-light" ]
+        [ text name ]
+
+
+lightTags : List String -> Html msg
+lightTags names =
     div [ class "control" ]
         [ div [ class "tags" ]
-            [ span [ class "tag is-light" ]
-                [ text name ]
-            ]
+            (List.map lightTag names)
         ]
 
 
 dangerTag : String -> Html msg
 dangerTag name =
+    span [ class "tag is-danger" ]
+        [ text name ]
+
+
+dangerTags : List String -> Html msg
+dangerTags names =
     div [ class "control" ]
         [ div [ class "tags" ]
-            [ span [ class "tag is-danger" ]
-                [ text name ]
-            ]
+            (List.map dangerTag names)
         ]
 
 

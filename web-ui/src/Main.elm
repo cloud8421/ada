@@ -607,9 +607,12 @@ workflowsSection workflows =
         workflowRow workflow =
             tr []
                 [ td [] [ text workflow.humanName ]
-                , td [ class "field is-grouped is-grouped-multiline" ]
+                , td []
                     [ div [ class "field is-grouped is-grouped-multiline" ]
-                        (List.map requirementTag workflow.requirements)
+                        [ div
+                            [ class "tags" ]
+                            (List.map requirementTag workflow.requirements)
+                        ]
                     ]
                 ]
 
@@ -655,25 +658,28 @@ find collection id =
 scheduledTasksSection : Model -> Html Msg
 scheduledTasksSection model =
     let
-        formatParam param =
+        toPair param =
             case param of
                 UserId id ->
                     find model.users id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
-                        |> Bulma.tagWithAddons "User"
+                        |> Tuple.pair "User"
 
                 LocationId id ->
                     find model.locations id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
-                        |> Bulma.tagWithAddons "Location"
+                        |> Tuple.pair "Location"
 
                 NewsTag tag ->
-                    Bulma.tagWithAddons "News tag" tag
+                    Tuple.pair "News tag" tag
 
                 UnsupportedParam ->
-                    Bulma.dangerTag "Unsupported"
+                    Tuple.pair "Unsupported" ":("
+
+        paramTags params =
+            Bulma.tagsWithAddons (List.map toPair params)
 
         scheduledTaskRow scheduledTask =
             let
@@ -691,7 +697,7 @@ scheduledTasksSection model =
                 , td [] [ text scheduledTask.workflowHumanName ]
                 , td []
                     [ div [ class "field is-grouped is-grouped-multiline" ]
-                        (List.map formatParam scheduledTask.params)
+                        [ paramTags scheduledTask.params ]
                     ]
                 , td [] [ text <| formatFrequency scheduledTask.frequency ]
                 , td []
@@ -913,6 +919,30 @@ scheduledTaskEditingForm title resource workflows =
                 otherwise ->
                     []
 
+        workflowMetasWithDefaultOption =
+            [ ( "Choose workflow", "choose-workflow" ) ] ++ workflowMetas
+
+        workflowRequirements =
+            case workflows of
+                Success items ->
+                    items
+                        |> Dict.get resource.workflowName
+                        |> Maybe.map .requirements
+
+                otherwise ->
+                    Nothing
+
+        requirementsDescription =
+            case workflowRequirements of
+                Just items ->
+                    [ p [ class "help" ] [ text "Requires" ]
+                    , div [ class "tags" ]
+                        (List.map requirementTag items)
+                    ]
+
+                Nothing ->
+                    [ p [ class "help" ] [ text "Choose a workflow to see its requirements" ] ]
+
         workflowOption selectedWorkflowName ( humanName, name ) =
             let
                 optionAttrs =
@@ -999,9 +1029,10 @@ scheduledTaskEditingForm title resource workflows =
                     , div [ class "control" ]
                         [ div [ class "select" ]
                             [ select [ onChange UpdateScheduledTaskWorkflowName ]
-                                (List.map (workflowOption resource.workflowName) workflowMetas)
+                                (List.map (workflowOption resource.workflowName) workflowMetasWithDefaultOption)
                             ]
                         ]
+                    , div [ class "control" ] requirementsDescription
                     ]
                 ]
             , div [ class "column" ]
