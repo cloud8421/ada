@@ -722,28 +722,22 @@ userEditingForm title resource =
             [ label [ class "label" ]
                 [ text "Name" ]
             , div [ class "control" ]
-                [ input
-                    [ class "input"
-                    , placeholder "User name"
-                    , type_ "text"
+                [ Bulma.textInput
+                    [ placeholder "User name"
                     , value resource.name
                     , onInput UpdateUserName
                     ]
-                    []
                 ]
             ]
         , div [ class "field" ]
             [ label [ class "label" ]
                 [ text "Email" ]
             , div [ class "control has-icons-left has-icons-right" ]
-                [ input
-                    [ class "input"
-                    , placeholder "Email input"
-                    , type_ "email"
+                [ Bulma.emailInput
+                    [ placeholder "User email"
                     , value resource.email
                     , onInput UpdateUserEmail
                     ]
-                    []
                 , span [ class "icon is-small is-left" ]
                     [ i [ class "fas fa-envelope" ]
                         []
@@ -753,24 +747,12 @@ userEditingForm title resource =
         , div
             [ class "field is-grouped" ]
             [ div [ class "control" ]
-                [ input
-                    [ class "button is-link"
-                    , type_ "button"
-                    , value "Submit"
-                    , onClick SaveUser
-                    ]
-                    []
+                [ Bulma.saveButton
+                    [ onClick SaveUser ]
                 ]
-            , div
-                [ class "control"
-                ]
-                [ input
-                    [ class "button is-text"
-                    , type_ "button"
-                    , value "Cancel"
-                    , onClick CloseEditingModal
-                    ]
-                    []
+            , div [ class "control" ]
+                [ Bulma.cancelButton
+                    [ onClick CloseEditingModal ]
                 ]
             ]
         ]
@@ -852,25 +834,11 @@ locationEditingForm title resource gmapsApiKey =
                     ]
                 , div
                     [ class "field is-grouped" ]
-                    [ div [ class "control" ]
-                        [ input
-                            [ class "button is-link"
-                            , type_ "button"
-                            , value "Submit"
-                            , onClick SaveLocation
-                            ]
-                            []
-                        ]
-                    , div
-                        [ class "control"
-                        ]
-                        [ input
-                            [ class "button is-text"
-                            , type_ "button"
-                            , value "Cancel"
-                            , onClick CloseEditingModal
-                            ]
-                            []
+                    [ Bulma.saveButton
+                        [ onClick SaveLocation ]
+                    , div [ class "control" ]
+                        [ Bulma.cancelButton
+                            [ onClick CloseEditingModal ]
                         ]
                     ]
                 ]
@@ -1042,24 +1010,12 @@ scheduledTaskEditingForm title resource workflows =
         , div
             [ class "field is-grouped" ]
             [ div [ class "control" ]
-                [ input
-                    [ class "button is-link"
-                    , type_ "button"
-                    , value "Submit"
-                    , onClick SaveScheduledTask
-                    ]
-                    []
+                [ Bulma.saveButton
+                    [ onClick SaveScheduledTask ]
                 ]
-            , div
-                [ class "control"
-                ]
-                [ input
-                    [ class "button is-text"
-                    , type_ "button"
-                    , value "Cancel"
-                    , onClick CloseEditingModal
-                    ]
-                    []
+            , div [ class "control" ]
+                [ Bulma.cancelButton
+                    [ onClick CloseEditingModal ]
                 ]
             ]
         ]

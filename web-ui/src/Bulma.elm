@@ -4,15 +4,19 @@ module Bulma
         , actionButton
         , block
         , blockWithNew
+        , cancelButton
         , dangerActionButton
         , dangerTag
+        , emailInput
         , iconButton
         , lightTag
+        , saveButton
         , tableHead
         , tag
         , tagWithAddon
         , tags
         , tagsWithAddons
+        , textInput
         , titleBar
         )
 
@@ -184,3 +188,49 @@ tableHead columnNames =
             th [] [ text columnName ]
     in
     thead [] [ tr [] (List.map cell columnNames) ]
+
+
+textInput : List (Attribute msg) -> Html msg
+textInput attributes =
+    let
+        defaultAttributes =
+            [ class "input"
+            , type_ "text"
+            ]
+    in
+    input (defaultAttributes ++ attributes) []
+
+
+emailInput : List (Attribute msg) -> Html msg
+emailInput attributes =
+    let
+        defaultAttributes =
+            [ class "input"
+            , type_ "text"
+            ]
+    in
+    input (defaultAttributes ++ attributes) []
+
+
+saveButton : List (Attribute msg) -> Html msg
+saveButton attributes =
+    let
+        defaultAttributes =
+            [ class "button is-link"
+            , type_ "button"
+            , value "Save"
+            ]
+    in
+    input (defaultAttributes ++ attributes) []
+
+
+cancelButton : List (Attribute msg) -> Html msg
+cancelButton attributes =
+    let
+        defaultAttributes =
+            [ class "button is-text"
+            , type_ "button"
+            , value "Cancel"
+            ]
+    in
+    input (defaultAttributes ++ attributes) []
