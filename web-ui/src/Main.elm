@@ -80,7 +80,6 @@ type alias Second =
 type Frequency
     = Daily Hour Minute
     | Hourly Minute Second
-    | UnsupportedFrequency
 
 
 
@@ -91,14 +90,12 @@ type WorkflowParam
     = UserId Int
     | LocationId Int
     | NewsTag String
-    | UnsupportedParam
 
 
 type WorkflowRequirement
     = RequiresUserId
     | RequiresLocationId
     | RequiresNewsTag
-    | UnsupportedRequirement
 
 
 type alias WorfklowName =
@@ -329,7 +326,7 @@ requirementDecoder =
                     JD.succeed RequiresLocationId
 
                 otherwise ->
-                    JD.succeed UnsupportedRequirement
+                    JD.fail "Unsupported requirement"
     in
     JD.string
         |> JD.andThen toRequirement
@@ -376,7 +373,7 @@ frequencyDecoder =
                         (JD.field "second" JD.int)
 
                 other ->
-                    JD.succeed UnsupportedFrequency
+                    JD.fail "Unsupported frequency"
     in
     JD.field "type" JD.string
         |> JD.andThen byFrequencyType
@@ -400,7 +397,7 @@ workflowParamDecoder =
                         (JD.field "value" JD.string)
 
                 other ->
-                    JD.succeed UnsupportedParam
+                    JD.fail "Unsupported Param"
     in
     JD.field "name" JD.string
         |> JD.andThen toParam
@@ -597,9 +594,6 @@ requirementTag requirement =
         RequiresNewsTag ->
             Bulma.tag "News tag"
 
-        UnsupportedRequirement ->
-            Bulma.dangerTag "Not supported"
-
 
 workflowsSection : WebData Workflows -> Html Msg
 workflowsSection workflows =
@@ -641,9 +635,6 @@ formatFrequency frequency =
         Hourly minute second ->
             "Every hour at " ++ timePad minute ++ ":" ++ timePad second
 
-        UnsupportedFrequency ->
-            "Frequency not supported"
-
 
 find : WebData (Dict.Dict Int v) -> Int -> Maybe v
 find collection id =
@@ -674,9 +665,6 @@ scheduledTasksSection model =
 
                 NewsTag tag ->
                     Tuple.pair "News tag" tag
-
-                UnsupportedParam ->
-                    Tuple.pair "Unsupported" ":("
 
         paramTags params =
             Bulma.tagsWithAddons (List.map toPair params)
@@ -1014,9 +1002,6 @@ scheduledTaskEditingForm title resource workflows =
                         , onInputTime UpdateScheduledTaskFrequency
                         ]
                         []
-
-                UnsupportedFrequency ->
-                    p [] [ text "Unsupported frequency value" ]
     in
     form []
         [ h1 [ class "title" ] [ text title ]
@@ -1455,7 +1440,7 @@ update msg model =
                             Hourly 30 0
 
                         otherwise ->
-                            UnsupportedFrequency
+                            Daily 9 0
 
                 newEditForm =
                     case model.editForm of
