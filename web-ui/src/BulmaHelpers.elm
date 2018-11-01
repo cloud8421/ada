@@ -1,4 +1,4 @@
-module Bulma
+module BulmaHelpers
     exposing
         ( Icon(..)
         , actionButton

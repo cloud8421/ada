@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser exposing (Document)
-import Bulma as Bulma
+import BulmaHelpers as BulmaHelpers
 import Dict as Dict
 import Html exposing (..)
 import Html.Attributes exposing (attribute, class, classList, href, placeholder, src, type_, value)
@@ -491,19 +491,19 @@ usersSection users =
                 , td [] [ text user.email ]
                 , td []
                     [ div [ class "field has-addons" ]
-                        [ Bulma.actionButton Bulma.Edit (OpenEditingModalEditUser user)
-                        , Bulma.dangerActionButton Bulma.Delete (DeleteUser user.id)
+                        [ BulmaHelpers.actionButton BulmaHelpers.Edit (OpenEditingModalEditUser user)
+                        , BulmaHelpers.dangerActionButton BulmaHelpers.Delete (DeleteUser user.id)
                         ]
                     ]
                 ]
 
         contentArea items =
             table [ class "table is-fullwidth" ]
-                [ Bulma.tableHead [ "ID", "Name", "Email", "Actions" ]
+                [ BulmaHelpers.tableHead [ "ID", "Name", "Email", "Actions" ]
                 , tbody [] (List.map userRow (Dict.values items))
                 ]
     in
-    Bulma.blockWithNew "Users" OpenEditingModalNewUser (webDataTable users contentArea)
+    BulmaHelpers.blockWithNew "Users" OpenEditingModalNewUser (webDataTable users contentArea)
 
 
 gMap : Location -> String -> Int -> Int -> Html Msg
@@ -528,9 +528,9 @@ locationsSection locations gmapsApiKey =
 
         activeTag active =
             if active then
-                Bulma.tag "active"
+                BulmaHelpers.tag "active"
             else
-                Bulma.lightTag "inactive"
+                BulmaHelpers.lightTag "inactive"
 
         locationRow location =
             let
@@ -554,34 +554,34 @@ locationsSection locations gmapsApiKey =
                                  ]
                                     ++ disabledAttr
                                 )
-                                [ Bulma.iconButton Bulma.Activate ]
+                                [ BulmaHelpers.iconButton BulmaHelpers.Activate ]
                             ]
-                        , Bulma.actionButton Bulma.Edit (OpenEditingModalEditLocation location)
-                        , Bulma.dangerActionButton Bulma.Delete (DeleteLocation location.id)
+                        , BulmaHelpers.actionButton BulmaHelpers.Edit (OpenEditingModalEditLocation location)
+                        , BulmaHelpers.dangerActionButton BulmaHelpers.Delete (DeleteLocation location.id)
                         ]
                     ]
                 ]
 
         contentArea items =
             table [ class "table is-fullwidth" ]
-                [ Bulma.tableHead [ "ID", "Name", "Status", "Coordinates", "Actions" ]
+                [ BulmaHelpers.tableHead [ "ID", "Name", "Status", "Coordinates", "Actions" ]
                 , tbody [] (List.map locationRow (Dict.values items))
                 ]
     in
-    Bulma.blockWithNew "Locations" OpenEditingModalNewLocation (webDataTable locations contentArea)
+    BulmaHelpers.blockWithNew "Locations" OpenEditingModalNewLocation (webDataTable locations contentArea)
 
 
 requirementTag : Workflow.Requirement -> Html Msg
 requirementTag requirement =
     case requirement of
         Workflow.RequiresUserId ->
-            Bulma.tag "User"
+            BulmaHelpers.tag "User"
 
         Workflow.RequiresLocationId ->
-            Bulma.tag "Location"
+            BulmaHelpers.tag "Location"
 
         Workflow.RequiresNewsTag ->
-            Bulma.tag "News tag"
+            BulmaHelpers.tag "News tag"
 
 
 workflowsSection : WebData Workflows -> Html Msg
@@ -601,11 +601,11 @@ workflowsSection workflows =
 
         contentArea items =
             table [ class "table is-fullwidth" ]
-                [ Bulma.tableHead [ "Name", "Requirements" ]
+                [ BulmaHelpers.tableHead [ "Name", "Requirements" ]
                 , tbody [] (List.map workflowRow (Dict.values items))
                 ]
     in
-    Bulma.block "Workflows" (webDataTable workflows contentArea)
+    BulmaHelpers.block "Workflows" (webDataTable workflows contentArea)
 
 
 timePad : Int -> String
@@ -656,7 +656,7 @@ scheduledTasksSection model =
                     Tuple.pair "News tag" tag
 
         paramTags params =
-            Bulma.tagsWithAddons (List.map toPair params)
+            BulmaHelpers.tagsWithAddons (List.map toPair params)
 
         scheduledTaskRow scheduledTask =
             let
@@ -684,11 +684,11 @@ scheduledTasksSection model =
                                 [ classList runClassList
                                 , onClick (ExecuteScheduledTask scheduledTask.id)
                                 ]
-                                [ Bulma.iconButton Bulma.Run ]
+                                [ BulmaHelpers.iconButton BulmaHelpers.Run ]
                             ]
-                        , Bulma.actionButton Bulma.Edit (OpenEditingModalEditScheduledTask scheduledTask)
+                        , BulmaHelpers.actionButton BulmaHelpers.Edit (OpenEditingModalEditScheduledTask scheduledTask)
                         , p [ class "control" ]
-                            [ a [ class "button is-danger" ] [ Bulma.iconButton Bulma.Delete ]
+                            [ a [ class "button is-danger" ] [ BulmaHelpers.iconButton BulmaHelpers.Delete ]
                             ]
                         ]
                     ]
@@ -696,11 +696,11 @@ scheduledTasksSection model =
 
         contentArea items =
             table [ class "table is-fullwidth" ]
-                [ Bulma.tableHead [ "ID", "Workflow Name", "Params", "Frequency", "Actions" ]
+                [ BulmaHelpers.tableHead [ "ID", "Workflow Name", "Params", "Frequency", "Actions" ]
                 , tbody [] (List.map scheduledTaskRow (Dict.values items))
                 ]
     in
-    Bulma.blockWithNew "Scheduled Tasks" OpenEditingModalNewScheduledTask (webDataTable model.scheduledTasks contentArea)
+    BulmaHelpers.blockWithNew "Scheduled Tasks" OpenEditingModalNewScheduledTask (webDataTable model.scheduledTasks contentArea)
 
 
 userEditingForm : String -> { a | name : String, email : String } -> Html Msg
@@ -711,7 +711,7 @@ userEditingForm title resource =
             [ label [ class "label" ]
                 [ text "Name" ]
             , div [ class "control" ]
-                [ Bulma.textInput
+                [ BulmaHelpers.textInput
                     [ placeholder "User name"
                     , value resource.name
                     , onInput UpdateUserName
@@ -722,7 +722,7 @@ userEditingForm title resource =
             [ label [ class "label" ]
                 [ text "Email" ]
             , div [ class "control has-icons-left has-icons-right" ]
-                [ Bulma.emailInput
+                [ BulmaHelpers.emailInput
                     [ placeholder "User email"
                     , value resource.email
                     , onInput UpdateUserEmail
@@ -736,11 +736,11 @@ userEditingForm title resource =
         , div
             [ class "field is-grouped" ]
             [ div [ class "control" ]
-                [ Bulma.saveButton
+                [ BulmaHelpers.saveButton
                     [ onClick SaveUser ]
                 ]
             , div [ class "control" ]
-                [ Bulma.cancelButton
+                [ BulmaHelpers.cancelButton
                     [ onClick CloseEditingModal ]
                 ]
             ]
@@ -823,10 +823,10 @@ locationEditingForm title resource gmapsApiKey =
                     ]
                 , div
                     [ class "field is-grouped" ]
-                    [ Bulma.saveButton
+                    [ BulmaHelpers.saveButton
                         [ onClick SaveLocation ]
                     , div [ class "control" ]
-                        [ Bulma.cancelButton
+                        [ BulmaHelpers.cancelButton
                             [ onClick CloseEditingModal ]
                         ]
                     ]
@@ -999,11 +999,11 @@ scheduledTaskEditingForm title resource workflows =
         , div
             [ class "field is-grouped" ]
             [ div [ class "control" ]
-                [ Bulma.saveButton
+                [ BulmaHelpers.saveButton
                     [ onClick SaveScheduledTask ]
                 ]
             , div [ class "control" ]
-                [ Bulma.cancelButton
+                [ BulmaHelpers.cancelButton
                     [ onClick CloseEditingModal ]
                 ]
             ]
@@ -1059,7 +1059,7 @@ editingModal model =
 body : Model -> List (Html Msg)
 body model =
     [ div []
-        [ Bulma.titleBar "Ada Control Center"
+        [ BulmaHelpers.titleBar "Ada Control Center"
         , div [ class "columns" ]
             [ scheduledTasksSection model
             , locationsSection model.locations model.gmapsApiKey
