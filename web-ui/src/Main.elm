@@ -13,6 +13,7 @@ import Map exposing (..)
 import Platform.Cmd as Cmd
 import Platform.Sub as Sub
 import RemoteData exposing (..)
+import Workflow as Workflow
 
 
 -- RESOURCE TYPES
@@ -86,18 +87,6 @@ type Frequency
 -- WORKFLOWS
 
 
-type WorkflowParam
-    = UserId Int
-    | LocationId Int
-    | NewsTag String
-
-
-type WorkflowRequirement
-    = RequiresUserId
-    | RequiresLocationId
-    | RequiresNewsTag
-
-
 type alias WorfklowName =
     String
 
@@ -105,7 +94,7 @@ type alias WorfklowName =
 type alias Workflow =
     { name : WorfklowName
     , humanName : String
-    , requirements : List WorkflowRequirement
+    , requirements : List Workflow.Requirement
     }
 
 
@@ -126,7 +115,7 @@ type alias ScheduledTask =
     , frequency : Frequency
     , workflowName : String
     , workflowHumanName : String
-    , params : List WorkflowParam
+    , params : List Workflow.Param
     }
 
 
@@ -311,19 +300,19 @@ deleteLocation locationId =
 -- API - WORKFLOWS
 
 
-requirementDecoder : JD.Decoder WorkflowRequirement
+requirementDecoder : JD.Decoder Workflow.Requirement
 requirementDecoder =
     let
         toRequirement reqName =
             case reqName of
                 "tag" ->
-                    JD.succeed RequiresNewsTag
+                    JD.succeed Workflow.RequiresNewsTag
 
                 "user_id" ->
-                    JD.succeed RequiresUserId
+                    JD.succeed Workflow.RequiresUserId
 
                 "location_id" ->
-                    JD.succeed RequiresLocationId
+                    JD.succeed Workflow.RequiresLocationId
 
                 otherwise ->
                     JD.fail "Unsupported requirement"
@@ -379,21 +368,21 @@ frequencyDecoder =
         |> JD.andThen byFrequencyType
 
 
-workflowParamDecoder : JD.Decoder WorkflowParam
+workflowParamDecoder : JD.Decoder Workflow.Param
 workflowParamDecoder =
     let
         toParam name =
             case name of
                 "user_id" ->
-                    JD.map UserId
+                    JD.map Workflow.UserId
                         (JD.field "value" JD.int)
 
                 "location_id" ->
-                    JD.map LocationId
+                    JD.map Workflow.LocationId
                         (JD.field "value" JD.int)
 
                 "tag" ->
-                    JD.map NewsTag
+                    JD.map Workflow.NewsTag
                         (JD.field "value" JD.string)
 
                 other ->
@@ -582,16 +571,16 @@ locationsSection locations gmapsApiKey =
     Bulma.blockWithNew "Locations" OpenEditingModalNewLocation (webDataTable locations contentArea)
 
 
-requirementTag : WorkflowRequirement -> Html Msg
+requirementTag : Workflow.Requirement -> Html Msg
 requirementTag requirement =
     case requirement of
-        RequiresUserId ->
+        Workflow.RequiresUserId ->
             Bulma.tag "User"
 
-        RequiresLocationId ->
+        Workflow.RequiresLocationId ->
             Bulma.tag "Location"
 
-        RequiresNewsTag ->
+        Workflow.RequiresNewsTag ->
             Bulma.tag "News tag"
 
 
@@ -651,19 +640,19 @@ scheduledTasksSection model =
     let
         toPair param =
             case param of
-                UserId id ->
+                Workflow.UserId id ->
                     find model.users id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
                         |> Tuple.pair "User"
 
-                LocationId id ->
+                Workflow.LocationId id ->
                     find model.locations id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
                         |> Tuple.pair "Location"
 
-                NewsTag tag ->
+                Workflow.NewsTag tag ->
                     Tuple.pair "News tag" tag
 
         paramTags params =
@@ -1091,7 +1080,7 @@ body model =
 type alias ScheduledTaskParams =
     { frequency : Frequency
     , workflowName : String
-    , params : List WorkflowParam
+    , params : List Workflow.Param
     }
 
 
