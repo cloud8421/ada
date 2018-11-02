@@ -587,8 +587,8 @@ workflowsSection workflows =
                 []
                 [ BE.tableCell [] [ text workflow.humanName ]
                 , BE.tableCell []
-                    [ BF.field [ class "is-grouped is-grouped-multiline" ]
-                        [ BE.multitag [] (toTags workflow.requirements) ]
+                    [ BE.tags []
+                        (toTags workflow.requirements)
                     ]
                 ]
 
@@ -729,28 +729,27 @@ scheduledTasksSection model =
             ]
 
         paramTags params =
-            List.concatMap (\p -> p |> toPair |> toTag) params
+            let
+                tagPairs =
+                    List.map (\p -> p |> toPair |> toTag) params
+
+                tagContainer tagPair =
+                    BF.control BF.controlModifiers [] [ BE.multitag [] tagPair ]
+            in
+            List.map tagContainer tagPairs
 
         tableRow scheduledTask =
             let
                 isRunning =
                     model.runningTask == Just scheduledTask.id
-
-                runClassList =
-                    [ ( "button", True )
-                    , ( "is-primary", True )
-                    , ( "is-loading", isRunning )
-                    ]
             in
             BE.tableRow False
                 []
                 [ BE.tableCell [] [ text <| String.fromInt scheduledTask.id ]
                 , BE.tableCell [] [ text scheduledTask.workflowHumanName ]
-                , BE.tableCell [] [ text <| formatFrequency scheduledTask.frequency ]
                 , BE.tableCell []
-                    [ BE.multitag []
-                        (paramTags scheduledTask.params)
-                    ]
+                    [ BF.multilineFields [] (paramTags scheduledTask.params) ]
+                , BE.tableCell [] [ text <| formatFrequency scheduledTask.frequency ]
                 , BE.tableCell []
                     [ BF.field [ class "has-addons" ]
                         [ BX.runButton isRunning [ onClick (ExecuteScheduledTask scheduledTask.id) ]
