@@ -1076,10 +1076,30 @@ editingModal model =
         ]
 
 
+titleBar : Html Msg
+titleBar =
+    BX.titleBar "Ada Control Center"
+        [ BCP.navbarItemLink False
+            []
+            [ span [ class "icon" ]
+                [ BX.sunIcon
+                , b [] [ text "+" ]
+                ]
+            ]
+        , BCP.navbarItemLink False
+            []
+            [ span [ class "icon" ]
+                [ BX.sunIcon
+                , b [] [ text "-" ]
+                ]
+            ]
+        ]
+
+
 body : Model -> List (Html Msg)
 body model =
     [ main_ []
-        [ BX.titleBar "Ada Control Center"
+        [ titleBar
         , BL.section BL.NotSpaced
             []
             [ BX.fullColumns

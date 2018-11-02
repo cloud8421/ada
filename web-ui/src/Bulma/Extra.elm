@@ -6,21 +6,44 @@ import Bulma.Elements exposing (..)
 import Bulma.Form exposing (..)
 import Bulma.Layout exposing (..)
 import Bulma.Modifiers exposing (..)
-import Html exposing (Attribute, Html, i, text)
+import Html exposing (Attribute, Html, a, i, span, text)
 import Html.Attributes exposing (class, type_, value)
 import Html.Events exposing (..)
 
 
-titleBar : String -> Html msg
-titleBar titleText =
-    hero { heroModifiers | color = Primary, size = Small, bold = True }
-        []
-        [ heroBody []
-            [ container []
-                [ title H1 [] [ text titleText ]
+topNavBar : String -> List (Html msg) -> Html msg
+topNavBar titleText menuLinks =
+    let
+        topNavbarBurger =
+            navbarBurger False
+                []
+                [ span [] []
+                , span [] []
+                , span [] []
                 ]
-            ]
+
+        titleTextNavbarItem =
+            navbarItem False [] [ title H2 [] [ text titleText ] ]
+    in
+    navbar navbarModifiers
+        []
+        [ navbarBrand [] topNavbarBurger [ titleTextNavbarItem ]
+        , navbarMenu True
+            []
+            [ navbarEnd [] menuLinks ]
         ]
+
+
+titleBar : String -> List (Html msg) -> Html msg
+titleBar titleText menuLinks =
+    hero { heroModifiers | color = Primary }
+        []
+        [ heroHead [] [ topNavBar titleText menuLinks ] ]
+
+
+sunIcon : Html msg
+sunIcon =
+    icon Large [] [ i [ class "fas fa-sun" ] [] ]
 
 
 tableHeadFromColumnNames : List String -> TablePartition msg
