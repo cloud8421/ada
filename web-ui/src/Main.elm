@@ -15,10 +15,10 @@ import Html.Events exposing (on, onClick, onInput, targetValue)
 import Http as Http
 import Json.Decode as JD
 import Json.Encode as JE
-import Map exposing (..)
 import Platform.Cmd as Cmd
 import Platform.Sub as Sub
 import RemoteData exposing (..)
+import Url.Builder as Builder
 
 
 -- RESOURCE TYPES
@@ -138,6 +138,19 @@ type alias ScheduledTask =
 
 type alias ScheduledTasks =
     Dict.Dict ScheduledTaskId ScheduledTask
+
+
+
+-- Maps
+
+
+type alias Map =
+    { apiKey : String
+    , coords : ( Float, Float )
+    , markerText : String
+    , width : Int
+    , height : Int
+    }
 
 
 
@@ -584,9 +597,37 @@ workflowsSection workflows =
     webDataTable workflows workflowsTable
 
 
+mapToUrl : Map -> String
+mapToUrl map =
+    let
+        ( lat, lng ) =
+            map.coords
+
+        coordsPair =
+            String.fromFloat lat ++ "," ++ String.fromFloat lng
+
+        size =
+            String.fromInt map.width ++ "x" ++ String.fromInt map.height
+
+        markers =
+            "color:blue|label:" ++ map.markerText ++ "|" ++ coordsPair
+    in
+    Builder.crossOrigin
+        "https://maps.googleapis.com"
+        [ "maps", "api", "staticmap" ]
+        [ Builder.string "center" coordsPair
+        , Builder.int "zoom" 13
+        , Builder.string "size" size
+        , Builder.string "maptype" "roadmap"
+        , Builder.string "markers" markers
+        , Builder.string "key" map.apiKey
+        ]
+
+
 gMap : Location -> String -> Int -> Int -> Html Msg
 gMap location gmapsApiKey width height =
     let
+        map : Map
         map =
             { apiKey = gmapsApiKey
             , coords = location.coords
@@ -595,7 +636,7 @@ gMap location gmapsApiKey width height =
             , height = height
             }
     in
-    img [ src (Map.toGmapsUrl map) ] []
+    img [ src (mapToUrl map) ] []
 
 
 locationsSection : WebData Locations -> String -> Html Msg
@@ -804,6 +845,7 @@ locationResourceForm title resource gmapsApiKey =
                     ]
                 ]
 
+        previewMap : Map
         previewMap =
             { apiKey = gmapsApiKey
             , coords = resource.coords
@@ -819,7 +861,7 @@ locationResourceForm title resource gmapsApiKey =
             ]
         , BX.halfColumn
             [ h2 [ class "subtitle" ] [ text "Preview" ]
-            , img [ src (Map.toGmapsUrl previewMap) ] []
+            , img [ src (mapToUrl previewMap) ] []
             ]
         ]
 
