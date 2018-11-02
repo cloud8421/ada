@@ -141,6 +141,14 @@ type alias ScheduledTasks =
 
 
 
+-- Brightness
+
+
+type alias Brightness =
+    Int
+
+
+
 -- Maps
 
 
@@ -198,6 +206,22 @@ requirementsAsLabels requirements =
                     "News tag"
     in
     List.map asLabel requirements
+
+
+incBrightness : Int -> Brightness -> Brightness
+incBrightness increment brightness =
+    if brightness + increment >= 255 then
+        255
+    else
+        brightness + increment
+
+
+decBrightness : Int -> Brightness -> Brightness
+decBrightness decrement brightness =
+    if brightness - decrement <= 1 then
+        1
+    else
+        brightness - decrement
 
 
 
@@ -520,6 +544,22 @@ delete url =
         , timeout = Nothing
         , withCredentials = False
         }
+
+
+
+-- API - BRIGHTNESS
+
+
+setBrightness : Brightness -> Cmd Msg
+setBrightness brightness =
+    let
+        encoded =
+            JE.object
+                [ ( "brightness", JE.int brightness ) ]
+    in
+    putNoContent "/display/brightness" (Http.jsonBody encoded)
+        |> RemoteData.sendRequest
+        |> Cmd.map SetBrightnessResponse
 
 
 
@@ -1076,18 +1116,18 @@ editingModal model =
         ]
 
 
-titleBar : Html Msg
-titleBar =
+titleBar : Brightness -> Html Msg
+titleBar brightness =
     BX.titleBar "Ada Control Center"
         [ BCP.navbarItemLink False
-            []
+            [ onClick (SetBrightness (incBrightness 20 brightness)) ]
             [ span [ class "icon" ]
                 [ BX.sunIcon
                 , b [] [ text "+" ]
                 ]
             ]
         , BCP.navbarItemLink False
-            []
+            [ onClick (SetBrightness (decBrightness 20 brightness)) ]
             [ span [ class "icon" ]
                 [ BX.sunIcon
                 , b [] [ text "-" ]
@@ -1099,7 +1139,7 @@ titleBar =
 body : Model -> List (Html Msg)
 body model =
     [ main_ []
-        [ titleBar
+        [ titleBar model.brightness
         , BL.section BL.NotSpaced
             []
             [ BX.fullColumns
@@ -1229,12 +1269,14 @@ type Msg
     | SaveFromModalForm
     | DeleteUser UserId
     | DeleteLocation LocationId
+    | SetBrightness Brightness
     | CreateUserResponse (WebData User)
     | UpdateUserResponse (WebData ())
     | DeleteUserResponse UserId (WebData ())
     | DeleteLocationResponse LocationId (WebData ())
     | CreateLocationResponse (WebData Location)
     | UpdateLocationResponse (WebData ())
+    | SetBrightnessResponse (WebData ())
 
 
 type alias Model =
@@ -1243,6 +1285,7 @@ type alias Model =
     , locations : WebData Locations
     , workflows : WebData Workflows
     , scheduledTasks : WebData ScheduledTasks
+    , brightness : Brightness
     , runningTask : Maybe Int
     , modalForm : ModalForm
     }
@@ -1265,6 +1308,7 @@ init googleMapsApiKey =
       , locations = NotAsked
       , workflows = NotAsked
       , scheduledTasks = NotAsked
+      , brightness = 1
       , runningTask = Nothing
       , modalForm = Closed
       }
@@ -1471,6 +1515,9 @@ update msg model =
         DeleteLocation locationId ->
             ( model, deleteLocation locationId )
 
+        SetBrightness brightness ->
+            ( { model | brightness = brightness }, setBrightness brightness )
+
         CreateUserResponse response ->
             case response of
                 Success user ->
@@ -1542,6 +1589,9 @@ update msg model =
 
                 otherwise ->
                     ( model, Cmd.none )
+
+        SetBrightnessResponse _ ->
+            ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
