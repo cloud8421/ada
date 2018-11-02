@@ -144,8 +144,12 @@ type alias ScheduledTasks =
 -- Maps
 
 
+type alias GoogleMapsApiKey =
+    String
+
+
 type alias Map =
-    { apiKey : String
+    { apiKey : GoogleMapsApiKey
     , coords : ( Float, Float )
     , markerText : String
     , width : Int
@@ -624,12 +628,12 @@ mapToUrl map =
         ]
 
 
-gMap : Location -> String -> Int -> Int -> Html Msg
-gMap location gmapsApiKey width height =
+gMap : Location -> GoogleMapsApiKey -> Int -> Int -> Html Msg
+gMap location googleMapsApiKey width height =
     let
         map : Map
         map =
-            { apiKey = gmapsApiKey
+            { apiKey = googleMapsApiKey
             , coords = location.coords
             , markerText = String.left 1 location.name
             , width = width
@@ -639,8 +643,8 @@ gMap location gmapsApiKey width height =
     img [ src (mapToUrl map) ] []
 
 
-locationsSection : WebData Locations -> String -> Html Msg
-locationsSection locations gmapsApiKey =
+locationsSection : WebData Locations -> GoogleMapsApiKey -> Html Msg
+locationsSection locations googleMapsApiKey =
     let
         columnNames =
             [ "ID", "Name", "Active", "Map", "Actions" ]
@@ -660,7 +664,7 @@ locationsSection locations gmapsApiKey =
                 [ BE.tableCell [] [ text <| String.fromInt location.id ]
                 , BE.tableCell [] [ text location.name ]
                 , BE.tableCell [] [ activeTag location.active ]
-                , BE.tableCell [] [ gMap location gmapsApiKey 300 120 ]
+                , BE.tableCell [] [ gMap location googleMapsApiKey 300 120 ]
                 , BE.tableCell []
                     [ BF.field [ class "has-addons" ]
                         [ BX.checkButton location.active [ onClick (ActivateLocation location.id) ]
@@ -792,8 +796,8 @@ userResourceForm title resource =
         ]
 
 
-locationResourceForm : String -> { a | name : String, coords : Coords } -> String -> Html Msg
-locationResourceForm title resource gmapsApiKey =
+locationResourceForm : String -> { a | name : String, coords : Coords } -> GoogleMapsApiKey -> Html Msg
+locationResourceForm title resource googleMapsApiKey =
     let
         latString =
             resource.coords |> Tuple.first |> String.fromFloat
@@ -847,7 +851,7 @@ locationResourceForm title resource gmapsApiKey =
 
         previewMap : Map
         previewMap =
-            { apiKey = gmapsApiKey
+            { apiKey = googleMapsApiKey
             , coords = resource.coords
             , markerText = String.left 1 resource.name
             , width = 287
@@ -1023,10 +1027,10 @@ editingModalForm model =
             userResourceForm "Edit User" user
 
         Open (NewLocation locationParams) ->
-            locationResourceForm "New Location" locationParams model.gmapsApiKey
+            locationResourceForm "New Location" locationParams model.googleMapsApiKey
 
         Open (EditLocation location) ->
-            locationResourceForm "Edit Location" location model.gmapsApiKey
+            locationResourceForm "Edit Location" location model.googleMapsApiKey
 
         Open (NewScheduledTask scheduleTaskParams) ->
             scheduledTaskResourceForm "New Scheduled Task" scheduleTaskParams model.workflows
@@ -1064,7 +1068,7 @@ body model =
                     ]
                 , BX.halfColumn
                     [ BX.sectionPanel "Locations"
-                        [ locationsSection model.locations model.gmapsApiKey ]
+                        [ locationsSection model.locations model.googleMapsApiKey ]
                         (Just OpenEditingModalNewLocation)
                     ]
                 ]
@@ -1196,7 +1200,7 @@ type Msg
 
 
 type alias Model =
-    { gmapsApiKey : String
+    { googleMapsApiKey : GoogleMapsApiKey
     , users : WebData Users
     , locations : WebData Locations
     , workflows : WebData Workflows
@@ -1216,9 +1220,9 @@ main =
         }
 
 
-init : Flags -> ( Model, Cmd Msg )
-init gmapsApiKey =
-    ( { gmapsApiKey = gmapsApiKey
+init : GoogleMapsApiKey -> ( Model, Cmd Msg )
+init googleMapsApiKey =
+    ( { googleMapsApiKey = googleMapsApiKey
       , users = NotAsked
       , locations = NotAsked
       , workflows = NotAsked
