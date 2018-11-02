@@ -23,7 +23,7 @@ topNavBar titleText menuLinks =
                 ]
 
         titleTextNavbarItem =
-            navbarItem False [] [ title H2 [] [ text titleText ] ]
+            navbarItem False [] [ title H3 [] [ text titleText ] ]
     in
     navbar navbarModifiers
         []
