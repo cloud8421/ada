@@ -769,6 +769,13 @@ scheduledTasksSection model =
     webDataTable model.scheduledTasks scheduledTasksTable
 
 
+type alias UserResource a =
+    { a
+        | name : String
+        , email : String
+    }
+
+
 userResourceForm : String -> { a | name : String, email : String } -> Html Msg
 userResourceForm title resource =
     div []
@@ -796,7 +803,14 @@ userResourceForm title resource =
         ]
 
 
-locationResourceForm : String -> { a | name : String, coords : Coords } -> GoogleMapsApiKey -> Html Msg
+type alias LocationResource a =
+    { a
+        | name : String
+        , coords : Coords
+    }
+
+
+locationResourceForm : String -> LocationResource a -> GoogleMapsApiKey -> Html Msg
 locationResourceForm title resource googleMapsApiKey =
     let
         latString =
@@ -870,6 +884,15 @@ locationResourceForm title resource googleMapsApiKey =
         ]
 
 
+type alias ScheduledTaskResource a =
+    { a
+        | workflowName : String
+        , frequency : Frequency
+        , params : List Param
+    }
+
+
+scheduledTaskResourceForm : String -> ScheduledTaskResource a -> WebData Workflows -> Html Msg
 scheduledTaskResourceForm title resource workflows =
     let
         workflowMetas =
