@@ -1182,10 +1182,6 @@ saveFromModalForm modalForm =
 -- APPLICATION WIRING
 
 
-type alias Flags =
-    String
-
-
 type Msg
     = NoOp
     | ExecuteScheduledTask Int
@@ -1232,7 +1228,7 @@ type alias Model =
     }
 
 
-main : Program Flags Model Msg
+main : Program GoogleMapsApiKey Model Msg
 main =
     Browser.document
         { init = init
