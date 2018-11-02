@@ -775,7 +775,7 @@ type alias UserResource a =
     }
 
 
-userResourceForm : String -> { a | name : String, email : String } -> Html Msg
+userResourceForm : String -> UserResource a -> Html Msg
 userResourceForm title resource =
     div []
         [ h1 [ class "title" ] [ text title ]
