@@ -1,7 +1,13 @@
 module Main exposing (main)
 
 import Browser exposing (Document)
-import BulmaHelpers as BulmaHelpers
+import Bulma.Columns as BC
+import Bulma.Components as BCP
+import Bulma.Elements as BE
+import Bulma.Extra as BX
+import Bulma.Form as BF
+import Bulma.Layout as BL
+import Bulma.Modifiers as BM
 import Dict as Dict
 import Html exposing (..)
 import Html.Attributes exposing (attribute, class, classList, href, placeholder, src, type_, value)
@@ -137,6 +143,16 @@ groupByName : List { a | name : comparable } -> Dict.Dict comparable { a | name 
 groupByName items =
     List.map (\i -> ( i.name, i )) items
         |> Dict.fromList
+
+
+findById : WebData (Dict.Dict Int v) -> Int -> Maybe v
+findById collection id =
+    case collection of
+        Success items ->
+            Dict.get id items
+
+        otherwise ->
+            Nothing
 
 
 
@@ -469,41 +485,75 @@ webDataTable : WebData items -> (items -> Html Msg) -> Html Msg
 webDataTable webData successContent =
     case webData of
         NotAsked ->
-            h2 [] [ text "Resource not loaded" ]
+            BX.infoNotificaton "Resource not loaded"
 
         Loading ->
-            h2 [] [ text "Resource loading" ]
+            BX.infoNotificaton "Resource loading"
+
+        Failure _ ->
+            BX.dangerNotification "Resource failed to load"
 
         Success items ->
             successContent items
-
-        Failure _ ->
-            h2 [] [ text "Resource failed to load" ]
 
 
 usersSection : WebData Users -> Html Msg
 usersSection users =
     let
-        userRow user =
-            tr []
-                [ td [] [ text <| String.fromInt user.id ]
-                , td [] [ text user.name ]
-                , td [] [ text user.email ]
-                , td []
-                    [ div [ class "field has-addons" ]
-                        [ BulmaHelpers.actionButton BulmaHelpers.Edit (OpenEditingModalEditUser user)
-                        , BulmaHelpers.dangerActionButton BulmaHelpers.Delete (DeleteUser user.id)
+        columnNames =
+            [ "ID", "Name", "Email", "Actions" ]
+
+        tableRow user =
+            BE.tableRow False
+                []
+                [ BE.tableCell [] [ text <| String.fromInt user.id ]
+                , BE.tableCell [] [ text user.name ]
+                , BE.tableCell [] [ text user.email ]
+                , BE.tableCell []
+                    [ BF.field [ class "has-addons" ]
+                        [ BX.editButton [ onClick (OpenEditingModalEditUser user) ]
+                        , BX.deleteButton [ onClick (DeleteUser user.id) ]
                         ]
                     ]
                 ]
 
-        contentArea items =
-            table [ class "table is-fullwidth" ]
-                [ BulmaHelpers.tableHead [ "ID", "Name", "Email", "Actions" ]
-                , tbody [] (List.map userRow (Dict.values items))
+        usersTable items =
+            BX.dataTable
+                [ BX.tableHeadFromColumnNames columnNames
+                , BX.tableBodyFromItems tableRow (Dict.values items)
                 ]
     in
-    BulmaHelpers.blockWithNew "Users" OpenEditingModalNewUser (webDataTable users contentArea)
+    webDataTable users usersTable
+
+
+workflowsSection : WebData Workflows -> Html Msg
+workflowsSection workflows =
+    let
+        columnNames =
+            [ "Name", "Requirements" ]
+
+        toTags requirements =
+            requirements
+                |> Workflow.requirementsAsLabels
+                |> List.map BX.infoTag
+
+        tableRow workflow =
+            BE.tableRow False
+                []
+                [ BE.tableCell [] [ text workflow.humanName ]
+                , BE.tableCell []
+                    [ BF.field [ class "is-grouped is-grouped-multiline" ]
+                        [ BE.multitag [] (toTags workflow.requirements) ]
+                    ]
+                ]
+
+        workflowsTable items =
+            BX.dataTable
+                [ BX.tableHeadFromColumnNames columnNames
+                , BX.tableBodyFromItems tableRow (Dict.values items)
+                ]
+    in
+    webDataTable workflows workflowsTable
 
 
 gMap : Location -> String -> Int -> Int -> Html Msg
@@ -523,89 +573,41 @@ gMap location gmapsApiKey width height =
 locationsSection : WebData Locations -> String -> Html Msg
 locationsSection locations gmapsApiKey =
     let
+        columnNames =
+            [ "ID", "Name", "Active", "Map", "Actions" ]
+
         coordsLabel ( lat, lng ) =
             String.fromFloat lat ++ "," ++ String.fromFloat lng
 
         activeTag active =
             if active then
-                BulmaHelpers.tag "active"
+                BX.infoTag "active"
             else
-                BulmaHelpers.lightTag "inactive"
+                BX.lightTag "inactive"
 
-        locationRow location =
-            let
-                disabledAttr =
-                    if location.active then
-                        [ attribute "disabled" "disabled" ]
-                    else
-                        []
-            in
-            tr []
-                [ td [] [ text <| String.fromInt location.id ]
-                , td [] [ text location.name ]
-                , td [] [ activeTag location.active ]
-                , td [] [ gMap location gmapsApiKey 300 120 ]
-                , td []
-                    [ div [ class "field has-addons" ]
-                        [ p [ class "control" ]
-                            [ a
-                                ([ class "button is-primary"
-                                 , onClick (ActivateLocation location.id)
-                                 ]
-                                    ++ disabledAttr
-                                )
-                                [ BulmaHelpers.iconButton BulmaHelpers.Activate ]
-                            ]
-                        , BulmaHelpers.actionButton BulmaHelpers.Edit (OpenEditingModalEditLocation location)
-                        , BulmaHelpers.dangerActionButton BulmaHelpers.Delete (DeleteLocation location.id)
+        tableRow location =
+            BE.tableRow False
+                []
+                [ BE.tableCell [] [ text <| String.fromInt location.id ]
+                , BE.tableCell [] [ text location.name ]
+                , BE.tableCell [] [ activeTag location.active ]
+                , BE.tableCell [] [ gMap location gmapsApiKey 300 120 ]
+                , BE.tableCell []
+                    [ BF.field [ class "has-addons" ]
+                        [ BX.checkButton location.active [ onClick (ActivateLocation location.id) ]
+                        , BX.editButton [ onClick (OpenEditingModalEditLocation location) ]
+                        , BX.deleteButton [ onClick (DeleteLocation location.id) ]
                         ]
                     ]
                 ]
 
-        contentArea items =
-            table [ class "table is-fullwidth" ]
-                [ BulmaHelpers.tableHead [ "ID", "Name", "Status", "Coordinates", "Actions" ]
-                , tbody [] (List.map locationRow (Dict.values items))
+        locationsTable items =
+            BX.dataTable
+                [ BX.tableHeadFromColumnNames columnNames
+                , BX.tableBodyFromItems tableRow (Dict.values items)
                 ]
     in
-    BulmaHelpers.blockWithNew "Locations" OpenEditingModalNewLocation (webDataTable locations contentArea)
-
-
-requirementTag : Workflow.Requirement -> Html Msg
-requirementTag requirement =
-    case requirement of
-        Workflow.RequiresUserId ->
-            BulmaHelpers.tag "User"
-
-        Workflow.RequiresLocationId ->
-            BulmaHelpers.tag "Location"
-
-        Workflow.RequiresNewsTag ->
-            BulmaHelpers.tag "News tag"
-
-
-workflowsSection : WebData Workflows -> Html Msg
-workflowsSection workflows =
-    let
-        workflowRow workflow =
-            tr []
-                [ td [] [ text workflow.humanName ]
-                , td []
-                    [ div [ class "field is-grouped is-grouped-multiline" ]
-                        [ div
-                            [ class "tags" ]
-                            (List.map requirementTag workflow.requirements)
-                        ]
-                    ]
-                ]
-
-        contentArea items =
-            table [ class "table is-fullwidth" ]
-                [ BulmaHelpers.tableHead [ "Name", "Requirements" ]
-                , tbody [] (List.map workflowRow (Dict.values items))
-                ]
-    in
-    BulmaHelpers.block "Workflows" (webDataTable workflows contentArea)
+    webDataTable locations locationsTable
 
 
 timePad : Int -> String
@@ -625,29 +627,22 @@ formatFrequency frequency =
             "Every hour at " ++ timePad minute ++ ":" ++ timePad second
 
 
-find : WebData (Dict.Dict Int v) -> Int -> Maybe v
-find collection id =
-    case collection of
-        Success items ->
-            Dict.get id items
-
-        otherwise ->
-            Nothing
-
-
 scheduledTasksSection : Model -> Html Msg
 scheduledTasksSection model =
     let
+        columnNames =
+            [ "ID", "Workflow name", "Params", "Frequency", "Actions" ]
+
         toPair param =
             case param of
                 Workflow.UserId id ->
-                    find model.users id
+                    findById model.users id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
                         |> Tuple.pair "User"
 
                 Workflow.LocationId id ->
-                    find model.locations id
+                    findById model.locations id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
                         |> Tuple.pair "Location"
@@ -655,10 +650,15 @@ scheduledTasksSection model =
                 Workflow.NewsTag tag ->
                     Tuple.pair "News tag" tag
 
-        paramTags params =
-            BulmaHelpers.tagsWithAddons (List.map toPair params)
+        toTag ( name, value ) =
+            [ BX.infoTag name
+            , BX.lightTag value
+            ]
 
-        scheduledTaskRow scheduledTask =
+        paramTags params =
+            List.concatMap (\p -> p |> toPair |> toTag) params
+
+        tableRow scheduledTask =
             let
                 isRunning =
                     model.runningTask == Just scheduledTask.id
@@ -669,86 +669,62 @@ scheduledTasksSection model =
                     , ( "is-loading", isRunning )
                     ]
             in
-            tr []
-                [ td [] [ text <| String.fromInt scheduledTask.id ]
-                , td [] [ text scheduledTask.workflowHumanName ]
-                , td []
-                    [ div [ class "field is-grouped is-grouped-multiline" ]
-                        [ paramTags scheduledTask.params ]
+            BE.tableRow False
+                []
+                [ BE.tableCell [] [ text <| String.fromInt scheduledTask.id ]
+                , BE.tableCell [] [ text scheduledTask.workflowHumanName ]
+                , BE.tableCell [] [ text <| formatFrequency scheduledTask.frequency ]
+                , BE.tableCell []
+                    [ BE.multitag []
+                        (paramTags scheduledTask.params)
                     ]
-                , td [] [ text <| formatFrequency scheduledTask.frequency ]
-                , td []
-                    [ div [ class "field has-addons" ]
-                        [ p [ class "control" ]
-                            [ a
-                                [ classList runClassList
-                                , onClick (ExecuteScheduledTask scheduledTask.id)
-                                ]
-                                [ BulmaHelpers.iconButton BulmaHelpers.Run ]
-                            ]
-                        , BulmaHelpers.actionButton BulmaHelpers.Edit (OpenEditingModalEditScheduledTask scheduledTask)
-                        , p [ class "control" ]
-                            [ a [ class "button is-danger" ] [ BulmaHelpers.iconButton BulmaHelpers.Delete ]
-                            ]
+                , BE.tableCell []
+                    [ BF.field [ class "has-addons" ]
+                        [ BX.runButton isRunning [ onClick (ExecuteScheduledTask scheduledTask.id) ]
+                        , BX.editButton [ onClick (OpenEditingModalEditScheduledTask scheduledTask) ]
+                        , BX.deleteButton [ onClick NoOp ]
                         ]
                     ]
                 ]
 
-        contentArea items =
-            table [ class "table is-fullwidth" ]
-                [ BulmaHelpers.tableHead [ "ID", "Workflow Name", "Params", "Frequency", "Actions" ]
-                , tbody [] (List.map scheduledTaskRow (Dict.values items))
+        scheduledTasksTable items =
+            BX.dataTable
+                [ BX.tableHeadFromColumnNames columnNames
+                , BX.tableBodyFromItems tableRow (Dict.values items)
                 ]
     in
-    BulmaHelpers.blockWithNew "Scheduled Tasks" OpenEditingModalNewScheduledTask (webDataTable model.scheduledTasks contentArea)
+    webDataTable model.scheduledTasks scheduledTasksTable
 
 
-userEditingForm : String -> { a | name : String, email : String } -> Html Msg
-userEditingForm title resource =
-    form []
+userResourceForm : String -> { a | name : String, email : String } -> Html Msg
+userResourceForm title resource =
+    div []
         [ h1 [ class "title" ] [ text title ]
-        , div [ class "field" ]
-            [ label [ class "label" ]
-                [ text "Name" ]
-            , div [ class "control" ]
-                [ BulmaHelpers.textInput
-                    [ placeholder "User name"
-                    , value resource.name
-                    , onInput UpdateUserName
-                    ]
+        , BF.field []
+            [ BF.controlLabel [] [ text "Name" ]
+            , BX.textInput
+                [ placeholder "e.g. Ada"
+                , value resource.name
+                , onInput UpdateUserName
                 ]
             ]
-        , div [ class "field" ]
-            [ label [ class "label" ]
-                [ text "Email" ]
-            , div [ class "control has-icons-left has-icons-right" ]
-                [ BulmaHelpers.emailInput
-                    [ placeholder "User email"
-                    , value resource.email
-                    , onInput UpdateUserEmail
-                    ]
-                , span [ class "icon is-small is-left" ]
-                    [ i [ class "fas fa-envelope" ]
-                        []
-                    ]
+        , BF.field []
+            [ BF.controlLabel [] [ text "Email" ]
+            , BX.emailInput
+                [ placeholder "e.g. ada@example.com"
+                , value resource.email
+                , onInput UpdateUserEmail
                 ]
             ]
-        , div
-            [ class "field is-grouped" ]
-            [ div [ class "control" ]
-                [ BulmaHelpers.saveButton
-                    [ onClick SaveUser ]
-                ]
-            , div [ class "control" ]
-                [ BulmaHelpers.cancelButton
-                    [ onClick CloseEditingModal ]
-                ]
+        , BF.field [ class "is-grouped" ]
+            [ BX.saveButton [ onClick SaveFromModalForm ]
+            , BX.cancelButton [ onClick CloseEditingModal ]
             ]
         ]
 
 
-locationEditingForm : String -> { a | name : String, coords : Coords } -> String -> Html Msg
-locationEditingForm title resource gmapsApiKey =
+locationResourceForm : String -> { a | name : String, coords : Coords } -> String -> Html Msg
+locationResourceForm title resource gmapsApiKey =
     let
         latString =
             resource.coords |> Tuple.first |> String.fromFloat
@@ -763,72 +739,40 @@ locationEditingForm title resource gmapsApiKey =
             on "input" (JD.map tagger targetValueFloat)
 
         editArea =
-            form []
-                [ h1 [ class "title" ] [ text title ]
-                , div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Name" ]
-                    , div [ class "control" ]
-                        [ input
-                            [ class "input"
-                            , placeholder "Location name"
-                            , type_ "text"
-                            , value resource.name
-                            , onInput UpdateLocationName
-                            ]
-                            []
+            div []
+                [ BF.field []
+                    [ BF.controlLabel [] [ text "Name" ]
+                    , BX.textInput
+                        [ placeholder "e.g. Home"
+                        , value resource.name
+                        , onInput UpdateLocationName
                         ]
                     ]
-                , div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Lat" ]
-                    , div [ class "control has-icons-left has-icons-right" ]
-                        [ input
-                            [ class "input"
-                            , placeholder "lat"
-                            , type_ "number"
-                            , attribute "min" "-90"
-                            , attribute "max" "90"
-                            , attribute "step" "0.0001"
-                            , value latString
-                            , onInputFloat (\v -> UpdateLocationCoords ( v, Tuple.second resource.coords ))
-                            ]
-                            []
-                        , span [ class "icon is-small is-left" ]
-                            [ i [ class "fas fa-map" ]
-                                []
-                            ]
+                , BF.field []
+                    [ BF.controlLabel [] [ text "Lat" ]
+                    , BX.coordInput
+                        [ placeholder "e.g. 51.0100"
+                        , attribute "min" "-90"
+                        , attribute "max" "90"
+                        , attribute "step" "0.0001"
+                        , value latString
+                        , onInputFloat (\v -> UpdateLocationCoords ( v, Tuple.second resource.coords ))
                         ]
                     ]
-                , div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Lng" ]
-                    , div [ class "control has-icons-left has-icons-right" ]
-                        [ input
-                            [ class "input"
-                            , placeholder "lng"
-                            , type_ "number"
-                            , attribute "min" "-180"
-                            , attribute "max" "180"
-                            , attribute "step" "0.0001"
-                            , value lngString
-                            , onInputFloat (\v -> UpdateLocationCoords ( Tuple.first resource.coords, v ))
-                            ]
-                            []
-                        , span [ class "icon is-small is-left" ]
-                            [ i [ class "fas fa-map" ]
-                                []
-                            ]
+                , BF.field []
+                    [ BF.controlLabel [] [ text "Lng" ]
+                    , BX.coordInput
+                        [ placeholder "e.g. -0.11"
+                        , attribute "min" "-180"
+                        , attribute "max" "180"
+                        , attribute "step" "0.0001"
+                        , value lngString
+                        , onInputFloat (\v -> UpdateLocationCoords ( Tuple.first resource.coords, v ))
                         ]
                     ]
-                , div
-                    [ class "field is-grouped" ]
-                    [ BulmaHelpers.saveButton
-                        [ onClick SaveLocation ]
-                    , div [ class "control" ]
-                        [ BulmaHelpers.cancelButton
-                            [ onClick CloseEditingModal ]
-                        ]
+                , BF.field [ class "is-grouped" ]
+                    [ BX.saveButton [ onClick SaveFromModalForm ]
+                    , BX.cancelButton [ onClick CloseEditingModal ]
                     ]
                 ]
 
@@ -840,19 +784,19 @@ locationEditingForm title resource gmapsApiKey =
             , height = 287
             }
     in
-    div [ class "columns" ]
-        [ div [ class "column" ]
-            [ editArea
+    BX.fullColumns
+        [ BX.halfColumn
+            [ h1 [ class "title" ] [ text title ]
+            , editArea
             ]
-        , div
-            [ class "column" ]
+        , BX.halfColumn
             [ h2 [ class "subtitle" ] [ text "Preview" ]
             , img [ src (Map.toGmapsUrl previewMap) ] []
             ]
         ]
 
 
-scheduledTaskEditingForm title resource workflows =
+scheduledTaskResourceForm title resource workflows =
     let
         workflowMetas =
             case workflows of
@@ -877,16 +821,20 @@ scheduledTaskEditingForm title resource workflows =
                 otherwise ->
                     Nothing
 
+        toTags requirements =
+            requirements
+                |> Workflow.requirementsAsLabels
+                |> List.map BX.infoTag
+
         requirementsDescription =
             case workflowRequirements of
                 Just items ->
-                    [ p [ class "help" ] [ text "Requires" ]
-                    , div [ class "tags" ]
-                        (List.map requirementTag items)
+                    [ p [] [ text "Requires" ]
+                    , BE.multitag [] (toTags items)
                     ]
 
                 Nothing ->
-                    [ p [ class "help" ] [ text "Choose a workflow to see its requirements" ] ]
+                    [ p [] [ text "Choose a workflow to see its requirements" ] ]
 
         workflowOption selectedWorkflowName ( humanName, name ) =
             let
@@ -943,67 +891,49 @@ scheduledTaskEditingForm title resource workflows =
         frequencyInput frequency =
             case frequency of
                 Daily hour minute ->
-                    input
-                        [ type_ "time"
-                        , class "input"
-                        , value (timePad hour ++ ":" ++ timePad minute)
+                    BX.timeInput
+                        [ value (timePad hour ++ ":" ++ timePad minute)
                         , onInputTime UpdateScheduledTaskFrequency
                         ]
-                        []
 
                 Hourly minute _ ->
-                    input
-                        [ type_ "number"
-                        , class "input"
-                        , value (String.fromInt minute)
+                    BX.minuteInput
+                        [ value (String.fromInt minute)
                         , onInputTime UpdateScheduledTaskFrequency
                         ]
-                        []
     in
-    form []
+    div []
         [ h1 [ class "title" ] [ text title ]
-        , div
-            [ class "columns" ]
-            [ div [ class "column" ]
-                [ div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Workflow Name" ]
-                    , div [ class "control" ]
-                        [ div [ class "select" ]
-                            [ select [ onChange UpdateScheduledTaskWorkflowName ]
-                                (List.map (workflowOption resource.workflowName) workflowMetasWithDefaultOption)
-                            ]
-                        ]
-                    , div [ class "control" ] requirementsDescription
+        , BX.fullColumns
+            [ BX.halfColumn
+                [ BF.field []
+                    [ BF.controlLabel [] [ text "Workflow Name" ]
+                    , BX.select
+                        [ onChange UpdateScheduledTaskWorkflowName ]
+                        (List.map (workflowOption resource.workflowName) workflowMetasWithDefaultOption)
+                    , BF.controlHelp BM.Default [] requirementsDescription
                     ]
                 ]
-            , div [ class "column" ]
-                [ div [ class "field" ]
-                    [ label [ class "label" ]
-                        [ text "Frequency" ]
-                    ]
-                , div [ class "field has-addons" ]
-                    [ p [ class "control" ]
-                        [ span [ class "select" ]
-                            [ select [ onChange ResetScheduledTaskFrequency ]
-                                [ option [ value "daily" ] [ text "Daily" ]
-                                , option [ value "hourly" ] [ text "Hourly" ]
-                                ]
-                            ]
+            , BX.halfColumn
+                [ BF.controlLabel [] [ text "Frequency" ]
+                , BF.field [ class "has-addons" ]
+                    [ BX.select
+                        [ onChange ResetScheduledTaskFrequency ]
+                        [ option [ value "daily" ] [ text "Daily" ]
+                        , option [ value "hourly" ] [ text "Hourly" ]
                         ]
-                    , p [ class "control" ]
-                        [ frequencyInput resource.frequency ]
+                    , frequencyInput resource.frequency
                     ]
                 ]
             ]
         , div
             [ class "field is-grouped" ]
             [ div [ class "control" ]
-                [ BulmaHelpers.saveButton
-                    [ onClick SaveScheduledTask ]
+                [ BX.saveButton
+                    [ onClick SaveFromModalForm ]
                 ]
             , div [ class "control" ]
-                [ BulmaHelpers.cancelButton
+                [ BX.cancelButton
                     [ onClick CloseEditingModal ]
                 ]
             ]
@@ -1012,63 +942,76 @@ scheduledTaskEditingForm title resource workflows =
 
 editingModalForm : Model -> Html Msg
 editingModalForm model =
-    case model.editForm of
+    case model.modalForm of
         Closed ->
             text "Nothing to see here"
 
-        NewUser userParams ->
-            userEditingForm "New User" userParams
+        Open (NewUser userParams) ->
+            userResourceForm "New User" userParams
 
-        EditUser user ->
-            userEditingForm "Edit User" user
+        Open (EditUser user) ->
+            userResourceForm "Edit User" user
 
-        NewLocation locationParams ->
-            locationEditingForm "New Location" locationParams model.gmapsApiKey
+        Open (NewLocation locationParams) ->
+            locationResourceForm "New Location" locationParams model.gmapsApiKey
 
-        EditLocation location ->
-            locationEditingForm "Edit Location" location model.gmapsApiKey
+        Open (EditLocation location) ->
+            locationResourceForm "Edit Location" location model.gmapsApiKey
 
-        NewScheduledTask scheduleTaskParams ->
-            scheduledTaskEditingForm "New Scheduled Task" scheduleTaskParams model.workflows
+        Open (NewScheduledTask scheduleTaskParams) ->
+            scheduledTaskResourceForm "New Scheduled Task" scheduleTaskParams model.workflows
 
-        EditScheduledTask scheduledTask ->
-            scheduledTaskEditingForm "Edit Scheduled Task" scheduledTask model.workflows
+        Open (EditScheduledTask scheduledTask) ->
+            scheduledTaskResourceForm "Edit Scheduled Task" scheduledTask model.workflows
 
 
 editingModal : Model -> Html Msg
 editingModal model =
-    let
-        modalClasses =
-            [ ( "modal", True ), ( "is-active", model.editForm /= Closed ) ]
-    in
-    div [ classList modalClasses ]
-        [ div [ class "modal-background" ]
-            []
-        , div [ class "modal-content" ]
-            [ div [ class "box" ] [ editingModalForm model ]
+    BCP.modal
+        (model.modalForm /= Closed)
+        []
+        [ BCP.modalBackground [] []
+        , BCP.modalCard []
+            [ BCP.modalCardBody []
+                [ editingModalForm model
+                ]
             ]
-        , button
-            [ onClick CloseEditingModal
-            , attribute "aria-label" "close"
-            , class "modal-close is-large"
-            ]
-            []
+        , BCP.easyModalClose BM.Large [] CloseEditingModal
         ]
 
 
 body : Model -> List (Html Msg)
 body model =
-    [ div []
-        [ BulmaHelpers.titleBar "Ada Control Center"
-        , div [ class "columns" ]
-            [ scheduledTasksSection model
-            , locationsSection model.locations model.gmapsApiKey
+    [ main_ []
+        [ BX.titleBar "Ada Control Center"
+        , BL.section BL.NotSpaced
+            []
+            [ BX.fullColumns
+                [ BX.halfColumn
+                    [ BX.sectionPanel "Scheduled Tasks"
+                        [ scheduledTasksSection model ]
+                        (Just OpenEditingModalNewScheduledTask)
+                    ]
+                , BX.halfColumn
+                    [ BX.sectionPanel "Locations"
+                        [ locationsSection model.locations model.gmapsApiKey ]
+                        (Just OpenEditingModalNewLocation)
+                    ]
+                ]
+            , BX.fullColumns
+                [ BX.halfColumn
+                    [ BX.sectionPanel "Workflows"
+                        [ workflowsSection model.workflows ]
+                        Nothing
+                    ]
+                , BX.halfColumn
+                    [ BX.sectionPanel "Users"
+                        [ usersSection model.users ]
+                        (Just OpenEditingModalNewUser)
+                    ]
+                ]
+            , editingModal model
             ]
-        , div [ class "columns" ]
-            [ workflowsSection model.workflows
-            , usersSection model.users
-            ]
-        , editingModal model
         ]
     ]
 
@@ -1096,9 +1039,8 @@ type alias UserParams =
     }
 
 
-type EditForm
-    = Closed
-    | NewScheduledTask ScheduledTaskParams
+type ResourceForm
+    = NewScheduledTask ScheduledTaskParams
     | EditScheduledTask ScheduledTask
     | NewUser UserParams
     | EditUser User
@@ -1106,9 +1048,20 @@ type EditForm
     | EditLocation Location
 
 
-saveUser : EditForm -> Cmd Msg
-saveUser editForm =
-    case editForm of
+type ModalForm
+    = Closed
+    | Open ResourceForm
+
+
+saveFromResourceForm : ResourceForm -> Cmd Msg
+saveFromResourceForm resourceForm =
+    case resourceForm of
+        NewLocation locationParams ->
+            createLocation locationParams
+
+        EditLocation location ->
+            updateLocation location
+
         NewUser userParams ->
             createUser userParams
 
@@ -1119,22 +1072,14 @@ saveUser editForm =
             Cmd.none
 
 
-saveLocation : EditForm -> Cmd Msg
-saveLocation editForm =
-    case editForm of
-        NewLocation locationParams ->
-            createLocation locationParams
+saveFromModalForm : ModalForm -> Cmd Msg
+saveFromModalForm modalForm =
+    case modalForm of
+        Open resourceForm ->
+            saveFromResourceForm resourceForm
 
-        EditLocation location ->
-            updateLocation location
-
-        otherwise ->
+        Closed ->
             Cmd.none
-
-
-saveScheduledTask : EditForm -> Cmd Msg
-saveScheduledTask editForm =
-    Cmd.none
 
 
 
@@ -1169,9 +1114,7 @@ type Msg
     | UpdateScheduledTaskWorkflowName String
     | UpdateScheduledTaskFrequency Frequency
     | ResetScheduledTaskFrequency String
-    | SaveUser
-    | SaveLocation
-    | SaveScheduledTask
+    | SaveFromModalForm
     | DeleteUser UserId
     | DeleteLocation LocationId
     | CreateUserResponse (WebData User)
@@ -1189,7 +1132,7 @@ type alias Model =
     , workflows : WebData Workflows
     , scheduledTasks : WebData ScheduledTasks
     , runningTask : Maybe Int
-    , editForm : EditForm
+    , modalForm : ModalForm
     }
 
 
@@ -1211,7 +1154,7 @@ init gmapsApiKey =
       , workflows = NotAsked
       , scheduledTasks = NotAsked
       , runningTask = Nothing
-      , editForm = Closed
+      , modalForm = Closed
       }
     , Cmd.batch [ getUsers, getLocations, getWorkflows, getScheduledTasks ]
     )
@@ -1255,124 +1198,131 @@ update msg model =
             ( model, getLocations )
 
         CloseEditingModal ->
-            ( { model | editForm = Closed }, Cmd.none )
+            ( { model | modalForm = Closed }, Cmd.none )
 
         OpenEditingModalNewUser ->
-            ( { model | editForm = NewUser { name = "e.g. Ada", email = "e.g. ada@example.com" } }, Cmd.none )
+            let
+                newUserForm =
+                    NewUser { name = "e.g. Ada", email = "e.g. ada@example.com" }
+            in
+            ( { model | modalForm = Open newUserForm }, Cmd.none )
 
         OpenEditingModalEditUser user ->
-            ( { model | editForm = EditUser user }, Cmd.none )
+            ( { model | modalForm = Open (EditUser user) }, Cmd.none )
 
         OpenEditingModalNewLocation ->
-            ( { model | editForm = NewLocation { name = "e.g. Home", coords = ( 0, 0 ) } }, Cmd.none )
+            let
+                newLocationForm =
+                    NewLocation { name = "e.g. Home", coords = ( 0, 0 ) }
+            in
+            ( { model | modalForm = Open newLocationForm }, Cmd.none )
 
         OpenEditingModalEditLocation location ->
-            ( { model | editForm = EditLocation location }, Cmd.none )
+            ( { model | modalForm = Open (EditLocation location) }, Cmd.none )
 
         OpenEditingModalNewScheduledTask ->
-            ( { model
-                | editForm =
+            let
+                newScheduledTaskForm =
                     NewScheduledTask
                         { frequency = Daily 9 0
                         , workflowName = "Choose name"
                         , params = []
                         }
-              }
-            , Cmd.none
-            )
+            in
+            ( { model | modalForm = Open newScheduledTaskForm }, Cmd.none )
 
         OpenEditingModalEditScheduledTask scheduledTask ->
-            ( { model | editForm = EditScheduledTask scheduledTask }, Cmd.none )
+            ( { model | modalForm = Open (EditScheduledTask scheduledTask) }, Cmd.none )
 
         UpdateUserName newName ->
             let
                 newEditForm =
-                    case model.editForm of
-                        NewUser userParams ->
-                            NewUser { userParams | name = newName }
+                    case model.modalForm of
+                        Open (NewUser userParams) ->
+                            Open (NewUser { userParams | name = newName })
 
-                        EditUser user ->
-                            EditUser { user | name = newName }
+                        Open (EditUser user) ->
+                            Open (EditUser { user | name = newName })
 
                         otherwise ->
-                            model.editForm
+                            model.modalForm
             in
-            ( { model | editForm = newEditForm }, Cmd.none )
+            ( { model | modalForm = newEditForm }, Cmd.none )
 
         UpdateUserEmail newEmail ->
             let
                 newEditForm =
-                    case model.editForm of
-                        NewUser userParams ->
-                            NewUser { userParams | email = newEmail }
+                    case model.modalForm of
+                        Open (NewUser userParams) ->
+                            Open (NewUser { userParams | email = newEmail })
 
-                        EditUser user ->
-                            EditUser { user | email = newEmail }
+                        Open (EditUser user) ->
+                            Open (EditUser { user | email = newEmail })
 
                         otherwise ->
-                            model.editForm
+                            model.modalForm
             in
-            ( { model | editForm = newEditForm }, Cmd.none )
+            ( { model | modalForm = newEditForm }, Cmd.none )
 
         UpdateLocationName newName ->
             let
                 newEditForm =
-                    case model.editForm of
-                        NewLocation locationParams ->
-                            NewLocation { locationParams | name = newName }
+                    case model.modalForm of
+                        Open (NewLocation locationParams) ->
+                            Open (NewLocation { locationParams | name = newName })
 
-                        EditLocation location ->
-                            EditLocation { location | name = newName }
+                        Open (EditLocation location) ->
+                            Open (EditLocation { location | name = newName })
 
                         otherwise ->
-                            model.editForm
+                            model.modalForm
             in
-            ( { model | editForm = newEditForm }, Cmd.none )
+            ( { model | modalForm = newEditForm }, Cmd.none )
 
         UpdateLocationCoords newCoords ->
             let
                 newEditForm =
-                    case model.editForm of
-                        NewLocation locationParams ->
-                            NewLocation { locationParams | coords = newCoords }
+                    case model.modalForm of
+                        Open (NewLocation locationParams) ->
+                            Open (NewLocation { locationParams | coords = newCoords })
 
-                        EditLocation location ->
-                            EditLocation { location | coords = newCoords }
+                        Open (EditLocation location) ->
+                            Open (EditLocation { location | coords = newCoords })
 
                         otherwise ->
-                            model.editForm
+                            model.modalForm
             in
-            ( { model | editForm = newEditForm }, Cmd.none )
+            ( { model | modalForm = newEditForm }, Cmd.none )
 
         UpdateScheduledTaskWorkflowName newWorkflowName ->
             let
                 newEditForm =
-                    case model.editForm of
-                        NewScheduledTask scheduleTaskParams ->
-                            NewScheduledTask { scheduleTaskParams | workflowName = newWorkflowName }
+                    case model.modalForm of
+                        Open (NewScheduledTask scheduleTaskParams) ->
+                            Open (NewScheduledTask { scheduleTaskParams | workflowName = newWorkflowName })
 
-                        EditScheduledTask scheduledTask ->
-                            EditScheduledTask { scheduledTask | workflowName = newWorkflowName }
+                        Open (EditScheduledTask scheduledTask) ->
+                            Open (EditScheduledTask { scheduledTask | workflowName = newWorkflowName })
 
                         otherwise ->
-                            model.editForm
+                            model.modalForm
             in
-            ( { model | editForm = newEditForm }, Cmd.none )
+            ( { model | modalForm = newEditForm }, Cmd.none )
 
         UpdateScheduledTaskFrequency newFrequency ->
             let
                 newEditForm =
-                    case model.editForm of
-                        NewScheduledTask scheduleTaskParams ->
-                            NewScheduledTask { scheduleTaskParams | frequency = newFrequency }
+                    case model.modalForm of
+                        Open (NewScheduledTask scheduleTaskParams) ->
+                            Open (NewScheduledTask { scheduleTaskParams | frequency = newFrequency })
 
-                        EditScheduledTask scheduledTask ->
-                            EditScheduledTask { scheduledTask | frequency = newFrequency }
+                        Open (EditScheduledTask scheduledTask) ->
+                            Open (EditScheduledTask { scheduledTask | frequency = newFrequency })
 
                         otherwise ->
-                            model.editForm
+                            model.modalForm
             in
-            ( { model | editForm = newEditForm }, Cmd.none )
+            ( { model | modalForm = newEditForm }, Cmd.none )
 
         ResetScheduledTaskFrequency typeString ->
             let
@@ -1388,26 +1338,20 @@ update msg model =
                             Daily 9 0
 
                 newEditForm =
-                    case model.editForm of
-                        NewScheduledTask scheduleTaskParams ->
-                            NewScheduledTask { scheduleTaskParams | frequency = newFrequency }
+                    case model.modalForm of
+                        Open (NewScheduledTask scheduleTaskParams) ->
+                            Open (NewScheduledTask { scheduleTaskParams | frequency = newFrequency })
 
-                        EditScheduledTask scheduledTask ->
-                            EditScheduledTask { scheduledTask | frequency = newFrequency }
+                        Open (EditScheduledTask scheduledTask) ->
+                            Open (EditScheduledTask { scheduledTask | frequency = newFrequency })
 
                         otherwise ->
-                            model.editForm
+                            model.modalForm
             in
-            ( { model | editForm = newEditForm }, Cmd.none )
+            ( { model | modalForm = newEditForm }, Cmd.none )
 
-        SaveUser ->
-            ( model, saveUser model.editForm )
-
-        SaveLocation ->
-            ( model, saveLocation model.editForm )
-
-        SaveScheduledTask ->
-            ( model, saveScheduledTask model.editForm )
+        SaveFromModalForm ->
+            ( model, saveFromModalForm model.modalForm )
 
         DeleteUser userId ->
             ( model, deleteUser userId )
@@ -1420,7 +1364,7 @@ update msg model =
                 Success user ->
                     ( { model
                         | users = RemoteData.map (Dict.insert user.id user) model.users
-                        , editForm = Closed
+                        , modalForm = Closed
                       }
                     , Cmd.none
                     )
@@ -1429,11 +1373,11 @@ update msg model =
                     ( model, Cmd.none )
 
         UpdateUserResponse _ ->
-            case model.editForm of
-                EditUser user ->
+            case model.modalForm of
+                Open (EditUser user) ->
                     ( { model
                         | users = RemoteData.map (Dict.insert user.id user) model.users
-                        , editForm = Closed
+                        , modalForm = Closed
                       }
                     , Cmd.none
                     )
@@ -1456,7 +1400,7 @@ update msg model =
                 Success location ->
                     ( { model
                         | locations = RemoteData.map (Dict.insert location.id location) model.locations
-                        , editForm = Closed
+                        , modalForm = Closed
                       }
                     , Cmd.none
                     )
@@ -1465,11 +1409,11 @@ update msg model =
                     ( model, Cmd.none )
 
         UpdateLocationResponse _ ->
-            case model.editForm of
-                EditLocation location ->
+            case model.modalForm of
+                Open (EditLocation location) ->
                     ( { model
                         | locations = RemoteData.map (Dict.insert location.id location) model.locations
-                        , editForm = Closed
+                        , modalForm = Closed
                       }
                     , Cmd.none
                     )
