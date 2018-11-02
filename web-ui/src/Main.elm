@@ -926,7 +926,7 @@ scheduledTaskResourceForm title resource workflows =
             case workflowRequirements of
                 Just items ->
                     [ p [] [ text "Requires" ]
-                    , BE.multitag [] (toTags items)
+                    , BE.tags [] (toTags items)
                     ]
 
                 Nothing ->
