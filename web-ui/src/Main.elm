@@ -19,7 +19,6 @@ import Map exposing (..)
 import Platform.Cmd as Cmd
 import Platform.Sub as Sub
 import RemoteData exposing (..)
-import Workflow as Workflow
 
 
 -- RESOURCE TYPES
@@ -93,6 +92,18 @@ type Frequency
 -- WORKFLOWS
 
 
+type Param
+    = UserId Int
+    | LocationId Int
+    | NewsTag String
+
+
+type Requirement
+    = RequiresUserId
+    | RequiresLocationId
+    | RequiresNewsTag
+
+
 type alias WorfklowName =
     String
 
@@ -100,7 +111,7 @@ type alias WorfklowName =
 type alias Workflow =
     { name : WorfklowName
     , humanName : String
-    , requirements : List Workflow.Requirement
+    , requirements : List Requirement
     }
 
 
@@ -121,7 +132,7 @@ type alias ScheduledTask =
     , frequency : Frequency
     , workflowName : String
     , workflowHumanName : String
-    , params : List Workflow.Param
+    , params : List Param
     }
 
 
@@ -153,6 +164,23 @@ findById collection id =
 
         otherwise ->
             Nothing
+
+
+requirementsAsLabels : List Requirement -> List String
+requirementsAsLabels requirements =
+    let
+        asLabel requirement =
+            case requirement of
+                RequiresUserId ->
+                    "User"
+
+                RequiresLocationId ->
+                    "Location"
+
+                RequiresNewsTag ->
+                    "News tag"
+    in
+    List.map asLabel requirements
 
 
 
@@ -316,19 +344,19 @@ deleteLocation locationId =
 -- API - WORKFLOWS
 
 
-requirementDecoder : JD.Decoder Workflow.Requirement
+requirementDecoder : JD.Decoder Requirement
 requirementDecoder =
     let
         toRequirement reqName =
             case reqName of
                 "tag" ->
-                    JD.succeed Workflow.RequiresNewsTag
+                    JD.succeed RequiresNewsTag
 
                 "user_id" ->
-                    JD.succeed Workflow.RequiresUserId
+                    JD.succeed RequiresUserId
 
                 "location_id" ->
-                    JD.succeed Workflow.RequiresLocationId
+                    JD.succeed RequiresLocationId
 
                 otherwise ->
                     JD.fail "Unsupported requirement"
@@ -384,21 +412,21 @@ frequencyDecoder =
         |> JD.andThen byFrequencyType
 
 
-workflowParamDecoder : JD.Decoder Workflow.Param
+workflowParamDecoder : JD.Decoder Param
 workflowParamDecoder =
     let
         toParam name =
             case name of
                 "user_id" ->
-                    JD.map Workflow.UserId
+                    JD.map UserId
                         (JD.field "value" JD.int)
 
                 "location_id" ->
-                    JD.map Workflow.LocationId
+                    JD.map LocationId
                         (JD.field "value" JD.int)
 
                 "tag" ->
-                    JD.map Workflow.NewsTag
+                    JD.map NewsTag
                         (JD.field "value" JD.string)
 
                 other ->
@@ -534,7 +562,7 @@ workflowsSection workflows =
 
         toTags requirements =
             requirements
-                |> Workflow.requirementsAsLabels
+                |> requirementsAsLabels
                 |> List.map BX.infoTag
 
         tableRow workflow =
@@ -635,19 +663,19 @@ scheduledTasksSection model =
 
         toPair param =
             case param of
-                Workflow.UserId id ->
+                UserId id ->
                     findById model.users id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
                         |> Tuple.pair "User"
 
-                Workflow.LocationId id ->
+                LocationId id ->
                     findById model.locations id
                         |> Maybe.map .name
                         |> Maybe.withDefault "Not available"
                         |> Tuple.pair "Location"
 
-                Workflow.NewsTag tag ->
+                NewsTag tag ->
                     Tuple.pair "News tag" tag
 
         toTag ( name, value ) =
@@ -823,7 +851,7 @@ scheduledTaskResourceForm title resource workflows =
 
         toTags requirements =
             requirements
-                |> Workflow.requirementsAsLabels
+                |> requirementsAsLabels
                 |> List.map BX.infoTag
 
         requirementsDescription =
@@ -1023,7 +1051,7 @@ body model =
 type alias ScheduledTaskParams =
     { frequency : Frequency
     , workflowName : String
-    , params : List Workflow.Param
+    , params : List Param
     }
 
 
