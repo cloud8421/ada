@@ -1118,7 +1118,7 @@ editingModal model =
 
 titleBar : Brightness -> Html Msg
 titleBar brightness =
-    BX.titleBar "Ada Control Center"
+    BX.titleBar
         [ BCP.navbarItemLink False
             [ onClick (SetBrightness (incBrightness 20 brightness)) ]
             [ span [ class "icon" ]

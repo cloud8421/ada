@@ -11,9 +11,12 @@ import Html.Attributes exposing (class, type_, value)
 import Html.Events exposing (..)
 
 
-topNavBar : String -> List (Html msg) -> Html msg
-topNavBar titleText menuLinks =
+topNavBar : List (Html msg) -> Html msg
+topNavBar menuLinks =
     let
+        robotIcon =
+            icon Large [] [ i [ class "fas fa-robot fa-3x" ] [] ]
+
         topNavbarBurger =
             navbarBurger False
                 []
@@ -21,24 +24,24 @@ topNavBar titleText menuLinks =
                 , span [] []
                 , span [] []
                 ]
-
-        titleTextNavbarItem =
-            navbarItem False [] [ title H3 [] [ text titleText ] ]
     in
     navbar navbarModifiers
         []
-        [ navbarBrand [] topNavbarBurger [ titleTextNavbarItem ]
+        [ navbarBrand []
+            topNavbarBurger
+            [ navbarItem False [ class "logo" ] [ robotIcon ]
+            ]
         , navbarMenu True
             []
             [ navbarEnd [] menuLinks ]
         ]
 
 
-titleBar : String -> List (Html msg) -> Html msg
-titleBar titleText menuLinks =
+titleBar : List (Html msg) -> Html msg
+titleBar menuLinks =
     hero { heroModifiers | color = Primary }
         []
-        [ heroHead [] [ topNavBar titleText menuLinks ] ]
+        [ heroHead [] [ topNavBar menuLinks ] ]
 
 
 sunIcon : Html msg
