@@ -11,15 +11,15 @@ import Html.Attributes exposing (class, type_, value)
 import Html.Events exposing (..)
 
 
-topNavBar : List (Html msg) -> Html msg
-topNavBar menuLinks =
+topNavBar : Bool -> msg -> List (Html msg) -> Html msg
+topNavBar isTopBarMenuOpen toggleMsg menuLinks =
     let
         robotIcon =
             icon Large [] [ i [ class "fas fa-robot fa-3x" ] [] ]
 
         topNavbarBurger =
-            navbarBurger False
-                []
+            navbarBurger isTopBarMenuOpen
+                [ onClick toggleMsg ]
                 [ span [] []
                 , span [] []
                 , span [] []
@@ -31,17 +31,17 @@ topNavBar menuLinks =
             topNavbarBurger
             [ navbarItem False [ class "logo" ] [ robotIcon ]
             ]
-        , navbarMenu True
+        , navbarMenu isTopBarMenuOpen
             []
             [ navbarEnd [] menuLinks ]
         ]
 
 
-titleBar : List (Html msg) -> Html msg
-titleBar menuLinks =
+titleBar : Bool -> msg -> List (Html msg) -> Html msg
+titleBar isTopBarMenuOpen toggleMsg menuLinks =
     hero { heroModifiers | color = Primary }
         []
-        [ heroHead [] [ topNavBar menuLinks ] ]
+        [ heroHead [] [ topNavBar isTopBarMenuOpen toggleMsg menuLinks ] ]
 
 
 sunIcon : Html msg

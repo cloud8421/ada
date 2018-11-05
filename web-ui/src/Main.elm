@@ -1121,9 +1121,10 @@ editingModal model =
         ]
 
 
-titleBar : Brightness -> Html Msg
-titleBar brightness =
-    BX.titleBar
+titleBar : Brightness -> Bool -> Html Msg
+titleBar brightness isTopBarMenuOpen =
+    BX.titleBar isTopBarMenuOpen
+        ToggleTopBarMenu
         [ BCP.navbarItemLink False
             [ onClick (SetBrightness (incBrightness 20 brightness)) ]
             [ span [ class "icon" ]
@@ -1144,7 +1145,7 @@ titleBar brightness =
 body : Model -> List (Html Msg)
 body model =
     [ main_ []
-        [ titleBar model.brightness
+        [ titleBar model.brightness model.isTopBarMenuOpen
         , BL.section BL.NotSpaced
             []
             [ BX.fullColumns
@@ -1257,6 +1258,7 @@ type Msg
     | ScheduledTasksResponse (WebData ScheduledTasks)
     | ExecuteScheduledTaskResponse (WebData ())
     | ActivateLocationResponse (WebData ())
+    | ToggleTopBarMenu
     | CloseEditingModal
     | OpenEditingModalNewUser
     | OpenEditingModalEditUser User
@@ -1286,6 +1288,7 @@ type Msg
 
 type alias Model =
     { googleMapsApiKey : GoogleMapsApiKey
+    , isTopBarMenuOpen : Bool
     , users : WebData Users
     , locations : WebData Locations
     , workflows : WebData Workflows
@@ -1309,6 +1312,7 @@ main =
 init : GoogleMapsApiKey -> ( Model, Cmd Msg )
 init googleMapsApiKey =
     ( { googleMapsApiKey = googleMapsApiKey
+      , isTopBarMenuOpen = False
       , users = NotAsked
       , locations = NotAsked
       , workflows = NotAsked
@@ -1357,6 +1361,9 @@ update msg model =
 
         ActivateLocationResponse _ ->
             ( model, getLocations )
+
+        ToggleTopBarMenu ->
+            ( { model | isTopBarMenuOpen = not model.isTopBarMenuOpen }, Cmd.none )
 
         CloseEditingModal ->
             ( { model | modalForm = Closed }, Cmd.none )
