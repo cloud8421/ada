@@ -1067,16 +1067,9 @@ scheduledTaskResourceForm title resource workflows =
                     ]
                 ]
             ]
-        , div
-            [ class "field is-grouped" ]
-            [ div [ class "control" ]
-                [ BX.saveButton
-                    [ onClick SaveFromModalForm ]
-                ]
-            , div [ class "control" ]
-                [ BX.cancelButton
-                    [ onClick CloseEditingModal ]
-                ]
+        , BF.field [ class "is-grouped" ]
+            [ BX.saveButton [ onClick SaveFromModalForm ]
+            , BX.cancelButton [ onClick CloseEditingModal ]
             ]
         ]
 
