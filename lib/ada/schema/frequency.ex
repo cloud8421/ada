@@ -5,6 +5,7 @@ defmodule Ada.Schema.Frequency do
 
   embedded_schema do
     field :type, :string, default: "daily"
+    field :day_of_week, :integer, default: 1
     field :hour, :integer, default: 0
     field :minute, :integer, default: 0
     field :second, :integer, default: 0
@@ -12,8 +13,9 @@ defmodule Ada.Schema.Frequency do
 
   def changeset(frequency, params) do
     frequency
-    |> Ecto.Changeset.cast(params, [:type, :hour, :minute, :second])
-    |> Ecto.Changeset.validate_inclusion(:type, ["daily", "hourly"])
+    |> Ecto.Changeset.cast(params, [:type, :day_of_week, :hour, :minute, :second])
+    |> Ecto.Changeset.validate_inclusion(:type, ["weekly", "daily", "hourly"])
+    |> Ecto.Changeset.validate_inclusion(:day_of_week, 1..7)
     |> Ecto.Changeset.validate_inclusion(:hour, 0..23)
     |> Ecto.Changeset.validate_inclusion(:minute, 0..59)
     |> Ecto.Changeset.validate_inclusion(:second, 0..59)
@@ -21,4 +23,5 @@ defmodule Ada.Schema.Frequency do
 
   def hourly?(frequency), do: frequency.type == "hourly"
   def daily?(frequency), do: frequency.type == "daily"
+  def weekly?(frequency), do: frequency.type == "weekly"
 end

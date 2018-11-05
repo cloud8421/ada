@@ -51,6 +51,11 @@ defmodule Ada.Scheduler do
     |> find_runnable_tasks(:daily, local_datetime)
     |> run_many_async(opts)
 
+    ScheduledTask
+    |> repo.all()
+    |> find_runnable_tasks(:weekly, local_datetime)
+    |> run_many_async(opts)
+
     {:noreply, opts}
   end
 
@@ -75,6 +80,12 @@ defmodule Ada.Scheduler do
   defp find_runnable_tasks(scheduled_tasks, :daily, datetime) do
     scheduled_tasks
     |> Enum.filter(&ScheduledTask.daily?/1)
+    |> Enum.filter(fn st -> ScheduledTask.matches_time?(st, datetime) end)
+  end
+
+  defp find_runnable_tasks(scheduled_tasks, :weekly, datetime) do
+    scheduled_tasks
+    |> Enum.filter(&ScheduledTask.weekly?/1)
     |> Enum.filter(fn st -> ScheduledTask.matches_time?(st, datetime) end)
   end
 

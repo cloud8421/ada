@@ -20,6 +20,19 @@ defmodule Ada.Schema.ScheduledTaskTest do
   end
 
   describe "matches_time?/2" do
+    test "weekly frequency" do
+      st = %ScheduledTask{
+        frequency: %Frequency{type: "weekly", day_of_week: 5, hour: 9}
+      }
+
+      # Local time is Europe London, so we declare an hour in advance
+      assert ScheduledTask.matches_time?(st, to_local(~N[2018-10-05 08:00:00.066161]))
+      assert ScheduledTask.matches_time?(st, to_local(~N[2018-10-12 08:00:00.066161]))
+      refute ScheduledTask.matches_time?(st, to_local(~N[2018-10-05 00:00:00.066161]))
+      refute ScheduledTask.matches_time?(st, to_local(~N[2018-10-06 01:00:00.066161]))
+      refute ScheduledTask.matches_time?(st, to_local(~N[2018-10-06 14:01:00.066161]))
+    end
+
     test "daily frequency" do
       st = %ScheduledTask{frequency: %Frequency{}}
 

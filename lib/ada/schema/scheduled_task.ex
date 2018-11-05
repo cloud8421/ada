@@ -32,9 +32,14 @@ defmodule Ada.Schema.ScheduledTask do
   def hourly?(%__MODULE__{frequency: frequency}), do: Frequency.hourly?(frequency)
 
   @doc """
-  Returns true for an daily task.
+  Returns true for a daily task.
   """
   def daily?(%__MODULE__{frequency: frequency}), do: Frequency.daily?(frequency)
+
+  @doc """
+  Returns true for a weekly task.
+  """
+  def weekly?(%__MODULE__{frequency: frequency}), do: Frequency.weekly?(frequency)
 
   @doc """
   Returns true for a task that matches a given datetime, where matching is defined as:
@@ -44,6 +49,15 @@ defmodule Ada.Schema.ScheduledTask do
   """
   def matches_time?(st, datetime) do
     case st.frequency do
+      %{type: "weekly", day_of_week: day_of_week, hour: hour} ->
+        as_day_of_week =
+          datetime
+          |> DateTime.to_date()
+          |> Date.day_of_week()
+
+        day_of_week == as_day_of_week and hour == datetime.hour and datetime.minute == 0 and
+          datetime.second == 0
+
       %{type: "daily", hour: hour, minute: minute} ->
         hour == datetime.hour and minute == datetime.minute and datetime.second == 0
 
