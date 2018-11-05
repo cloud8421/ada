@@ -1,4 +1,4 @@
-module Bulma.Extra exposing (..)
+module Bulma.Extra exposing (cancelButton, checkButton, coordInput, dangerNotification, dataTable, deleteButton, editButton, emailInput, fullColumns, halfColumn, infoNotificaton, infoTag, lightTag, minuteInput, newButton, runButton, saveButton, sectionPanel, select, sunIcon, tableBodyFromItems, tableHeadFromColumnNames, textInput, timeInput, titleBar, topNavBar)
 
 import Bulma.Columns exposing (..)
 import Bulma.Components exposing (..)
@@ -123,6 +123,7 @@ runButton isRunning attributes =
             , state =
                 if isRunning then
                     Loading
+
                 else
                     Active
             , iconLeft = Just ( Small, [], i [ class "fas fa-play" ] [] )

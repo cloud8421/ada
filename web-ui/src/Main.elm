@@ -21,6 +21,7 @@ import RemoteData exposing (..)
 import Url.Builder as Builder
 
 
+
 -- RESOURCE TYPES
 
 
@@ -212,6 +213,7 @@ incBrightness : Int -> Brightness -> Brightness
 incBrightness increment brightness =
     if brightness + increment >= 255 then
         255
+
     else
         brightness + increment
 
@@ -220,6 +222,7 @@ decBrightness : Int -> Brightness -> Brightness
 decBrightness decrement brightness =
     if brightness - decrement <= 1 then
         1
+
     else
         brightness - decrement
 
@@ -695,6 +698,7 @@ locationsSection locations googleMapsApiKey =
         activeTag active =
             if active then
                 BX.infoTag "active"
+
             else
                 BX.lightTag "inactive"
 
@@ -977,6 +981,7 @@ scheduledTaskResourceForm title resource workflows =
                 optionAttrs =
                     if name == selectedWorkflowName then
                         [ attribute "selected" "selected" ]
+
                     else
                         []
             in
