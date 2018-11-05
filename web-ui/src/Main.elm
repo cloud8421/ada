@@ -744,12 +744,8 @@ formatFrequency frequency =
             "Every hour at " ++ timePad minute ++ ":" ++ timePad second
 
 
-scheduledTasksSection : Model -> Html Msg
-scheduledTasksSection model =
+paramTags params model =
     let
-        columnNames =
-            [ "ID", "Workflow name", "Params", "Frequency", "Actions" ]
-
         toPair param =
             case param of
                 UserId id ->
@@ -772,15 +768,20 @@ scheduledTasksSection model =
             , BX.lightTag value
             ]
 
-        paramTags params =
-            let
-                tagPairs =
-                    List.map (\p -> p |> toPair |> toTag) params
+        tagPairs =
+            List.map (\p -> p |> toPair |> toTag) params
 
-                tagContainer tagPair =
-                    BF.control BF.controlModifiers [] [ BE.multitag [] tagPair ]
-            in
-            List.map tagContainer tagPairs
+        tagContainer tagPair =
+            BF.control BF.controlModifiers [] [ BE.multitag [] tagPair ]
+    in
+    List.map tagContainer tagPairs
+
+
+scheduledTasksSection : Model -> Html Msg
+scheduledTasksSection model =
+    let
+        columnNames =
+            [ "ID", "Workflow name", "Params", "Frequency", "Actions" ]
 
         tableRow scheduledTask =
             let
@@ -792,7 +793,7 @@ scheduledTasksSection model =
                 [ BE.tableCell [] [ text <| String.fromInt scheduledTask.id ]
                 , BE.tableCell [] [ text scheduledTask.workflowHumanName ]
                 , BE.tableCell []
-                    [ BF.multilineFields [] (paramTags scheduledTask.params) ]
+                    [ BF.multilineFields [] (paramTags scheduledTask.params model) ]
                 , BE.tableCell [] [ text <| formatFrequency scheduledTask.frequency ]
                 , BE.tableCell []
                     [ BF.field [ class "has-addons" ]
@@ -935,11 +936,11 @@ type alias ScheduledTaskResource a =
     }
 
 
-scheduledTaskResourceForm : String -> ScheduledTaskResource a -> WebData Workflows -> Html Msg
-scheduledTaskResourceForm title resource workflows =
+scheduledTaskResourceForm : String -> ScheduledTaskResource a -> Model -> Html Msg
+scheduledTaskResourceForm title resource model =
     let
         workflowMetas =
-            case workflows of
+            case model.workflows of
                 Success items ->
                     items
                         |> Dict.values
@@ -952,7 +953,7 @@ scheduledTaskResourceForm title resource workflows =
             [ ( "Choose workflow", "choose-workflow" ) ] ++ workflowMetas
 
         workflowRequirements =
-            case workflows of
+            case model.workflows of
                 Success items ->
                     items
                         |> Dict.get resource.workflowName
@@ -1054,6 +1055,10 @@ scheduledTaskResourceForm title resource workflows =
                         (List.map (workflowOption resource.workflowName) workflowMetasWithDefaultOption)
                     , BF.controlHelp BM.Default [] requirementsDescription
                     ]
+                , BF.field []
+                    [ BF.controlLabel [] [ text "Params" ]
+                    , BF.multilineFields [] (paramTags resource.params model)
+                    ]
                 ]
             , BX.halfColumn
                 [ BF.controlLabel [] [ text "Frequency" ]
@@ -1093,10 +1098,10 @@ editingModalForm model =
             locationResourceForm "Edit Location" location model.googleMapsApiKey
 
         Open (NewScheduledTask scheduleTaskParams) ->
-            scheduledTaskResourceForm "New Scheduled Task" scheduleTaskParams model.workflows
+            scheduledTaskResourceForm "New Scheduled Task" scheduleTaskParams model
 
         Open (EditScheduledTask scheduledTask) ->
-            scheduledTaskResourceForm "Edit Scheduled Task" scheduledTask model.workflows
+            scheduledTaskResourceForm "Edit Scheduled Task" scheduledTask model
 
 
 editingModal : Model -> Html Msg
