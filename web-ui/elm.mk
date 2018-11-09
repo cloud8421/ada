@@ -5,8 +5,8 @@ ELM_SRC := src
 SCSS_SRC := styles
 ELM_SRC_FILES = $(shell find $(ELM_SRC) -type f -name '*.elm' 2>/dev/null)
 SCSS_SRC_FILES = $(shell find $(SCSS_SRC) -type f -name '*.scss' 2>/dev/null)
-BUILD := ../priv/static/web-ui/build
-DIST := ../priv/static/web-ui/dist
+BUILD := build
+DIST := dist
 NPM_BIN := node_modules/.bin
 OS := $(shell uname)
 
