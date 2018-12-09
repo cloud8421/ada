@@ -29,7 +29,7 @@ defmodule Ada.Application do
       Ada.TimeKeeper,
       {Ada.Repo, []},
       {Task.Supervisor, name: Ada.TaskSupervisor},
-      {Ada.Scheduler, [repo: Ada.Repo, timezone: "Europe/London"]},
+      {Ada.Scheduler, [repo: Ada.Repo, timezone: "Europe/Istanbul"]},
       {Ada.HTTP.Listener, listener_opts(@env, @target)}
     ]
   end
@@ -37,7 +37,7 @@ defmodule Ada.Application do
   defp children("host") do
     [
       {Ada.Display, driver: Ada.Display.Driver.Dummy},
-      {Ada.UI, display: Ada.Display, timezone: "Europe/London"}
+      {Ada.UI, display: Ada.Display, timezone: "Europe/Istanbul"}
       # Starts a worker by calling: Ada.Worker.start_link(arg)
       # {Ada.Worker, arg},
     ]
@@ -47,7 +47,7 @@ defmodule Ada.Application do
     [
       {Ada.Display.Driver.ScrollPhatHD, []},
       {Ada.Display, driver: Ada.Display.Driver.ScrollPhatHD},
-      {Ada.UI, display: Ada.Display, timezone: "Europe/London"}
+      {Ada.UI, display: Ada.Display, timezone: "Europe/Istanbul"}
       # Starts a worker by calling: Ada.Worker.start_link(arg)
       # {Ada.Worker, arg},
     ]
