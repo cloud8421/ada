@@ -9,12 +9,11 @@ defmodule Ada.UI do
     Ada.ScheduledTask.End
   ]
 
-  @timezone "Europe/London"
-
   alias Ada.PubSub.Broadcast
   alias Ada.UI.{Clock, TaskMon}
 
   defstruct display: nil,
+            timezone: nil,
             current_time: nil,
             running_tasks: MapSet.new()
 
@@ -46,13 +45,14 @@ defmodule Ada.UI do
     :ok = subscribe(@subscriptions)
 
     display = Keyword.fetch!(opts, :display)
-    current_time = local_now!()
+    timezone = Keyword.fetch!(opts, :timezone)
+    current_time = local_now!(DateTime.utc_now(), timezone)
 
     current_time
     |> Clock.render()
     |> display.set_content()
 
-    {:ok, :clock, %__MODULE__{display: display, current_time: current_time}}
+    {:ok, :clock, %__MODULE__{display: display, current_time: current_time, timezone: timezone}}
   end
 
   def handle_event(:info, {Broadcast, Ada.Time.Minute, current_time}, :clock, data) do
@@ -61,7 +61,7 @@ defmodule Ada.UI do
     end)
 
     current_time
-    |> local_now!()
+    |> local_now!(data.timezone)
     |> Clock.render()
     |> data.display.set_content()
 
@@ -137,7 +137,7 @@ defmodule Ada.UI do
     Enum.each(subscriptions, &Ada.PubSub.subscribe/1)
   end
 
-  defp local_now!(current_time \\ DateTime.utc_now()) do
-    Calendar.DateTime.shift_zone!(current_time, @timezone)
+  defp local_now!(current_time \\ DateTime.utc_now(), timezone) do
+    Calendar.DateTime.shift_zone!(current_time, timezone)
   end
 end

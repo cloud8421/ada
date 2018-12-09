@@ -5,8 +5,6 @@ defmodule Ada.Scheduler do
 
   alias Ada.{PubSub, Schema.ScheduledTask, Time.Hour, Time.Minute}
 
-  @timezone "Europe/London"
-
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
@@ -44,7 +42,8 @@ defmodule Ada.Scheduler do
 
   def handle_info({PubSub.Broadcast, Hour, datetime}, opts) do
     repo = Keyword.fetch!(opts, :repo)
-    local_datetime = Calendar.DateTime.shift_zone!(datetime, @timezone)
+    timezone = Keyword.fetch!(opts, :timezone)
+    local_datetime = Calendar.DateTime.shift_zone!(datetime, timezone)
 
     ScheduledTask
     |> repo.all()
@@ -61,7 +60,8 @@ defmodule Ada.Scheduler do
 
   def handle_info({PubSub.Broadcast, Minute, datetime}, opts) do
     repo = Keyword.fetch!(opts, :repo)
-    local_datetime = Calendar.DateTime.shift_zone!(datetime, @timezone)
+    timezone = Keyword.fetch!(opts, :timezone)
+    local_datetime = Calendar.DateTime.shift_zone!(datetime, timezone)
 
     ScheduledTask
     |> repo.all()
