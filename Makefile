@@ -1,4 +1,4 @@
-.PHONY: deps.get deps.outdated rpi0.firmware rpi0.burn rpi0.push host.clean-and-test host.test host.setup ssh
+.PHONY: deps.get deps.outdated rpi0.firmware rpi0.burn rpi0.push host.clean-and-test host.shell host.test host.setup ssh
 
 deps.get:
 	MIX_TARGET=rpi0 mix deps.get
@@ -26,6 +26,9 @@ host.clean-and-test:
 
 host.test:
 	MIX_TARGET=host MIX_ENV=test mix test
+
+host.shell:
+	MIX_TARGET=host iex -S mix
 
 host.setup:
 	mix local.rebar --force
