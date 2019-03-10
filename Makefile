@@ -19,7 +19,7 @@ rpi0.burn:
 rpi0.push:
 	$(MAKE) -C web-ui prod
 	MIX_TARGET=rpi0 mix firmware
-	./script/upload.sh ada.local _build/rpi0/dev/nerves/images/ada.fw
+	./script/upload.sh ada.local _build/rpi0_dev/nerves/images/ada.fw
 
 host.clean-and-test:
 	MIX_TARGET=host MIX_ENV=test mix do ecto.reset, test
