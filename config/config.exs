@@ -16,4 +16,4 @@ config :ada, Ada.Repo, adapter: Sqlite.Ecto2
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations
 
-import_config "#{Mix.Project.config()[:target]}.exs"
+import_config "#{Mix.target()}.exs"

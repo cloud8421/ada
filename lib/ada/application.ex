@@ -1,7 +1,7 @@
 defmodule Ada.Application do
   @moduledoc false
 
-  @target Mix.Project.config()[:target]
+  @target Mix.target()
   @env Mix.env()
 
   use Application
@@ -34,7 +34,7 @@ defmodule Ada.Application do
     ]
   end
 
-  defp children("host") do
+  defp children(:host) do
     [
       {Ada.Display, driver: Ada.Display.Driver.Dummy},
       {Ada.UI, display: Ada.Display, timezone: "Europe/Istanbul"}
@@ -43,7 +43,7 @@ defmodule Ada.Application do
     ]
   end
 
-  defp children(_target) do
+  defp children(_device_target) do
     [
       {Ada.Display.Driver.ScrollPhatHD, []},
       {Ada.Display, driver: Ada.Display.Driver.ScrollPhatHD},

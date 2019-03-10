@@ -1,8 +1,12 @@
-.PHONY: deps.get rpi0.firmware rpi0.burn rpi0.push host.clean-and-test host.test host.setup ssh
+.PHONY: deps.get deps.outdated rpi0.firmware rpi0.burn rpi0.push host.clean-and-test host.test host.setup ssh
 
 deps.get:
 	MIX_TARGET=rpi0 mix deps.get
 	MIX_TARGET=host mix deps.get
+
+deps.outdated:
+	MIX_TARGET=rpi0 mix hex.outdated
+	MIX_TARGET=host mix hex.outdated
 
 rpi0.firmware:
 	$(MAKE) -C web-ui prod
