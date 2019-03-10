@@ -14,7 +14,7 @@ config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
 # docs for separating out critical OTP applications such as those
 # involved with firmware updates.
 config :shoehorn,
-  init: [:nerves_runtime, :nerves_init_gadget, :nerves_network],
+  init: [:nerves_runtime, :nerves_init_gadget, :nerves_network, :power_control],
   app: Mix.Project.config()[:app]
 
 # Use Ringlogger as the logger backend and remove :console.
@@ -56,3 +56,8 @@ config :nerves_init_gadget,
   node_name: nil,
   node_host: :mdns_domain,
   ssh_console_port: 22
+
+config :power_control,
+  cpu_governor: :powersave,
+  disable_leds: true,
+  disable_hdmi: true

@@ -49,6 +49,7 @@ defmodule Ada.MixProject do
       {:nerves_init_gadget, "~> 0.4", targets: @all_targets},
       {:nerves_time, "~> 0.2.0", targets: @all_targets},
       {:elixir_ale, "~> 1.1", targets: @all_targets},
+      {:power_control, "~> 0.2.0", targets: :rpi0},
       {:nerves_system_rpi0, "~> 1.0", runtime: false, targets: :rpi0}
     ]
   end
