@@ -7,8 +7,8 @@ defmodule Ada.MixProject do
     [
       app: :ada,
       version: "0.1.0",
-      elixir: "~> 1.6",
-      archives: [nerves_bootstrap: "~> 1.0"],
+      elixir: "~> 1.8",
+      archives: [nerves_bootstrap: "~> 1.5"],
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.target() != :host,
       deps_path: "deps/#{Mix.target()}",
@@ -46,6 +46,7 @@ defmodule Ada.MixProject do
       {:nerves, "~> 1.3", runtime: false},
       {:shoehorn, "~> 0.4"},
       {:ring_logger, "~> 0.4"},
+      {:toolshed, "~> 0.2"},
       {:nerves_runtime, "~> 0.6", targets: @all_targets},
       {:nerves_init_gadget, "~> 0.4", targets: @all_targets},
       {:nerves_time, "~> 0.2.0", targets: @all_targets},
