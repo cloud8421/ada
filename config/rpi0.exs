@@ -53,7 +53,7 @@ config :nerves_init_gadget,
   ifname: "wlan0",
   address_method: :dhcp,
   mdns_domain: "ada.local",
-  node_name: nil,
+  node_name: :ada,
   node_host: :mdns_domain,
   ssh_console_port: 22
 
