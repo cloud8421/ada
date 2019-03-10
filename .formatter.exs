@@ -9,8 +9,6 @@
     resource: 2,
     resource: 3,
     match: 2,
-    # distillery
-    set: 1,
     # ecto
     from: 2,
     field: 1,
@@ -20,5 +18,6 @@
     embeds_one: 2,
     embeds_one: 3,
     add: 3
-  ]
+  ],
+  import_deps: [:distillery, :ex_cli]
 ]

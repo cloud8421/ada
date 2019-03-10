@@ -16,7 +16,11 @@ defmodule Ada.MixProject do
         loadconfig: [&bootstrap/1],
         "ecto.reset": ["ecto.drop --quiet", "ecto.create --quiet", "ecto.migrate --quiet"]
       ],
-      deps: deps()
+      deps: deps(),
+      escript: [
+        main_module: Ada.CLI,
+        app: nil
+      ]
     ]
   end
 
@@ -47,6 +51,7 @@ defmodule Ada.MixProject do
       {:shoehorn, "~> 0.4"},
       {:ring_logger, "~> 0.4"},
       {:toolshed, "~> 0.2"},
+      {:ex_cli, "~> 0.1.6"},
       {:nerves_runtime, "~> 0.6", targets: @all_targets},
       {:nerves_init_gadget, "~> 0.4", targets: @all_targets},
       {:nerves_time, "~> 0.2.0", targets: @all_targets},
