@@ -11,6 +11,7 @@ defmodule Ada.MixProject do
       archives: [nerves_bootstrap: "~> 1.0"],
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.target() != :host,
+      deps_path: "deps/#{Mix.target()}",
       aliases: [
         loadconfig: [&bootstrap/1],
         "ecto.reset": ["ecto.drop --quiet", "ecto.create --quiet", "ecto.migrate --quiet"]
