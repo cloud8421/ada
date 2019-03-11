@@ -1,7 +1,7 @@
 defmodule Ada.CLI do
   use ExCLI.DSL, escript: true
 
-  alias Ada.CLI.Format
+  alias Ada.{CLI.Format, CRUD}
 
   @default_target_node :"ada@ada.local"
   @cli_node :"cli@127.0.0.1"
@@ -26,7 +26,7 @@ defmodule Ada.CLI do
       connect!(target_node)
 
       target_node
-      |> :rpc.call(Ada.Repo, :all, [Ada.Schema.User])
+      |> :rpc.call(CRUD, :list, [Ada.Schema.User])
       |> Format.list_users()
       |> IO.puts()
     end
@@ -46,11 +46,8 @@ defmodule Ada.CLI do
 
       connect!(target_node)
 
-      changeset =
-        :rpc.call(target_node, Ada.Schema.User, :changeset, [%Ada.Schema.User{}, context])
-
       target_node
-      |> :rpc.call(Ada.Repo, :insert!, [changeset])
+      |> :rpc.call(CRUD, :create, [Ada.Schema.User, context])
       |> Format.user_created()
       |> IO.puts()
     end
@@ -69,9 +66,9 @@ defmodule Ada.CLI do
 
       connect!(target_node)
 
-      user = :rpc.call(target_node, Ada.Repo, :get!, [Ada.Schema.User, context.id])
+      user = :rpc.call(target_node, CRUD, :find, [Ada.Schema.User, context.id])
 
-      :rpc.call(target_node, Ada.Repo, :delete!, [user])
+      :rpc.call(target_node, CRUD, :delete, [user])
       |> Format.user_deleted()
       |> IO.puts()
     end

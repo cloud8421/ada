@@ -1,22 +1,36 @@
 defmodule Ada.CLI.Format do
+  @break "\n"
+
   def list_users(users) do
-    users
-    |> Enum.map(fn user ->
-      """
-      ID: #{user.id}
-      Name: #{user.name}
-      Email: #{user.email}
-      """
-    end)
-    |> Enum.intersperse("----\n")
-    |> :erlang.iolist_to_binary()
+    preamble = "==> System users"
+
+    list =
+      users
+      |> Enum.map(fn user ->
+        """
+               ID: #{user.id}
+             Name: #{user.name}
+            Email: #{user.email}
+        """
+      end)
+      |> Enum.intersperse(@break)
+
+    :erlang.iolist_to_binary([preamble, @break, @break, list])
   end
 
-  def user_created(user) do
-    "Created User with ID #{user.id}"
+  def user_created({:ok, user}) do
+    "==> Created User with ID #{user.id}"
   end
 
-  def user_deleted(user) do
-    "Deleted User with ID #{user.id}"
+  def user_created({:error, changeset}) do
+    "==> Error creating user: #{inspect(changeset.errors)}"
+  end
+
+  def user_deleted({:ok, user}) do
+    "==> Deleted User with ID #{user.id}"
+  end
+
+  def user_deleted({:error, changeset}) do
+    "==> Error deleting user: #{inspect(changeset.errors)}"
   end
 end
