@@ -119,7 +119,7 @@ defmodule Ada.CLI do
     {:ok, _} = :net_kernel.start([@cli_node, :longnames])
 
     :erlang.set_cookie(
-      :"cli@127.0.0.1",
+      @cli_node,
       String.to_atom("a2g6ek6co44eyahlgfyloqootchaxjuscqh6yf7a2ad63sc2sjiscxynd5wb6k7j")
     )
 
