@@ -74,6 +74,47 @@ defmodule Ada.CLI do
     end
   end
 
+  command :brightness do
+    option :target_node, aliases: [:t]
+    aliases [:b]
+    description "Controls the device brightness"
+    long_description "Controls the device brightness"
+
+    argument(:operation)
+    option(:intensity, type: :integer)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      connect!(target_node)
+
+      current_brightness = :rpc.call(target_node, Ada.Display, :get_brightness, [])
+
+      case context.operation do
+        "up" ->
+          :rpc.call(target_node, Ada.Display, :set_brightness, [
+            inc_brightness(current_brightness, 10)
+          ])
+          |> Format.brightness_changed()
+          |> IO.puts()
+
+        "down" ->
+          :rpc.call(target_node, Ada.Display, :set_brightness, [
+            dec_brightness(current_brightness, 10)
+          ])
+          |> Format.brightness_changed()
+          |> IO.puts()
+
+        "set" ->
+          :rpc.call(target_node, Ada.Display, :set_brightness, [
+            context.intensity
+          ])
+          |> Format.brightness_changed()
+          |> IO.puts()
+      end
+    end
+  end
+
   defp connect!(target_node) do
     {:ok, _} = :net_kernel.start([@cli_node, :longnames])
 
@@ -83,5 +124,13 @@ defmodule Ada.CLI do
     )
 
     true = Node.connect(target_node)
+  end
+
+  defp inc_brightness(brightness, inc) do
+    if brightness + inc >= 255, do: 255, else: brightness + inc
+  end
+
+  defp dec_brightness(brightness, dec) do
+    if brightness - dec <= 1, do: 1, else: brightness - dec
   end
 end

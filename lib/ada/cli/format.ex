@@ -33,4 +33,12 @@ defmodule Ada.CLI.Format do
   def user_deleted({:error, changeset}) do
     "==> Error deleting user: #{inspect(changeset.errors)}"
   end
+
+  def brightness_changed(:ok) do
+    "==> Brightness updated successfully"
+  end
+
+  def brightness_changed(error) do
+    "==> Error updating brightness: #{inspect(error)}"
+  end
 end

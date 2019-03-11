@@ -4,6 +4,7 @@ defmodule Ada.Display do
   @default_content ' ADA'
 
   defstruct driver: Ada.Display.Driver.Dummy,
+            brightness: 1,
             content: @default_content
 
   ################################################################################
@@ -28,6 +29,10 @@ defmodule Ada.Display do
 
   def set_brightness(brightness) when brightness in 0..255 do
     :gen_statem.call(__MODULE__, {:set_brightness, brightness})
+  end
+
+  def get_brightness do
+    :gen_statem.call(__MODULE__, :get_brightness)
   end
 
   ################################################################################
@@ -80,6 +85,10 @@ defmodule Ada.Display do
     {:next_state, :static, data, {:reply, from, :ok}}
   end
 
+  def off({:call, from}, :get_brightness, data) do
+    {:keep_state_and_data, {:reply, from, data.brightness}}
+  end
+
   def off({:call, from}, {:set_content, {:static, buffer}}, data) do
     :ok = data.driver.set_buffer(buffer)
     :ok = data.driver.set_default_brightness()
@@ -112,6 +121,10 @@ defmodule Ada.Display do
   def static({:call, from}, {:set_brightness, brightness}, data) do
     :ok = data.driver.set_brightness(brightness)
     {:keep_state_and_data, {:reply, from, :ok}}
+  end
+
+  def static({:call, from}, :get_brightness, data) do
+    {:keep_state_and_data, {:reply, from, data.brightness}}
   end
 
   def static({:call, from}, {:set_content, {:static, buffer}}, data) do
@@ -148,12 +161,18 @@ defmodule Ada.Display do
 
   def cyclic({:call, from}, :turn_off, data) do
     :ok = data.driver.set_brightness(0)
-    {:next_state, :off, data, {:reply, from, :ok}}
+    new_data = %{data | brightness: 0}
+    {:next_state, :off, new_data, {:reply, from, :ok}}
   end
 
   def cyclic({:call, from}, {:set_brightness, brightness}, data) do
     :ok = data.driver.set_brightness(brightness)
-    {:keep_state_and_data, {:reply, from, :ok}}
+    new_data = %{data | brightness: 0}
+    {:keep_state, new_data, {:reply, from, :ok}}
+  end
+
+  def cyclic({:call, from}, :get_brightness, data) do
+    {:keep_state_and_data, {:reply, from, data.brightness}}
   end
 
   def cyclic({:call, from}, {:set_content, {:static, buffer}}, data) do
