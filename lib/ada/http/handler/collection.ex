@@ -20,25 +20,22 @@ defmodule Ada.HTTP.Handler.Collection do
   end
 
   def to_json(req, ctx) do
-    repo = Keyword.fetch!(ctx, :repo)
     schema = Keyword.fetch!(ctx, :schema)
 
     body =
       schema
-      |> repo.all()
+      |> Ada.CRUD.list(ctx)
       |> Jason.encode!()
 
     {body, req, ctx}
   end
 
   def from_json(req, ctx) do
-    repo = Keyword.fetch!(ctx, :repo)
     schema = Keyword.fetch!(ctx, :schema)
     {:ok, encoded, req} = :cowboy_req.read_body(req)
 
     with {:ok, decoded} <- Jason.decode(encoded),
-         changeset <- schema.changeset(struct(schema), decoded),
-         {:ok, persisted} <- repo.insert(changeset) do
+         {:ok, persisted} <- Ada.CRUD.create(schema, decoded, ctx) do
       {true, set_resp_body(req, persisted), ctx}
     else
       _error ->

@@ -54,13 +54,11 @@ defmodule Ada.HTTP.Handler.Resource do
   end
 
   def from_json(req, {resource, ctx} = state) do
-    repo = Keyword.fetch!(ctx, :repo)
     schema = Keyword.fetch!(ctx, :schema)
     {:ok, encoded, req} = :cowboy_req.read_body(req)
 
     with {:ok, decoded} <- Jason.decode(encoded),
-         changeset <- schema.changeset(resource, decoded),
-         {:ok, new_resource} <- repo.update(changeset) do
+         {:ok, new_resource} <- Ada.CRUD.update(schema, resource, decoded, ctx) do
       {true, req, {new_resource, ctx}}
     else
       _error ->
@@ -69,9 +67,7 @@ defmodule Ada.HTTP.Handler.Resource do
   end
 
   def delete_resource(req, {resource, ctx} = state) do
-    repo = Keyword.fetch!(ctx, :repo)
-
-    case repo.delete(resource) do
+    case Ada.CRUD.delete(resource, ctx) do
       {:ok, _} -> {true, req, {:no_resource, ctx}}
       _error -> {false, req, state}
     end
