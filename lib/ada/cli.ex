@@ -34,6 +34,7 @@ defmodule Ada.CLI do
 
   command :create_user do
     option :target_node, aliases: [:t]
+    option(:last_fm_username)
     aliases [:cu]
     description "Creates a new system user"
     long_description "Creates a new system user"
