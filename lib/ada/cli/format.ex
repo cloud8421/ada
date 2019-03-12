@@ -27,6 +27,14 @@ defmodule Ada.CLI.Format do
     "==> Error creating user: #{inspect(changeset.errors)}"
   end
 
+  def user_updated({:ok, user}) do
+    "==> Updated User with ID #{user.id}"
+  end
+
+  def user_updated({:error, changeset}) do
+    "==> Error updating user: #{inspect(changeset.errors)}"
+  end
+
   def user_deleted({:ok, user}) do
     "==> Deleted User with ID #{user.id}"
   end

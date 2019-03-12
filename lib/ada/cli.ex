@@ -54,6 +54,31 @@ defmodule Ada.CLI do
     end
   end
 
+  command :update_user do
+    option :target_node, aliases: [:t]
+    aliases [:uu]
+    description "Updates an existing system user"
+    long_description "Updates an existing system user"
+
+    argument(:id, type: :integer)
+    option(:last_fm_username)
+    option(:name)
+    option(:email)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      connect!(target_node)
+
+      user = :rpc.call(target_node, CRUD, :find, [Ada.Schema.User, context.id])
+
+      target_node
+      |> :rpc.call(CRUD, :update, [Ada.Schema.User, user, context])
+      |> Format.user_updated()
+      |> IO.puts()
+    end
+  end
+
   command :delete_user do
     option :target_node, aliases: [:t]
     aliases [:du]
