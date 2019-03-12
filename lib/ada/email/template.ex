@@ -26,6 +26,13 @@ defmodule Ada.Email.Template do
     [:stories]
   )
 
+  EEx.function_from_file(
+    :def,
+    :last_fm_report_template,
+    Path.join(@templates_path, "last_fm_report.html.eex"),
+    [:tracks]
+  )
+
   def weather(location_name, report) do
     layout_template(
       @style_css,
@@ -36,6 +43,10 @@ defmodule Ada.Email.Template do
 
   def news(source_name, stories) do
     layout_template(@style_css, "News for #{source_name}", stories_template(stories))
+  end
+
+  def last_fm_report(report_name, tracks) do
+    layout_template(@style_css, report_name, last_fm_report_template(tracks))
   end
 
   defp format_weather_datetime(datetime) do

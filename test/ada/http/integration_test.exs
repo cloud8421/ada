@@ -313,6 +313,11 @@ defmodule Ada.HTTP.IntegrationTest do
 
       assert [
                %{
+                 "human_name" => "Send a Last.Fm report",
+                 "name" => "Ada.Workflow.SendLastFmReport",
+                 "requirements" => ["interval_in_hours", "user_id"]
+               },
+               %{
                  "name" => "Ada.Workflow.SendNewsByTag",
                  "human_name" => "Send News by tag",
                  "requirements" => ["tag", "user_id"]
