@@ -8,9 +8,10 @@ defmodule Ada.CLI.Format do
       users
       |> Enum.map(fn user ->
         """
-               ID: #{user.id}
-             Name: #{user.name}
-            Email: #{user.email}
+                 ID: #{user.id}
+               Name: #{user.name}
+              Email: #{user.email}
+            Last.fm: #{user.last_fm_username}
         """
       end)
       |> Enum.intersperse(@break)
