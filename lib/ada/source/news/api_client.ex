@@ -16,10 +16,10 @@ defmodule Ada.Source.News.ApiClient do
     url = Path.join([@base_url, "search"])
     qs_params = %{"tag" => tag, "show-fields" => "body,thumbnail", "api-key" => @api_key}
 
-    with %HTTPClient.Response{status_code: 200, body: body} <- HTTPClient.get(url, [], qs_params),
-         {:ok, data} <- Jason.decode(body) do
-      {:ok, parse_stories(data)}
-    else
+    case HTTPClient.json_get(url, [], qs_params) do
+      %HTTPClient.Response{status_code: 200, body: body} ->
+        {:ok, parse_stories(body)}
+
       %HTTPClient.Response{status_code: status_code, body: body} ->
         {:error, {status_code, body}}
 

@@ -11,10 +11,10 @@ defmodule Ada.Source.Weather.ApiClient do
     url = Path.join([@base_url, "forecast", @api_key, lat_lng])
     qs_params = [{"exclude", @exclude_opts}, {"units", @unit}]
 
-    with %HTTPClient.Response{status_code: 200, body: body} <- HTTPClient.get(url, [], qs_params),
-         {:ok, data} <- Jason.decode(body) do
-      {:ok, parse_response(data)}
-    else
+    case HTTPClient.json_get(url, [], qs_params) do
+      %HTTPClient.Response{status_code: 200, body: body} ->
+        {:ok, parse_response(body)}
+
       %HTTPClient.Response{status_code: status_code, body: body} ->
         {:error, {status_code, body}}
 
