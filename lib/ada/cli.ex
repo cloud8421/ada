@@ -212,6 +212,24 @@ defmodule Ada.CLI do
     end
   end
 
+  command :list_scheduled_tasks do
+    option :target_node, aliases: [:t]
+    aliases [:lst]
+    description "Lists configured scheduled task"
+    long_description "Lists configured scheduled tasks"
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      target_node
+      |> :rpc.call(CRUD, :list, [Ada.Schema.ScheduledTask])
+      |> Format.list_scheduled_tasks()
+      |> IO.puts()
+    end
+  end
+
   defp inc_brightness(brightness, inc) do
     if brightness + inc >= 255, do: 255, else: brightness + inc
   end
