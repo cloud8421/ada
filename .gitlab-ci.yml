@@ -9,6 +9,20 @@ core:test:
       - deps
       - _build
 
+core:cli:
+  image: elixir:latest
+  before_script:
+    - make host.setup
+  script:
+    - make host.cli
+  cache:
+    paths:
+      - deps
+      - _build
+  artifacts:
+    paths:
+      - ada
+
 ui:build:
   image: buildpack-deps:stretch
   script:
