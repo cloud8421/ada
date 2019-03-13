@@ -58,4 +58,12 @@ defmodule Ada.CLI.Format do
   def location_created({:error, changeset}) do
     "==> Error creating location: #{inspect(changeset.errors)}"
   end
+
+  def scheduled_task_created({:ok, scheduled_task}) do
+    "==> Created scheduled_task with ID #{scheduled_task.id}"
+  end
+
+  def scheduled_task_created({:error, changeset}) do
+    "==> Error creating scheduled_task: #{inspect(changeset.errors)}"
+  end
 end
