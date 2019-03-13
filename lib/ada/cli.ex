@@ -1,7 +1,7 @@
 defmodule Ada.CLI do
   use ExCLI.DSL, escript: true
 
-  alias Ada.{CLI.Format, CRUD}
+  alias Ada.{CLI.Helpers, CLI.Format, CRUD}
 
   @default_target_node :"ada@ada.local"
   @cli_node :"cli@127.0.0.1"
@@ -23,7 +23,7 @@ defmodule Ada.CLI do
     run context do
       target_node = Map.get(context, :target_node, @default_target_node)
 
-      connect!(target_node)
+      Helpers.connect!(@cli_node, target_node)
 
       target_node
       |> :rpc.call(CRUD, :list, [Ada.Schema.User])
@@ -45,7 +45,7 @@ defmodule Ada.CLI do
     run context do
       target_node = Map.get(context, :target_node, @default_target_node)
 
-      connect!(target_node)
+      Helpers.connect!(@cli_node, target_node)
 
       target_node
       |> :rpc.call(CRUD, :create, [Ada.Schema.User, context])
@@ -68,7 +68,7 @@ defmodule Ada.CLI do
     run context do
       target_node = Map.get(context, :target_node, @default_target_node)
 
-      connect!(target_node)
+      Helpers.connect!(@cli_node, target_node)
 
       user = :rpc.call(target_node, CRUD, :find, [Ada.Schema.User, context.id])
 
@@ -90,7 +90,7 @@ defmodule Ada.CLI do
     run context do
       target_node = Map.get(context, :target_node, @default_target_node)
 
-      connect!(target_node)
+      Helpers.connect!(@cli_node, target_node)
 
       user = :rpc.call(target_node, CRUD, :find, [Ada.Schema.User, context.id])
 
@@ -112,7 +112,7 @@ defmodule Ada.CLI do
     run context do
       target_node = Map.get(context, :target_node, @default_target_node)
 
-      connect!(target_node)
+      Helpers.connect!(@cli_node, target_node)
 
       current_brightness = :rpc.call(target_node, Ada.Display, :get_brightness, [])
 
@@ -154,11 +154,11 @@ defmodule Ada.CLI do
     run context do
       target_node = Map.get(context, :target_node, @default_target_node)
 
-      connect!(target_node)
+      Helpers.connect!(@cli_node, target_node)
 
-      ensure_location_dependencies!()
+      Helpers.ensure_location_dependencies!()
 
-      location_attributes = get_current_location_data()
+      location_attributes = Helpers.get_current_location_data()
 
       target_node
       |> :rpc.call(CRUD, :create, [Ada.Schema.Location, location_attributes])
@@ -167,48 +167,11 @@ defmodule Ada.CLI do
     end
   end
 
-  defp connect!(target_node) do
-    {:ok, _} = :net_kernel.start([@cli_node, :longnames])
-
-    :erlang.set_cookie(
-      @cli_node,
-      String.to_atom("a2g6ek6co44eyahlgfyloqootchaxjuscqh6yf7a2ad63sc2sjiscxynd5wb6k7j")
-    )
-
-    true = Node.connect(target_node)
-  end
-
   defp inc_brightness(brightness, inc) do
     if brightness + inc >= 255, do: 255, else: brightness + inc
   end
 
   defp dec_brightness(brightness, dec) do
     if brightness - dec <= 1, do: 1, else: brightness - dec
-  end
-
-  defp get_current_location_data do
-    {data, 0} = System.cmd("CoreLocationCLI", ["-format", "%latitude|%longitude|%address"])
-
-    [lat, lng, address] = String.split(data, "|")
-
-    %{lat: lat, lng: lng, name: address}
-  end
-
-  defp ensure_location_dependencies! do
-    case :os.find_executable('CoreLocationCLI') do
-      false ->
-        IO.puts("""
-        Cannot find 'CoreLocationCLI' in path.
-
-        Please install with:
-
-        brew cask install corelocationcli
-        """)
-
-        System.halt(1)
-
-      _executable ->
-        :ok
-    end
   end
 end
