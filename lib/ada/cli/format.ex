@@ -76,13 +76,21 @@ defmodule Ada.CLI.Format do
         """
                          ID: #{scheduled_task.id}
               Workflow Name: #{inspect(scheduled_task.workflow_name)}
-                     Params: #{Jason.encode!(scheduled_task.params)}
+                     Params: #{format_params(scheduled_task.params)}
                   Frequency: #{format_frequency(scheduled_task.frequency)}
         """
       end)
       |> Enum.intersperse(@break)
 
     :erlang.iolist_to_binary([preamble, @break, @break, list])
+  end
+
+  defp format_params(params) do
+    params
+    |> Enum.map(fn {k, v} ->
+      "#{k}=#{v}"
+    end)
+    |> Enum.join(", ")
   end
 
   defp format_frequency(frequency) do
