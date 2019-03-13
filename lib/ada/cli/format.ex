@@ -50,4 +50,12 @@ defmodule Ada.CLI.Format do
   def brightness_changed(error) do
     "==> Error updating brightness: #{inspect(error)}"
   end
+
+  def location_created({:ok, location}) do
+    "==> Created location with ID #{location.id}"
+  end
+
+  def location_created({:error, changeset}) do
+    "==> Error creating location: #{inspect(changeset.errors)}"
+  end
 end

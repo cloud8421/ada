@@ -141,6 +141,32 @@ defmodule Ada.CLI do
     end
   end
 
+  command :add_current_location do
+    option :target_node, aliases: [:t]
+    aliases [:acl]
+    description "Adds the current location"
+
+    long_description """
+    Adds the current location. Requires CoreLocationCLI to be installed and it may
+    prompt for user authorization.
+    """
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      connect!(target_node)
+
+      ensure_location_dependencies!()
+
+      location_attributes = get_current_location_data()
+
+      target_node
+      |> :rpc.call(CRUD, :create, [Ada.Schema.Location, location_attributes])
+      |> Format.location_created()
+      |> IO.puts()
+    end
+  end
+
   defp connect!(target_node) do
     {:ok, _} = :net_kernel.start([@cli_node, :longnames])
 
@@ -158,5 +184,31 @@ defmodule Ada.CLI do
 
   defp dec_brightness(brightness, dec) do
     if brightness - dec <= 1, do: 1, else: brightness - dec
+  end
+
+  defp get_current_location_data do
+    {data, 0} = System.cmd("CoreLocationCLI", ["-format", "%latitude|%longitude|%address"])
+
+    [lat, lng, address] = String.split(data, "|")
+
+    %{lat: lat, lng: lng, name: address}
+  end
+
+  defp ensure_location_dependencies! do
+    case :os.find_executable('CoreLocationCLI') do
+      false ->
+        IO.puts("""
+        Cannot find 'CoreLocationCLI' in path.
+
+        Please install with:
+
+        brew cask install corelocationcli
+        """)
+
+        System.halt(1)
+
+      _executable ->
+        :ok
+    end
   end
 end
