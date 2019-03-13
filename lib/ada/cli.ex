@@ -137,6 +137,18 @@ defmodule Ada.CLI do
           ])
           |> Format.brightness_changed()
           |> IO.puts()
+
+        other ->
+          IO.puts("""
+          ==> Unsupported option #{other}.
+
+              Valid values are:
+              - up
+              - down
+              - set --intensity <integer-between-0-and-255>
+          """)
+
+          System.halt(1)
       end
     end
   end
