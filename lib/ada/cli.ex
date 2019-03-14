@@ -246,7 +246,7 @@ defmodule Ada.CLI do
       scheduled_task = :rpc.call(target_node, CRUD, :find, [Ada.Schema.ScheduledTask, context.id])
 
       target_node
-      |> :rpc.call(Ada.Schema.ScheduledTask, :execute, [scheduled_task, [repo: Ada.Repo]])
+      |> :rpc.call(Ada.Scheduler, :run_one_sync, [scheduled_task, [repo: Ada.Repo]])
       |> Format.scheduled_task_result()
       |> IO.puts()
     end

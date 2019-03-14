@@ -85,7 +85,7 @@ defmodule Ada.CLI.Format do
     :erlang.iolist_to_binary([preamble, @break, @break, list])
   end
 
-  def scheduled_task_result({:ok, _data}) do
+  def scheduled_task_result(:ok) do
     header("Task run successfully")
   end
 
