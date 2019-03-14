@@ -296,4 +296,21 @@ defmodule Ada.CLI do
         System.halt(1)
     end
   end
+
+  command :fish_autocomplete do
+    description "Generate autocomplete rules for the Fish shell"
+
+    long_description """
+    Generate autocomplete rules for the Fish shell
+
+    Load with: ada fish_autocomplete | source
+    """
+
+    run _context do
+      Ada.CLI.FishCompletion.render()
+      |> IO.puts()
+    end
+  end
+
+  def commands, do: @app.commands
 end
