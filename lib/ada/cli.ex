@@ -230,6 +230,28 @@ defmodule Ada.CLI do
     end
   end
 
+  command :run_scheduled_task do
+    option :target_node, aliases: [:t]
+    aliases [:rst]
+    description "Runs the specified scheduled task"
+    long_description "Runs the specifed scheduled task"
+
+    argument(:id, type: :integer)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      scheduled_task = :rpc.call(target_node, CRUD, :find, [Ada.Schema.ScheduledTask, context.id])
+
+      target_node
+      |> :rpc.call(Ada.Schema.ScheduledTask, :execute, [scheduled_task, [repo: Ada.Repo]])
+      |> Format.scheduled_task_result()
+      |> IO.puts()
+    end
+  end
+
   defp inc_brightness(brightness, inc) do
     if brightness + inc >= 255, do: 255, else: brightness + inc
   end

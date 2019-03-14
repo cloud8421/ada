@@ -85,6 +85,14 @@ defmodule Ada.CLI.Format do
     :erlang.iolist_to_binary([preamble, @break, @break, list])
   end
 
+  def scheduled_task_result({:ok, _data}) do
+    header("Task run successfully")
+  end
+
+  def scheduled_task_result({:error, reason}) do
+    header("Error running task: #{inspect(reason)}")
+  end
+
   defp format_params(params) do
     params
     |> Enum.map(fn {k, v} ->
