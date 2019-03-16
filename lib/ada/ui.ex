@@ -80,7 +80,9 @@ defmodule Ada.UI do
     |> TaskMon.render()
     |> data.display.set_content()
 
-    {:keep_state, new_data}
+    action = {:timeout, 5000, :to_clock}
+
+    {:keep_state, new_data, action}
   end
 
   def handle_event(:info, {Broadcast, Ada.ScheduledTask.End, scheduled_task}, _state, data) do
