@@ -9,7 +9,7 @@ defmodule Ada.Schema.ScheduledTask do
     field :version, :integer, null: false, default: @task_version
     field :workflow_name, Ecto.Module, null: false
     field :params, :map, null: false, default: %{}
-    embeds_one :frequency, Frequency
+    embeds_one :frequency, Frequency, on_replace: :update
 
     timestamps()
   end
