@@ -212,6 +212,47 @@ defmodule Ada.CLI do
     end
   end
 
+  command :update_scheduled_task do
+    option :target_node, aliases: [:t]
+    aliases [:ust]
+    description "Updates an existing scheduled task"
+    long_description "Updates an existing scheduled task"
+
+    argument(:id, type: :integer)
+    option(:frequency)
+    option(:user_id, type: :integer)
+    option(:location_id, type: :integer)
+    option(:tag)
+    option(:email)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      scheduled_task = :rpc.call(target_node, CRUD, :find, [Ada.Schema.ScheduledTask, context.id])
+
+      params =
+        case Map.take(context, [:user_id, :location_id, :tag, :interval_in_hours]) do
+          map when map_size(map) == 0 -> %{}
+          non_empty_params -> %{params: non_empty_params}
+        end
+
+      frequency =
+        case Map.get(context, :frequency) do
+          nil -> %{}
+          frequency_string -> %{frequency: parse_frequency(frequency_string)}
+        end
+
+      attributes = Map.merge(frequency, params)
+
+      target_node
+      |> :rpc.call(CRUD, :update, [Ada.Schema.ScheduledTask, scheduled_task, attributes])
+      |> Format.scheduled_task_updated()
+      |> IO.puts()
+    end
+  end
+
   command :list_scheduled_tasks do
     option :target_node, aliases: [:t]
     aliases [:lst]

@@ -67,6 +67,14 @@ defmodule Ada.CLI.Format do
     header("Error creating scheduled_task: #{inspect(changeset.errors)}")
   end
 
+  def scheduled_task_updated({:ok, scheduled_task}) do
+    header("Updated Scheduled Task with ID #{scheduled_task.id}")
+  end
+
+  def scheduled_task_updated({:error, changeset}) do
+    header("Error updating Scheduled Task: #{inspect(changeset.errors)}")
+  end
+
   def list_scheduled_tasks(scheduled_tasks) do
     preamble = header("Scheduled Tasks")
 
