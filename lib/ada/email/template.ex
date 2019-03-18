@@ -45,8 +45,9 @@ defmodule Ada.Email.Template do
     layout_template(@style_css, "News for #{source_name}", stories_template(stories))
   end
 
-  def last_fm_report(report_name, tracks) do
-    layout_template(@style_css, report_name, last_fm_report_template(tracks))
+  def last_fm_report(report_name, tracks, timezone) do
+    tracks_in_local_time = Enum.map(tracks, fn t -> shift_to_local_time(t, timezone) end)
+    layout_template(@style_css, report_name, last_fm_report_template(tracks_in_local_time))
   end
 
   defp format_weather_datetime(datetime) do
@@ -61,5 +62,11 @@ defmodule Ada.Email.Template do
       |> String.pad_leading(2, "0")
 
     "#{hour}:#{minute}"
+  end
+
+  defp shift_to_local_time(track, timezone) do
+    Map.update!(track, :listened_at, fn utc_listened_at ->
+      Calendar.DateTime.shift_zone!(utc_listened_at, timezone)
+    end)
   end
 end

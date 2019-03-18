@@ -29,11 +29,16 @@ defmodule Ada.Source.LastFm.ApiClient do
   defp parse_response(response) do
     tracks = get_in(response, ["recenttracks", "track"])
 
-    Enum.map(tracks, fn t ->
+    tracks
+    |> Enum.reverse()
+    |> Enum.map(fn t ->
+      listened_at = t |> get_in(["date", "uts"]) |> String.to_integer() |> DateTime.from_unix!()
+
       %Track{
         artist: get_in(t, ["artist", "#text"]),
         album: get_in(t, ["album", "#text"]),
-        name: Map.get(t, "name")
+        name: Map.get(t, "name"),
+        listened_at: listened_at
       }
     end)
   end

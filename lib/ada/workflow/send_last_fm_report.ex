@@ -18,6 +18,7 @@ defmodule Ada.Workflow.SendLastFmReport do
   @impl true
   def run(params, ctx) do
     repo = Keyword.fetch!(ctx, :repo)
+    timezone = Keyword.fetch!(ctx, :timezone)
 
     with user when is_present(user) <- repo.get(User, params.user_id),
          interval_in_hours when is_present(interval_in_hours) <-
@@ -27,7 +28,8 @@ defmodule Ada.Workflow.SendLastFmReport do
          email_body =
            Email.Template.last_fm_report(
              "LastFm report for the last #{interval_in_hours} hours",
-             tracks
+             tracks,
+             timezone
            ),
          email = compose_email(user, interval_in_hours, email_body) do
       Email.ApiClient.send_email(email)
