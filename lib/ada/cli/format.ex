@@ -112,9 +112,13 @@ defmodule Ada.CLI.Format do
   defp format_frequency(frequency) do
     case frequency.type do
       "hourly" -> "Hourly, at #{frequency.minute}"
-      "daily" -> "Daily, at #{frequency.hour}"
+      "daily" -> "Daily, at #{frequency.hour}:#{zero_pad(frequency.minute)}"
       "weekly" -> "Every week, on #{day_name(frequency.day_of_week)} at #{frequency.hour}"
     end
+  end
+
+  defp zero_pad(int) do
+    int |> Integer.to_string() |> String.pad_leading(2, "0")
   end
 
   defp day_name(day_of_week) do

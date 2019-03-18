@@ -293,73 +293,6 @@ defmodule Ada.CLI do
     end
   end
 
-  defp inc_brightness(brightness, inc) do
-    if brightness + inc >= 255, do: 255, else: brightness + inc
-  end
-
-  defp dec_brightness(brightness, dec) do
-    if brightness - dec <= 1, do: 1, else: brightness - dec
-  end
-
-  defp parse_frequency(frequency_string) do
-    case String.split(frequency_string, ":") do
-      ["hourly", minute] ->
-        %{type: "hourly", minute: String.to_integer(minute)}
-
-      ["daily", hour] ->
-        %{type: "daily", hour: String.to_integer(hour)}
-
-      ["weekly", day_of_week, hour] ->
-        %{
-          type: "daily",
-          day_of_week: String.to_integer(day_of_week),
-          hour: String.to_integer(hour)
-        }
-
-      other ->
-        IO.puts("""
-        ==> Incorrectly formatted frequency value #{other}.
-
-            Allowed values are:
-
-            - hourly:10 (every hour at 10 past)
-            - daily:14 (every day at 2pm)
-            - weekly:1:15 (every monday at 3pm)
-        """)
-
-        System.halt(1)
-    end
-  end
-
-  defp parse_workflow_name(workflow_name_string, available_workflows) do
-    suffix_strings =
-      Enum.map(available_workflows, fn aw ->
-        [_, _, suffix] = Module.split(aw)
-
-        Macro.underscore(suffix)
-      end)
-
-    case workflow_name_string do
-      "send_last_fm_report" ->
-        Ada.Workflow.SendLastFmReport
-
-      "send_news_by_tag" ->
-        Ada.Workflow.SendNewsByTag
-
-      "send_weather_forecast" ->
-        Ada.Workflow.SendWeatherForecast
-
-      other ->
-        IO.puts("""
-        ==> Invalid workflow name #{other}.
-
-            Valid names are: #{inspect(suffix_strings)}
-        """)
-
-        System.halt(1)
-    end
-  end
-
   command :pull_db do
     option :target_node, aliases: [:t]
     description "Pull a copy of the system database"
@@ -433,4 +366,76 @@ defmodule Ada.CLI do
   end
 
   def commands, do: @app.commands
+
+  defp inc_brightness(brightness, inc) do
+    if brightness + inc >= 255, do: 255, else: brightness + inc
+  end
+
+  defp dec_brightness(brightness, dec) do
+    if brightness - dec <= 1, do: 1, else: brightness - dec
+  end
+
+  @splitter ~r(\:|\.)
+  defp parse_frequency(frequency_string) do
+    case String.split(frequency_string, @splitter) do
+      ["hourly", minute] ->
+        %{type: "hourly", minute: String.to_integer(minute)}
+
+      ["daily", hour, minute] ->
+        %{type: "daily", hour: String.to_integer(hour), minute: String.to_integer(minute)}
+
+      ["daily", hour] ->
+        %{type: "daily", hour: String.to_integer(hour)}
+
+      ["weekly", day_of_week, hour] ->
+        %{
+          type: "daily",
+          day_of_week: String.to_integer(day_of_week),
+          hour: String.to_integer(hour)
+        }
+
+      other ->
+        IO.puts("""
+        ==> Incorrectly formatted frequency value #{other}.
+
+            Allowed values are:
+
+            - hourly:10 (every hour at 10 past)
+            - daily:14 (every day at 2pm)
+            - daily:14.30 (every day at 2.30pm)
+            - weekly:1:15 (every monday at 3pm)
+        """)
+
+        System.halt(1)
+    end
+  end
+
+  defp parse_workflow_name(workflow_name_string, available_workflows) do
+    suffix_strings =
+      Enum.map(available_workflows, fn aw ->
+        [_, _, suffix] = Module.split(aw)
+
+        Macro.underscore(suffix)
+      end)
+
+    case workflow_name_string do
+      "send_last_fm_report" ->
+        Ada.Workflow.SendLastFmReport
+
+      "send_news_by_tag" ->
+        Ada.Workflow.SendNewsByTag
+
+      "send_weather_forecast" ->
+        Ada.Workflow.SendWeatherForecast
+
+      other ->
+        IO.puts("""
+        ==> Invalid workflow name #{other}.
+
+            Valid names are: #{inspect(suffix_strings)}
+        """)
+
+        System.halt(1)
+    end
+  end
 end
