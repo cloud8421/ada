@@ -7,6 +7,9 @@ defmodule Ada.Application do
   use Application
 
   def start(_type, _args) do
+    # When the application crashes, only cowboy gets restarted,
+    # but ranch isn't. We manually make sure that that's the case.
+    Application.ensure_all_started(:ranch)
     Ada.Setup.ensure_data_directory!()
     Ada.Setup.ensure_migrations!()
 
