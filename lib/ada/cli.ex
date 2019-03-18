@@ -360,6 +360,35 @@ defmodule Ada.CLI do
     end
   end
 
+  command :pull_db do
+    option :target_node, aliases: [:t]
+    description "Pull a copy of the system database"
+    long_description "Pull a copy of the system database"
+
+    option(:target_file)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      target_file =
+        Map.get_lazy(context, :target_file, fn ->
+          now = DateTime.utc_now() |> DateTime.to_iso8601()
+          "ada-v1-#{now}.db"
+        end)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      repo_config = :rpc.call(target_node, Ada.Repo, :config, [])
+      db_file_path = repo_config[:database]
+
+      db_file_contents = :rpc.call(target_node, File, :read!, [db_file_path])
+
+      File.write!(target_file, db_file_contents)
+
+      IO.puts("DB file written at #{target_file}")
+    end
+  end
+
   command :fish_autocomplete do
     description "Generate autocomplete rules for the Fish shell"
 
