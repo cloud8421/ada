@@ -1,3 +1,9 @@
 export FORECAST_IO_API_KEY='<api-key>'
 export SENDGRID_API_TOKEN='<api-token>'
 export GUARDIAN_API_KEY='<api-key>'
+export DROPBOX_API_TOKEN='<dropbox-api-token>'
+export GOOGLE_MAPS_API_KEY='<google-maps-api-key>'
+export LAST_FM_API_KEY='<last.fm-api-key>'
+
+export WIFI_PASS='<wifi-pass>'
+export WIFI_SSID='<wifi-ssid>'
