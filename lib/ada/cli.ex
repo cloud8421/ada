@@ -389,6 +389,34 @@ defmodule Ada.CLI do
     end
   end
 
+  command :push_db do
+    option :target_node, aliases: [:t]
+    description "Restore the device system database from a local copy"
+    long_description "Restore the device system database from a local copy"
+
+    argument(:source_file)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      source_file_contents = File.read!(context.source_file)
+
+      repo_config = :rpc.call(target_node, Ada.Repo, :config, [])
+      db_file_path = repo_config[:database]
+
+      :ok = :rpc.call(target_node, File, :write!, [db_file_path, source_file_contents])
+
+      :ok = :rpc.call(target_node, Application, :stop, [:ada])
+
+      :ok = :rpc.call(target_node, Application, :ensure_all_started, [:ranch])
+      :ok = :rpc.call(target_node, Application, :ensure_all_started, [:ada])
+
+      IO.puts("DB file pushed")
+    end
+  end
+
   command :fish_autocomplete do
     description "Generate autocomplete rules for the Fish shell"
 
