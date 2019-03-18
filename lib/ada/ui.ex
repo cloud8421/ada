@@ -14,7 +14,7 @@ defmodule Ada.UI do
 
   defstruct display: nil,
             timezone: nil,
-            current_time: nil,
+            local_time: nil,
             running_tasks: MapSet.new()
 
   ################################################################################
@@ -46,26 +46,28 @@ defmodule Ada.UI do
 
     display = Keyword.fetch!(opts, :display)
     timezone = Keyword.fetch!(opts, :timezone)
-    current_time = local_now!(DateTime.utc_now(), timezone)
 
-    current_time
+    local_time = Calendar.DateTime.shift_zone!(DateTime.utc_now(), timezone)
+
+    local_time
     |> Clock.render()
     |> display.set_content()
 
-    {:ok, :clock, %__MODULE__{display: display, current_time: current_time, timezone: timezone}}
+    {:ok, :clock, %__MODULE__{display: display, local_time: local_time, timezone: timezone}}
   end
 
-  def handle_event(:info, {Broadcast, Ada.Time.Minute, current_time}, :clock, data) do
+  def handle_event(:info, {Broadcast, Ada.Time.Minute, current_utc_time}, :clock, data) do
+    local_time = Calendar.DateTime.shift_zone!(current_utc_time, data.timezone)
+
     Logger.debug(fn ->
-      "UI -> clock: new time #{DateTime.to_iso8601(current_time)}"
+      "UI -> clock: new time #{DateTime.to_iso8601(local_time)}"
     end)
 
-    current_time
-    |> local_now!(data.timezone)
+    local_time
     |> Clock.render()
     |> data.display.set_content()
 
-    :keep_state_and_data
+    {:keep_state, %{data | local_time: local_time}}
   end
 
   def handle_event(:info, {Broadcast, Ada.ScheduledTask.Start, scheduled_task}, _state, data) do
@@ -80,7 +82,7 @@ defmodule Ada.UI do
     |> TaskMon.render()
     |> data.display.set_content()
 
-    action = {:timeout, 5000, :to_clock}
+    action = {:timeout, 10000, :to_clock}
 
     {:keep_state, new_data, action}
   end
@@ -103,7 +105,7 @@ defmodule Ada.UI do
       if Enum.empty?(new_data.running_tasks) do
         {:next_event, :internal, :to_clock}
       else
-        {:timeout, 1000, :to_clock}
+        {:timeout, 10000, :to_clock}
       end
 
     {:keep_state, new_data, action}
@@ -112,11 +114,10 @@ defmodule Ada.UI do
   def handle_event(event_type, :to_clock, _state, data)
       when event_type in [:internal, :timeout] do
     Logger.debug(fn ->
-      "UI -> clock: new time #{DateTime.to_iso8601(data.current_time)}"
+      "UI -> clock: new time #{DateTime.to_iso8601(data.local_time)}"
     end)
 
-    data.current_time
-    |> local_now!()
+    data.local_time
     |> Clock.render()
     |> data.display.set_content()
 
@@ -137,9 +138,5 @@ defmodule Ada.UI do
 
   defp subscribe(subscriptions) do
     Enum.each(subscriptions, &Ada.PubSub.subscribe/1)
-  end
-
-  defp local_now!(current_time \\ DateTime.utc_now(), timezone) do
-    Calendar.DateTime.shift_zone!(current_time, timezone)
   end
 end
