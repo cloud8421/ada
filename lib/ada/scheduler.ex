@@ -68,6 +68,11 @@ defmodule Ada.Scheduler do
     |> find_runnable_tasks(:hourly, local_datetime)
     |> run_many_async(opts)
 
+    ScheduledTask
+    |> repo.all()
+    |> find_runnable_tasks(:daily, local_datetime)
+    |> run_many_async(opts)
+
     {:noreply, opts}
   end
 
