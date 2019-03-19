@@ -11,6 +11,14 @@ defmodule Ada.Setup do
     Ada.Repo.stop(pid, 100)
   end
 
+  def load_preferences! do
+    {:ok, pid} = Ada.Repo.start_link([])
+    Ada.Preferences.load_defaults!()
+    preferences = Ada.Preferences.all()
+    Ada.Repo.stop(pid, 100)
+    preferences
+  end
+
   defp db_file, do: Application.get_env(:ada, Ada.Repo)[:database]
 
   defp migrations_path(app, repo) do

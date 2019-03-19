@@ -12,6 +12,8 @@ config :ada,
 
 config :ada, Ada.Repo, adapter: Sqlite.Ecto2
 
+config :ada, :default_preferences, timezone: "Europe/London"
+
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations

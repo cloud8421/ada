@@ -12,8 +12,9 @@ defmodule Ada.Application do
     Application.ensure_all_started(:ranch)
     Ada.Setup.ensure_data_directory!()
     Ada.Setup.ensure_migrations!()
+    preferences = Ada.Setup.load_preferences!()
 
-    children = common_children() ++ children(@target)
+    children = common_children(preferences) ++ children(@target, preferences)
     opts = [strategy: :one_for_one, name: Ada.Supervisor]
     Supervisor.start_link(children, opts)
   end
@@ -26,31 +27,37 @@ defmodule Ada.Application do
     Application.get_env(:ada, :http_port)
   end
 
-  defp common_children() do
+  defp common_children(preferences) do
+    timezone = Keyword.fetch!(preferences, :timezone)
+
     [
       Ada.PubSub,
       Ada.TimeKeeper,
       {Ada.Repo, []},
       {Task.Supervisor, name: Ada.TaskSupervisor},
-      {Ada.Scheduler, [repo: Ada.Repo, timezone: "Europe/Istanbul"]},
+      {Ada.Scheduler, [repo: Ada.Repo, timezone: timezone]},
       {Ada.HTTP.Listener, listener_opts(@env, @target)}
     ]
   end
 
-  defp children(:host) do
+  defp children(:host, preferences) do
+    timezone = Keyword.fetch!(preferences, :timezone)
+
     [
       {Ada.Display, driver: Ada.Display.Driver.Dummy},
-      {Ada.UI, display: Ada.Display, timezone: "Europe/Istanbul"}
+      {Ada.UI, display: Ada.Display, timezone: timezone}
       # Starts a worker by calling: Ada.Worker.start_link(arg)
       # {Ada.Worker, arg},
     ]
   end
 
-  defp children(_device_target) do
+  defp children(_device_target, preferences) do
+    timezone = Keyword.fetch!(preferences, :timezone)
+
     [
       {Ada.Display.Driver.ScrollPhatHD, []},
       {Ada.Display, driver: Ada.Display.Driver.ScrollPhatHD},
-      {Ada.UI, display: Ada.Display, timezone: "Europe/Istanbul"}
+      {Ada.UI, display: Ada.Display, timezone: timezone}
       # Starts a worker by calling: Ada.Worker.start_link(arg)
       # {Ada.Worker, arg},
     ]
