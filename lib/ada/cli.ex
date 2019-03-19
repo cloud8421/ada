@@ -293,6 +293,28 @@ defmodule Ada.CLI do
     end
   end
 
+  command :set_preference do
+    option :target_node, aliases: [:t]
+    description "Sets a preference on the device"
+    long_description "Sets a preference on the device"
+
+    argument(:preference_name)
+    argument(:preference_value)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      preference_name = parse_preference_name(context.preference_name)
+
+      :ok =
+        :rpc.call(target_node, Ada.Preferences, :set, [preference_name, context.preference_value])
+
+      IO.puts("Preference #{context.preference_name} updated to #{context.preference_value}")
+    end
+  end
+
   command :pull_db do
     option :target_node, aliases: [:t]
     description "Pull a copy of the system database"
@@ -433,6 +455,22 @@ defmodule Ada.CLI do
         ==> Invalid workflow name #{other}.
 
             Valid names are: #{inspect(suffix_strings)}
+        """)
+
+        System.halt(1)
+    end
+  end
+
+  defp parse_preference_name(name_string) do
+    case name_string do
+      "timezone" ->
+        :timezone
+
+      other ->
+        IO.puts("""
+        ==> Invalid preference name #{other}.
+
+            Valid names are: ["timezone"].
         """)
 
         System.halt(1)
