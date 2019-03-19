@@ -32,7 +32,7 @@ defmodule Ada.Preferences do
     changeset = Preference.changeset(current_preference, %{value: value})
 
     Repo.update!(changeset)
-    Ada.PubSub.publish(Ada.Preferences, {name, value})
+    Ada.PubSub.publish(Ada.Preference, {name, value})
   end
 
   defp defaults do

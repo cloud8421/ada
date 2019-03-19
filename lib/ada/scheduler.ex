@@ -3,7 +3,7 @@ defmodule Ada.Scheduler do
 
   require Logger
 
-  alias Ada.{PubSub, Schema.ScheduledTask, Time.Hour, Time.Minute}
+  alias Ada.{Preference, PubSub, Schema.ScheduledTask, Time.Hour, Time.Minute}
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
@@ -76,6 +76,14 @@ defmodule Ada.Scheduler do
     {:noreply, opts}
   end
 
+  def handle_info({PubSub.Broadcast, Preference, {:timezone, timezone}}, opts) do
+    {:noreply, Keyword.put(opts, :timezone, timezone)}
+  end
+
+  def handle_info({PubSub.Broadcast, Preference, _pair}, opts) do
+    {:noreply, opts}
+  end
+
   defp find_runnable_tasks(scheduled_tasks, :hourly, datetime) do
     scheduled_tasks
     |> Enum.filter(&ScheduledTask.hourly?/1)
@@ -97,5 +105,6 @@ defmodule Ada.Scheduler do
   defp subscribe! do
     PubSub.subscribe(Hour)
     PubSub.subscribe(Minute)
+    PubSub.subscribe(Preference)
   end
 end

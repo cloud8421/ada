@@ -6,7 +6,8 @@ defmodule Ada.UI do
   @subscriptions [
     Ada.Time.Minute,
     Ada.ScheduledTask.Start,
-    Ada.ScheduledTask.End
+    Ada.ScheduledTask.End,
+    Ada.Preference
   ]
 
   alias Ada.PubSub.Broadcast
@@ -107,6 +108,19 @@ defmodule Ada.UI do
       else
         {:timeout, 10000, :to_clock}
       end
+
+    {:keep_state, new_data, action}
+  end
+
+  def handle_event(:info, {Broadcast, Ada.Preference, {:timezone, timezone}}, _state, data) do
+    Logger.debug(fn ->
+      "UI -> timezone changed to #{timezone}"
+    end)
+
+    local_time = Calendar.DateTime.shift_zone!(data.local_time, timezone)
+    new_data = %{data | timezone: timezone, local_time: local_time}
+
+    action = {:next_event, :internal, :to_clock}
 
     {:keep_state, new_data, action}
   end
