@@ -16,6 +16,10 @@ defmodule Ada.Backup.Uploader do
     GenServer.call(__MODULE__, :save_today)
   end
 
+  def save_now do
+    GenServer.call(__MODULE__, :save_now)
+  end
+
   @impl true
   def init(opts) do
     state = Enum.into(opts, %{})
@@ -33,6 +37,11 @@ defmodule Ada.Backup.Uploader do
   @impl true
   def handle_call(:save_today, _from, state) do
     {:reply, upload_db(get_today(), state.strategy, state.repo), state}
+  end
+
+  @impl true
+  def handle_call(:save_now, _from, state) do
+    {:reply, upload_db(get_now(), state.strategy, state.repo), state}
   end
 
   @impl true
@@ -87,5 +96,9 @@ defmodule Ada.Backup.Uploader do
 
   defp get_today do
     Date.utc_today() |> Date.to_iso8601()
+  end
+
+  defp get_now do
+    DateTime.utc_now() |> DateTime.to_iso8601()
   end
 end
