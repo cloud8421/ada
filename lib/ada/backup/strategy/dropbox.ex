@@ -3,7 +3,7 @@ defmodule Ada.Backup.Strategy.Dropbox do
 
   @api_token System.get_env("DROPBOX_API_TOKEN")
   @content_base_url "https://content.dropboxapi.com/2"
-  @api_base_url "https://api.dropboxapi.com/2/"
+  @api_base_url "https://api.dropboxapi.com/2"
   @app_namespace "/ada-v1"
 
   alias Ada.HTTPClient
