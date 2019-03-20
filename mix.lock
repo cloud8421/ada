@@ -49,6 +49,7 @@
   "sqlitex": {:hex, :sqlitex, "1.5.0", "1b23eec4532433a4bdd9c3d77cda988b79a7b4723505a83385ade98b2be35157", [:mix], [{:decimal, "~> 1.5", [hex: :decimal, repo: "hexpm", optional: false]}, {:esqlite, "~> 0.2.5", [hex: :esqlite, repo: "hexpm", optional: false]}], "hexpm"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.4", "f0eafff810d2041e93f915ef59899c923f4568f4585904d010387ed74988e77b", [:make, :mix, :rebar3], [], "hexpm"},
   "system_registry": {:hex, :system_registry, "0.8.2", "df791dc276652fcfb53be4dab823e05f8269b96ac57c26f86a67838dbc0eefe7", [:mix], [], "hexpm"},
+  "telemetry": {:hex, :telemetry, "0.4.0", "8339bee3fa8b91cb84d14c2935f8ecf399ccd87301ad6da6b71c09553834b2ab", [:rebar3], [], "hexpm"},
   "toolshed": {:hex, :toolshed, "0.2.6", "55ac1853c988ae345365d54fd20c8835adb013ace64a3cecd96090c5cf2fb442", [:mix], [{:nerves_runtime, "~> 0.8", [hex: :nerves_runtime, repo: "hexpm", optional: true]}], "hexpm"},
   "tzdata": {:hex, :tzdata, "0.5.19", "7962a3997bf06303b7d1772988ede22260f3dae1bf897408ebdac2b4435f4e6a", [:mix], [{:hackney, "~> 1.0", [hex: :hackney, repo: "hexpm", optional: false]}], "hexpm"},
   "uboot_env": {:hex, :uboot_env, "0.1.0", "176d277c8461d849614d8b82595060bf03ace6ca59d49c5b53707d90cb9e2f5a", [:mix], [], "hexpm"},

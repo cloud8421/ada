@@ -52,6 +52,7 @@ defmodule Ada.MixProject do
       {:ring_logger, "~> 0.4"},
       {:toolshed, "~> 0.2"},
       {:ex_cli, "~> 0.1.6"},
+      {:telemetry, "~> 0.4.0"},
       {:nerves_runtime, "~> 0.6", targets: @all_targets},
       {:nerves_init_gadget, "~> 0.4", targets: @all_targets},
       {:nerves_time, "~> 0.2.0", targets: @all_targets},
