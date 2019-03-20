@@ -24,4 +24,23 @@ defmodule Ada.Schema.Frequency do
   def hourly?(frequency), do: frequency.type == "hourly"
   def daily?(frequency), do: frequency.type == "daily"
   def weekly?(frequency), do: frequency.type == "weekly"
+
+  def matches_time?(frequency, datetime) do
+    case frequency do
+      %{type: "weekly", day_of_week: day_of_week, hour: hour} ->
+        as_day_of_week =
+          datetime
+          |> DateTime.to_date()
+          |> Date.day_of_week()
+
+        day_of_week == as_day_of_week and hour == datetime.hour and datetime.minute == 0 and
+          datetime.second == 0
+
+      %{type: "daily", hour: hour, minute: minute} ->
+        hour == datetime.hour and minute == datetime.minute and datetime.second == 0
+
+      %{type: "hourly", minute: minute, second: second} ->
+        minute == datetime.minute and second == datetime.second
+    end
+  end
 end
