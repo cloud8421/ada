@@ -6,6 +6,6 @@ defmodule Ada.Backup do
     now = DateTime.utc_now() |> DateTime.to_iso8601()
     file_name = "#{now}/ada-v1.db"
 
-    Ada.Backup.DropboxClient.upload_file(file_name, File.read!(db_file))
+    Ada.Backup.Strategy.Dropbox.upload_file(file_name, File.read!(db_file))
   end
 end

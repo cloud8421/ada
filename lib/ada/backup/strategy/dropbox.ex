@@ -1,10 +1,18 @@
-defmodule Ada.Backup.DropboxClient do
+defmodule Ada.Backup.Strategy.Dropbox do
+  @behaviour Ada.Backup.Strategy
+
   @api_token System.get_env("DROPBOX_API_TOKEN")
   @upload_url "https://content.dropboxapi.com/2/files/upload"
   @upload_namespace "ada-v1"
 
   alias Ada.HTTPClient
 
+  @impl true
+  def enabled? do
+    @api_token !== nil
+  end
+
+  @impl true
   def upload_file(name, contents) do
     case do_upload_file(name, contents) do
       %HTTPClient.Response{status_code: 200, body: body} ->
