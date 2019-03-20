@@ -36,6 +36,8 @@ defmodule Ada.Application do
       {Ada.Repo, []},
       {Task.Supervisor, name: Ada.TaskSupervisor},
       {Ada.Scheduler, [repo: Ada.Repo, timezone: timezone]},
+      {Ada.Backup.Uploader,
+       [repo: Ada.Repo, strategy: Ada.Backup.Strategy.Dropbox, timezone: timezone]},
       {Ada.HTTP.Listener, listener_opts(@env, @target)}
     ]
   end

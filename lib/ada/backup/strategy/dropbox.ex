@@ -8,7 +8,7 @@ defmodule Ada.Backup.Strategy.Dropbox do
   alias Ada.HTTPClient
 
   @impl true
-  def enabled? do
+  def configured? do
     @api_token !== nil
   end
 
@@ -28,7 +28,7 @@ defmodule Ada.Backup.Strategy.Dropbox do
 
   defp do_upload_file(name, contents) do
     path = Path.join(["/", @upload_namespace, name])
-    dropbox_api_args = %{"path" => path, "mode" => "add", "autorename" => true, "mute" => true}
+    dropbox_api_args = %{"path" => path, "mode" => "overwrite", "mute" => true}
 
     headers = %{
       "Authorization" => "Bearer #{@api_token}",
