@@ -372,6 +372,22 @@ defmodule Ada.CLI do
     end
   end
 
+  command :backup_db do
+    option :target_node, aliases: [:t]
+    description "Backs up the device database with the configured strategy"
+    long_description "Backs up the device database with the configured strategy"
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      {:ok, path} = :rpc.call(target_node, Ada.Backup.Uploader, :save_now, [])
+
+      IO.puts("Backup file saved at #{path}")
+    end
+  end
+
   command :fish_autocomplete do
     description "Generate autocomplete rules for the Fish shell"
 
