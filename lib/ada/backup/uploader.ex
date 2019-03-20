@@ -12,13 +12,8 @@ defmodule Ada.Backup.Uploader do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def run(strategy, repo) do
-    db_file = repo.config()[:database]
-
-    now = DateTime.utc_now() |> DateTime.to_iso8601()
-    file_name = "#{now}/ada-v1.db"
-
-    strategy.upload_file(file_name, File.read!(db_file))
+  def save_today do
+    GenServer.call(__MODULE__, :save_today)
   end
 
   @impl true
@@ -36,11 +31,16 @@ defmodule Ada.Backup.Uploader do
   end
 
   @impl true
+  def handle_call(:save_today, _from, state) do
+    {:reply, upload_db(get_today(), state.strategy, state.repo), state}
+  end
+
+  @impl true
   def handle_info({PubSub.Broadcast, Hour, datetime}, state) do
     local_datetime = Calendar.DateTime.shift_zone!(datetime, state.timezone)
 
     if Frequency.matches_time?(@frequency, local_datetime) do
-      case run(state.strategy, state.repo) do
+      case upload_db(get_today(), state.strategy, state.repo) do
         {:ok, _result} ->
           log_successful_backup(local_datetime)
 
@@ -75,5 +75,17 @@ defmodule Ada.Backup.Uploader do
     Logger.error(fn ->
       "evt=backup.error time=#{DateTime.to_iso8601(local_datetime)} reason=#{inspect(reason)}"
     end)
+  end
+
+  defp upload_db(prefix, strategy, repo) do
+    db_file = repo.config()[:database]
+
+    file_name = "#{prefix}/ada-v1.db"
+
+    strategy.upload_file(file_name, File.read!(db_file))
+  end
+
+  defp get_today do
+    Date.utc_today() |> Date.to_iso8601()
   end
 end
