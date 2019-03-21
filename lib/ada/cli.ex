@@ -286,8 +286,13 @@ defmodule Ada.CLI do
 
       scheduled_task = :rpc.call(target_node, CRUD, :find, [Ada.Schema.ScheduledTask, context.id])
 
+      timezone = :rpc.call(target_node, Ada.Preferences, :get, [:timezone])
+
       target_node
-      |> :rpc.call(Ada.Scheduler, :run_one_sync, [scheduled_task, [repo: Ada.Repo]])
+      |> :rpc.call(Ada.Scheduler, :run_one_sync, [
+        scheduled_task,
+        [repo: Ada.Repo, timezone: timezone]
+      ])
       |> Format.scheduled_task_result()
       |> IO.puts()
     end
