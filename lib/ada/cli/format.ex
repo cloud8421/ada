@@ -75,7 +75,7 @@ defmodule Ada.CLI.Format do
     header("Error updating Scheduled Task: #{inspect(changeset.errors)}")
   end
 
-  def list_scheduled_tasks(scheduled_tasks) do
+  def list_scheduled_tasks(scheduled_tasks, users, locations) do
     preamble = header("Scheduled Tasks")
 
     list =
@@ -84,7 +84,7 @@ defmodule Ada.CLI.Format do
         [
           list_item("ID", scheduled_task.id),
           list_item("Workflow Name", inspect(scheduled_task.workflow_name)),
-          list_item("Params", format_params(scheduled_task.params)),
+          list_item("Params", format_params(scheduled_task.params, users, locations)),
           list_item("Frequency", format_frequency(scheduled_task.frequency))
         ]
       end)
@@ -101,12 +101,33 @@ defmodule Ada.CLI.Format do
     header("Error running task: #{inspect(reason)}")
   end
 
-  defp format_params(params) do
+  defp format_params(params, users, locations) do
     params
-    |> Enum.map(fn {k, v} ->
-      "#{k}=#{v}"
+    |> Enum.map(fn
+      {"location_id", location_id} ->
+        format_location_param(location_id, locations)
+
+      {"user_id", user_id} ->
+        format_user_param(user_id, users)
+
+      {k, v} ->
+        "- #{k}: #{v}"
     end)
-    |> Enum.join(", ")
+    |> Enum.join(padder("Params: "))
+  end
+
+  defp format_location_param(location_id, locations) do
+    case Enum.find(locations, fn location -> location.id == location_id end) do
+      nil -> "- location: not available"
+      existing -> "- location: #{existing.name}"
+    end
+  end
+
+  defp format_user_param(user_id, users) do
+    case Enum.find(users, fn user -> user.id == user_id end) do
+      nil -> "- user: not available"
+      existing -> "- user: #{existing.name}"
+    end
   end
 
   defp format_frequency(frequency) do
@@ -133,5 +154,10 @@ defmodule Ada.CLI.Format do
 
   defp list_item(k, v) do
     "#{IO.ANSI.yellow()}#{k}: #{IO.ANSI.white()}#{v}#{IO.ANSI.reset()}\n"
+  end
+
+  defp padder(string) do
+    padding = String.duplicate(" ", String.length(string))
+    "\n#{padding}"
   end
 end

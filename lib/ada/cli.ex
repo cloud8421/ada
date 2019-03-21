@@ -264,9 +264,12 @@ defmodule Ada.CLI do
 
       Helpers.connect!(@cli_node, target_node)
 
-      target_node
-      |> :rpc.call(CRUD, :list, [Ada.Schema.ScheduledTask])
-      |> Format.list_scheduled_tasks()
+      users = :rpc.call(target_node, CRUD, :list, [Ada.Schema.User])
+      locations = :rpc.call(target_node, CRUD, :list, [Ada.Schema.Location])
+      scheduled_tasks = :rpc.call(target_node, CRUD, :list, [Ada.Schema.ScheduledTask])
+
+      scheduled_tasks
+      |> Format.list_scheduled_tasks(users, locations)
       |> IO.puts()
     end
   end
