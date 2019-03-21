@@ -9,13 +9,13 @@ defmodule Ada.Scheduler do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def run_many_async(scheduled_tasks, opts) do
+  def run_many_async(scheduled_tasks, opts \\ get_opts()) do
     Ada.TaskSupervisor
     |> Task.Supervisor.async_stream(scheduled_tasks, __MODULE__, :run_one_sync, [opts])
     |> Stream.run()
   end
 
-  def run_one_sync(scheduled_task, opts) do
+  def run_one_sync(scheduled_task, opts \\ get_opts()) do
     PubSub.publish(Ada.ScheduledTask.Start, scheduled_task)
 
     case :timer.tc(ScheduledTask, :execute, [scheduled_task, opts]) do
@@ -37,12 +37,23 @@ defmodule Ada.Scheduler do
     end
   end
 
+  def get_opts do
+    GenServer.call(__MODULE__, :get_opts)
+  end
+
+  @impl true
   def init(opts) do
     subscribe!()
 
     {:ok, opts}
   end
 
+  @impl true
+  def handle_call(:get_opts, _from, opts) do
+    {:reply, opts, opts}
+  end
+
+  @impl true
   def handle_info({PubSub.Broadcast, Hour, datetime}, opts) do
     repo = Keyword.fetch!(opts, :repo)
     timezone = Keyword.fetch!(opts, :timezone)
@@ -61,6 +72,7 @@ defmodule Ada.Scheduler do
     {:noreply, opts}
   end
 
+  @impl true
   def handle_info({PubSub.Broadcast, Minute, datetime}, opts) do
     repo = Keyword.fetch!(opts, :repo)
     timezone = Keyword.fetch!(opts, :timezone)
@@ -79,10 +91,12 @@ defmodule Ada.Scheduler do
     {:noreply, opts}
   end
 
+  @impl true
   def handle_info({PubSub.Broadcast, Preference, {:timezone, timezone}}, opts) do
     {:noreply, Keyword.put(opts, :timezone, timezone)}
   end
 
+  @impl true
   def handle_info({PubSub.Broadcast, Preference, _pair}, opts) do
     {:noreply, opts}
   end
