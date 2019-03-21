@@ -29,10 +29,10 @@ defmodule Ada.Scheduler do
         track_success(scheduled_task, elapsed_us)
         Logger.info(fn -> "evt=st.ok id=#{scheduled_task.id}" end)
 
-      {elapsed_us, {:error, reason} = error} ->
+      {elapsed_us, error} ->
         PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
-        track_error(scheduled_task, reason, elapsed_us)
-        Logger.error(fn -> "evt=st.error id=#{scheduled_task.id} reason=#{inspect(reason)}" end)
+        track_error(scheduled_task, error, elapsed_us)
+        Logger.error(fn -> "evt=st.error id=#{scheduled_task.id} reason=#{inspect(error)}" end)
         error
     end
   end
