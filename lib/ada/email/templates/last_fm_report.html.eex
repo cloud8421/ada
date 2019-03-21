@@ -5,7 +5,7 @@
       <li>
         <p>
           <%= track.artist %> - <strong><%= track.name %></strong> (<%= track.album %>)
-          <small><%= DateTime.to_iso8601(track.listened_at) %></small>
+          <small><%= format_listened_at(track.listened_at) %></small>
         </p>
       </li>
     <% end %>

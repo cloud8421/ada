@@ -32,14 +32,22 @@ defmodule Ada.Source.LastFm.ApiClient do
     tracks
     |> Enum.reverse()
     |> Enum.map(fn t ->
-      listened_at = t |> get_in(["date", "uts"]) |> String.to_integer() |> DateTime.from_unix!()
-
       %Track{
         artist: get_in(t, ["artist", "#text"]),
         album: get_in(t, ["album", "#text"]),
         name: Map.get(t, "name"),
-        listened_at: listened_at
+        listened_at: parse_listened_at(t)
       }
     end)
+  end
+
+  defp parse_listened_at(t) do
+    case get_in(t, ["@attr", "nowplaying"]) do
+      "true" ->
+        :now_playing
+
+      nil ->
+        t |> get_in(["date", "uts"]) |> String.to_integer() |> DateTime.from_unix!()
+    end
   end
 end

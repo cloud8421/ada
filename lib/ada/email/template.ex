@@ -65,8 +65,15 @@ defmodule Ada.Email.Template do
   end
 
   defp shift_to_local_time(track, timezone) do
-    Map.update!(track, :listened_at, fn utc_listened_at ->
-      Calendar.DateTime.shift_zone!(utc_listened_at, timezone)
+    Map.update!(track, :listened_at, fn
+      :now_playing -> :now_playing
+      utc_listened_at -> Calendar.DateTime.shift_zone!(utc_listened_at, timezone)
     end)
+  end
+
+  defp format_listened_at(:now_playing), do: "Now playing"
+
+  defp format_listened_at(datetime) do
+    DateTime.to_iso8601(datetime)
   end
 end
