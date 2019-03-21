@@ -18,17 +18,20 @@ defmodule Ada.Scheduler do
   def run_one_sync(scheduled_task, opts) do
     PubSub.publish(Ada.ScheduledTask.Start, scheduled_task)
 
-    case ScheduledTask.execute(scheduled_task, opts) do
-      :ok ->
+    case :timer.tc(ScheduledTask, :execute, [scheduled_task, opts]) do
+      {elapsed_us, :ok} ->
         PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
+        track_success(scheduled_task, elapsed_us)
         Logger.info(fn -> "evt=st.ok id=#{scheduled_task.id}" end)
 
-      {:ok, _value} ->
+      {elapsed_us, {:ok, _value}} ->
         PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
+        track_success(scheduled_task, elapsed_us)
         Logger.info(fn -> "evt=st.ok id=#{scheduled_task.id}" end)
 
-      {:error, reason} = error ->
+      {elapsed_us, {:error, reason} = error} ->
         PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
+        track_error(scheduled_task, reason, elapsed_us)
         Logger.error(fn -> "evt=st.error id=#{scheduled_task.id} reason=#{inspect(reason)}" end)
         error
     end
@@ -107,4 +110,29 @@ defmodule Ada.Scheduler do
     PubSub.subscribe(Minute)
     PubSub.subscribe(Preference)
   end
+
+  defp track_success(scheduled_task, elapsed_us) do
+    duration = to_ms(elapsed_us)
+
+    meta = %{
+      task_id: scheduled_task.id,
+      workflow: scheduled_task.workflow_name
+    }
+
+    :telemetry.execute([:scheduler, :run, :ok], %{duration: duration}, meta)
+  end
+
+  defp track_error(scheduled_task, reason, elapsed_us) do
+    duration = to_ms(elapsed_us)
+
+    meta = %{
+      task_id: scheduled_task.id,
+      workflow: scheduled_task.workflow_name,
+      reason: reason
+    }
+
+    :telemetry.execute([:scheduler, :run, :error], %{duration: duration}, meta)
+  end
+
+  defp to_ms(us), do: div(us, 1000)
 end
