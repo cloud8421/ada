@@ -97,12 +97,14 @@ type Param
     = UserId Int
     | LocationId Int
     | NewsTag String
+    | IntervalInHours Int
 
 
 type Requirement
     = RequiresUserId
     | RequiresLocationId
     | RequiresNewsTag
+    | RequiresIntervalInHours
 
 
 type alias WorfklowName =
@@ -205,6 +207,9 @@ requirementsAsLabels requirements =
 
                 RequiresNewsTag ->
                     "News tag"
+
+                RequiresIntervalInHours ->
+                    "Interval (in hours)"
     in
     List.map asLabel requirements
 
@@ -402,6 +407,9 @@ requirementDecoder =
                 "location_id" ->
                     JD.succeed RequiresLocationId
 
+                "interval_in_hours" ->
+                    JD.succeed RequiresIntervalInHours
+
                 otherwise ->
                     JD.fail "Unsupported requirement"
     in
@@ -472,6 +480,10 @@ workflowParamDecoder =
                 "tag" ->
                     JD.map NewsTag
                         (JD.field "value" JD.string)
+
+                "interval_in_hours" ->
+                    JD.map IntervalInHours
+                        (JD.field "value" JD.int)
 
                 other ->
                     JD.fail "Unsupported Param"
@@ -762,6 +774,9 @@ paramTags params model =
 
                 NewsTag tag ->
                     Tuple.pair "News tag" tag
+
+                IntervalInHours interval ->
+                    Tuple.pair "Interval (in hours)" (String.fromInt interval)
 
         toTag ( name, value ) =
             [ BX.infoTag name
