@@ -69,6 +69,6 @@ defmodule Ada.Application do
     [http_port: http_port(env), repo: Ada.Repo, ui_path: ui_path(target)]
   end
 
-  defp ui_path("host"), do: 'static/web-ui/build'
+  defp ui_path(:host), do: 'static/web-ui/build'
   defp ui_path(_target), do: 'static/web-ui/dist'
 end
