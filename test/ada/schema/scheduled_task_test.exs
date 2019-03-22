@@ -55,11 +55,11 @@ defmodule Ada.Schema.ScheduledTaskTest do
     end
   end
 
-  describe "execute/1" do
+  describe "run/1" do
     test "it runs the contained workflow" do
       st = %ScheduledTask{workflow_name: TestWorkflow, params: %{name: "Ada"}}
 
-      assert "ADA" == ScheduledTask.execute(st, [])
+      assert "ADA" == ScheduledTask.run(st, [])
     end
   end
 

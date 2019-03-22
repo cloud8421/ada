@@ -52,7 +52,7 @@ defmodule Ada.Schema.ScheduledTask do
   @doc """
   Performs a scheduled task resolving the contained workflow.
   """
-  def execute(scheduled_task, ctx \\ []) do
+  def run(scheduled_task, ctx \\ []) do
     Ada.Workflow.run(scheduled_task.workflow_name, scheduled_task.params, ctx)
   end
 

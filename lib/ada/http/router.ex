@@ -12,7 +12,7 @@ defmodule Ada.HTTP.Router do
          resource_path('/locations', Ada.Schema.Location, opts),
          collection_path('/users', Ada.Schema.User, opts),
          resource_path('/users', Ada.Schema.User, opts),
-         {'/scheduled_tasks/[:scheduled_task_id]/execute', Handler.ExecuteScheduledTask, opts},
+         {'/scheduled_tasks/[:scheduled_task_id]/run', Handler.RunScheduledTask, opts},
          collection_path('/scheduled_tasks', Ada.Schema.ScheduledTask, opts),
          resource_path('/scheduled_tasks', Ada.Schema.ScheduledTask, opts),
          {'/workflows', Handler.Workflows, opts},

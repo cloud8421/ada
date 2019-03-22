@@ -515,11 +515,11 @@ getScheduledTasks =
         |> Cmd.map ScheduledTasksResponse
 
 
-executeScheduledTask : Int -> Cmd Msg
-executeScheduledTask taskId =
-    putNoBodyNoContent ("/scheduled_tasks/" ++ String.fromInt taskId ++ "/execute")
+runScheduledTask : Int -> Cmd Msg
+runScheduledTask taskId =
+    putNoBodyNoContent ("/scheduled_tasks/" ++ String.fromInt taskId ++ "/run")
         |> RemoteData.sendRequest
-        |> Cmd.map ExecuteScheduledTaskResponse
+        |> Cmd.map RunScheduledTaskResponse
 
 
 putNoBodyNoContent : String -> Http.Request ()
@@ -812,7 +812,7 @@ scheduledTasksSection model =
                 , BE.tableCell [] [ text <| formatFrequency scheduledTask.frequency ]
                 , BE.tableCell []
                     [ BF.field [ class "has-addons" ]
-                        [ BX.runButton isRunning [ onClick (ExecuteScheduledTask scheduledTask.id) ]
+                        [ BX.runButton isRunning [ onClick (RunScheduledTask scheduledTask.id) ]
                         , BX.editButton [ onClick (OpenEditingModalEditScheduledTask scheduledTask) ]
                         , BX.deleteButton [ onClick NoOp ]
                         ]
@@ -1263,13 +1263,13 @@ saveFromModalForm modalForm =
 
 type Msg
     = NoOp
-    | ExecuteScheduledTask Int
+    | RunScheduledTask Int
     | ActivateLocation Int
     | UsersResponse (WebData Users)
     | LocationsResponse (WebData Locations)
     | WorkflowsResponse (WebData Workflows)
     | ScheduledTasksResponse (WebData ScheduledTasks)
-    | ExecuteScheduledTaskResponse (WebData ())
+    | RunScheduledTaskResponse (WebData ())
     | ActivateLocationResponse (WebData ())
     | ToggleTopBarMenu
     | CloseEditingModal
@@ -1351,8 +1351,8 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        ExecuteScheduledTask taskId ->
-            ( { model | runningTask = Just taskId }, executeScheduledTask taskId )
+        RunScheduledTask taskId ->
+            ( { model | runningTask = Just taskId }, runScheduledTask taskId )
 
         ActivateLocation locationId ->
             ( model, activateLocation locationId )
@@ -1369,7 +1369,7 @@ update msg model =
         ScheduledTasksResponse response ->
             ( { model | scheduledTasks = response }, Cmd.none )
 
-        ExecuteScheduledTaskResponse _ ->
+        RunScheduledTaskResponse _ ->
             ( { model | runningTask = Nothing }, Cmd.none )
 
         ActivateLocationResponse _ ->

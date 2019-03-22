@@ -18,7 +18,7 @@ defmodule Ada.Scheduler do
   def run_one_sync(scheduled_task, opts \\ get_opts()) do
     PubSub.publish(Ada.ScheduledTask.Start, scheduled_task)
 
-    case :timer.tc(ScheduledTask, :execute, [scheduled_task, opts]) do
+    case :timer.tc(ScheduledTask, :run, [scheduled_task, opts]) do
       {elapsed_us, :ok} ->
         PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
         track_success(scheduled_task, elapsed_us)
