@@ -26,7 +26,7 @@ defmodule Ada.Source.LastFm.ApiClient do
     end
   end
 
-  defp parse_response(response) do
+  def parse_response(response) do
     tracks = get_in(response, ["recenttracks", "track"])
 
     tracks
