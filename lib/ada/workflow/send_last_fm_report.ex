@@ -24,15 +24,15 @@ defmodule Ada.Workflow.SendLastFmReport do
          interval_in_hours when is_present(interval_in_hours) <-
            Map.get(params, :interval_in_hours),
          {from, to} <- compute_interval(interval_in_hours),
-         {:ok, tracks} <- LastFm.get_recent(%{user: user.last_fm_username, from: from, to: to}),
-         email_body =
-           Email.Template.last_fm_report(
-             "LastFm report for the last #{interval_in_hours} hours",
-             tracks,
-             timezone
-           ),
-         email = compose_email(user, interval_in_hours, email_body) do
-      Email.ApiClient.send_email(email)
+         {:ok, tracks} <- LastFm.get_recent(%{user: user.last_fm_username, from: from, to: to}) do
+      email_body =
+        Email.Template.last_fm_report(
+          "LastFm report for the last #{interval_in_hours} hours",
+          tracks,
+          timezone
+        )
+
+      {:ok, compose_email(user, interval_in_hours, email_body)}
     end
   end
 

@@ -3,6 +3,10 @@ defmodule Ada.Schema.ScheduledTaskTest do
 
   alias Ada.Schema.{Frequency, ScheduledTask}
 
+  defmodule TestEmailApiClient do
+    def send_email(%Ada.Email{} = email), do: {:ok, email}
+  end
+
   defmodule TestWorkflow do
     @behaviour Ada.Workflow
 
@@ -15,7 +19,7 @@ defmodule Ada.Schema.ScheduledTaskTest do
     @impl true
     def run(params, :email, _ctx) do
       name = Map.fetch!(params, :name)
-      String.upcase(name)
+      {:ok, %Ada.Email{subject: String.upcase(name)}}
     end
   end
 
@@ -59,7 +63,8 @@ defmodule Ada.Schema.ScheduledTaskTest do
     test "it runs the contained workflow" do
       st = %ScheduledTask{workflow_name: TestWorkflow, params: %{name: "Ada"}}
 
-      assert "ADA" == ScheduledTask.run(st, [])
+      assert {:ok, %Ada.Email{subject: "ADA"}} ==
+               ScheduledTask.run(st, email_api_client: TestEmailApiClient)
     end
   end
 

@@ -20,10 +20,9 @@ defmodule Ada.Workflow.SendWeatherForecast do
 
     with user when is_present(user) <- repo.get(User, params.user_id),
          location when is_present(location) <- repo.get(Location, params.location_id),
-         {:ok, weather_report} <- Weather.get(location),
-         email_body = Email.Template.weather(location.name, weather_report),
-         email = compose_email(user, location, email_body) do
-      Email.ApiClient.send_email(email)
+         {:ok, weather_report} <- Weather.get(location) do
+      email_body = Email.Template.weather(location.name, weather_report)
+      {:ok, compose_email(user, location, email_body)}
     end
   end
 

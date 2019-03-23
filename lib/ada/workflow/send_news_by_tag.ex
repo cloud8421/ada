@@ -20,10 +20,9 @@ defmodule Ada.Workflow.SendNewsByTag do
 
     with user when is_present(user) <- repo.get(User, params.user_id),
          tag <- Map.get(params, :tag),
-         {:ok, stories} <- News.get(%{tag: tag}),
-         email_body = Email.Template.news("News for #{tag}", stories),
-         email = compose_email(user, tag, email_body) do
-      Email.ApiClient.send_email(email)
+         {:ok, stories} <- News.get(%{tag: tag}) do
+      email_body = Email.Template.news("News for #{tag}", stories)
+      {:ok, compose_email(user, tag, email_body)}
     end
   end
 

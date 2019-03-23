@@ -9,9 +9,15 @@ defmodule Ada.Workflow do
   @callback run(map(), transport, Keyword.t()) :: worfklow_result()
 
   def run(workflow_name, params, transport, ctx) do
-    case validate(workflow_name, params) do
-      {:ok, normalized_params} -> workflow_name.run(normalized_params, transport, ctx)
-      error -> error
+    with {:ok, normalized_params} <- validate(workflow_name, params),
+         {:ok, result = %Ada.Email{}} <- workflow_name.run(normalized_params, transport, ctx) do
+      apply_transport(result, transport, ctx)
+    else
+      {:ok, _non_email_result} ->
+        {:error, "Workflow result is not compatible with transport"}
+
+      error ->
+        error
     end
   end
 
@@ -43,5 +49,11 @@ defmodule Ada.Workflow do
     {params, types}
     |> cast(params, Map.keys(types))
     |> validate_required(Map.keys(types))
+  end
+
+  defp apply_transport(email, :email, ctx) do
+    email_api_client = Keyword.fetch!(ctx, :email_api_client)
+
+    email_api_client.send_email(email)
   end
 end
