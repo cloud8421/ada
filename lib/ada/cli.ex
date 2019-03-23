@@ -224,6 +224,7 @@ defmodule Ada.CLI do
     option(:location_id, type: :integer)
     option(:tag)
     option(:email)
+    option(:interval_in_hours, type: :integer)
 
     run context do
       target_node = Map.get(context, :target_node, @default_target_node)
@@ -235,7 +236,7 @@ defmodule Ada.CLI do
       params =
         case Map.take(context, [:user_id, :location_id, :tag, :interval_in_hours]) do
           map when map_size(map) == 0 -> %{}
-          non_empty_params -> %{params: non_empty_params}
+          non_empty_params -> %{params: Map.merge(scheduled_task.params, non_empty_params)}
         end
 
       frequency =
