@@ -135,6 +135,7 @@ type alias ScheduledTask =
     , frequency : Frequency
     , workflowName : String
     , workflowHumanName : String
+    , transport : String
     , params : List Param
     }
 
@@ -494,11 +495,12 @@ workflowParamDecoder =
 
 decodeScheduledTask : JD.Decoder ScheduledTask
 decodeScheduledTask =
-    JD.map5 ScheduledTask
+    JD.map6 ScheduledTask
         (JD.field "id" JD.int)
         (JD.field "frequency" frequencyDecoder)
         (JD.field "workflow_name" JD.string)
         (JD.field "workflow_human_name" JD.string)
+        (JD.field "transport" JD.string)
         (JD.field "params" (JD.list workflowParamDecoder))
 
 
@@ -796,7 +798,7 @@ scheduledTasksSection : Model -> Html Msg
 scheduledTasksSection model =
     let
         columnNames =
-            [ "ID", "Workflow name", "Params", "Frequency", "Actions" ]
+            [ "ID", "Workflow name", "Transport", "Params", "Frequency", "Actions" ]
 
         tableRow scheduledTask =
             let
@@ -807,6 +809,7 @@ scheduledTasksSection model =
                 []
                 [ BE.tableCell [] [ text <| String.fromInt scheduledTask.id ]
                 , BE.tableCell [] [ text scheduledTask.workflowHumanName ]
+                , BE.tableCell [] [ text scheduledTask.transport ]
                 , BE.tableCell []
                     [ BF.multilineFields [] (paramTags scheduledTask.params model) ]
                 , BE.tableCell [] [ text <| formatFrequency scheduledTask.frequency ]

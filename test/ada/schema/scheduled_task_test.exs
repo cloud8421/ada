@@ -13,7 +13,7 @@ defmodule Ada.Schema.ScheduledTaskTest do
     def requirements, do: %{name: :string}
 
     @impl true
-    def run(params, _ctx) do
+    def run(params, :email, _ctx) do
       name = Map.fetch!(params, :name)
       String.upcase(name)
     end

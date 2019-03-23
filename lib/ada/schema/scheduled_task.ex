@@ -4,11 +4,13 @@ defmodule Ada.Schema.ScheduledTask do
   alias Ada.Schema.Frequency
 
   @task_version 1
+  @transports [:email]
 
   schema "scheduled_tasks" do
     field :version, :integer, null: false, default: @task_version
     field :workflow_name, Ecto.Module, null: false
     field :params, :map, null: false, default: %{}
+    field :transport, Ecto.Atom, null: false, default: :email
     embeds_one :frequency, Frequency, on_replace: :update
 
     timestamps()
@@ -16,9 +18,10 @@ defmodule Ada.Schema.ScheduledTask do
 
   def changeset(scheduled_task, params \\ %{}) do
     scheduled_task
-    |> Ecto.Changeset.cast(params, [:version, :workflow_name, :params])
+    |> Ecto.Changeset.cast(params, [:version, :workflow_name, :params, :transport])
     |> Ecto.Changeset.cast_embed(:frequency)
-    |> Ecto.Changeset.validate_required([:frequency, :workflow_name])
+    |> Ecto.Changeset.validate_required([:frequency, :workflow_name, :transport])
+    |> Ecto.Changeset.validate_inclusion(:transport, @transports)
     |> Ecto.Changeset.validate_number(:version, equal_to: @task_version)
     |> Ecto.Changeset.validate_change(:workflow_name, workflow_name_validator())
   end
@@ -52,8 +55,8 @@ defmodule Ada.Schema.ScheduledTask do
   @doc """
   Performs a scheduled task resolving the contained workflow.
   """
-  def run(scheduled_task, ctx \\ []) do
-    Ada.Workflow.run(scheduled_task.workflow_name, scheduled_task.params, ctx)
+  def run(st, ctx \\ []) do
+    Ada.Workflow.run(st.workflow_name, st.params, st.transport, ctx)
   end
 
   defp workflow_name_validator do

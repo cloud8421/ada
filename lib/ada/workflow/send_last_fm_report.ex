@@ -16,7 +16,7 @@ defmodule Ada.Workflow.SendLastFmReport do
   defguard is_present(thing) when not is_nil(thing)
 
   @impl true
-  def run(params, ctx) do
+  def run(params, :email, ctx) do
     repo = Keyword.fetch!(ctx, :repo)
     timezone = Keyword.fetch!(ctx, :timezone)
 

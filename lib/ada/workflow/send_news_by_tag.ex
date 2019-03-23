@@ -15,7 +15,7 @@ defmodule Ada.Workflow.SendNewsByTag do
   defguard is_present(thing) when not is_nil(thing)
 
   @impl true
-  def run(params, ctx) do
+  def run(params, :email, ctx) do
     repo = Keyword.fetch!(ctx, :repo)
 
     with user when is_present(user) <- repo.get(User, params.user_id),

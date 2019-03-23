@@ -2,21 +2,22 @@ defmodule Ada.Workflow do
   import Ecto.Changeset
 
   @type worfklow_result :: {:ok, term()} | {:error, term()}
+  @type transport :: :email
 
   @callback human_name() :: String.t()
   @callback requirements() :: %{optional(atom()) => term()}
-  @callback run(map(), Keyword.t()) :: worfklow_result()
+  @callback run(map(), transport, Keyword.t()) :: worfklow_result()
 
-  def run(workflow_name, params, ctx) do
+  def run(workflow_name, params, transport, ctx) do
     case validate(workflow_name, params) do
-      {:ok, normalized_params} -> workflow_name.run(normalized_params, ctx)
+      {:ok, normalized_params} -> workflow_name.run(normalized_params, transport, ctx)
       error -> error
     end
   end
 
   def valid_name?(workflow_name) do
     Code.ensure_loaded?(workflow_name) and function_exported?(workflow_name, :requirements, 0) and
-      function_exported?(workflow_name, :run, 2)
+      function_exported?(workflow_name, :run, 3)
   end
 
   def validate(workflow_name, params) do

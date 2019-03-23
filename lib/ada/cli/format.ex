@@ -85,6 +85,7 @@ defmodule Ada.CLI.Format do
           list_item("ID", scheduled_task.id),
           list_item("Workflow Name", inspect(scheduled_task.workflow_name)),
           list_item("Params", format_params(scheduled_task.params, users, locations)),
+          list_item("Transport", scheduled_task.transport),
           list_item("Frequency", format_frequency(scheduled_task.frequency))
         ]
       end)

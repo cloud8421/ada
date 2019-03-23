@@ -223,6 +223,7 @@ defmodule Ada.HTTP.IntegrationTest do
       data = %{
         workflow_name: Ada.Workflow.SendWeatherForecast,
         params: %{"user_id" => 1, "location_id" => 1},
+        transport: "email",
         frequency: %{}
       }
 
