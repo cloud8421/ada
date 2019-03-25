@@ -37,6 +37,10 @@ defmodule Ada.Scheduler do
     end
   end
 
+  def preview(scheduled_task, opts \\ get_opts()) do
+    ScheduledTask.preview(scheduled_task, opts)
+  end
+
   def get_opts do
     GenServer.call(__MODULE__, :get_opts)
   end

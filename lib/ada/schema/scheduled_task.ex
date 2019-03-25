@@ -52,10 +52,18 @@ defmodule Ada.Schema.ScheduledTask do
   def matches_time?(st, datetime), do: Frequency.matches_time?(st.frequency, datetime)
 
   @doc """
-  Performs a scheduled task resolving the contained workflow.
+  Runs a scheduled task resolving the contained workflow.
   """
   def run(st, ctx \\ []) do
     Workflow.run(st.workflow_name, st.params, st.transport, ctx)
+  end
+
+  @doc """
+  Previews the results of a scheduled task by looking at
+  its raw data.
+  """
+  def preview(st, ctx \\ []) do
+    Workflow.raw_data(st.workflow_name, st.params, ctx)
   end
 
   defp workflow_name_validator do

@@ -16,24 +16,30 @@ defmodule Ada.Workflow.SendLastFmReport do
   defguard is_present(thing) when not is_nil(thing)
 
   @impl true
-  def run(params, :email, ctx) do
+  def fetch(params, ctx) do
     repo = Keyword.fetch!(ctx, :repo)
-    timezone = Keyword.fetch!(ctx, :timezone)
 
     with user when is_present(user) <- repo.get(User, params.user_id),
          interval_in_hours when is_present(interval_in_hours) <-
            Map.get(params, :interval_in_hours),
          {from, to} <- compute_interval(interval_in_hours),
          {:ok, tracks} <- LastFm.get_recent(%{user: user.last_fm_username, from: from, to: to}) do
-      email_body =
-        Email.Template.last_fm_report(
-          "LastFm report for the last #{interval_in_hours} hours",
-          tracks,
-          timezone
-        )
-
-      {:ok, compose_email(user, interval_in_hours, email_body)}
+      {:ok, %{tracks: tracks, interval_in_hours: interval_in_hours, user: user}}
     end
+  end
+
+  @impl true
+  def format(raw_data, :email, ctx) do
+    timezone = Keyword.fetch!(ctx, :timezone)
+
+    email_body =
+      Email.Template.last_fm_report(
+        "LastFm report for the last #{raw_data.interval_in_hours} hours",
+        raw_data.tracks,
+        timezone
+      )
+
+    {:ok, compose_email(raw_data.user, raw_data.interval_in_hours, email_body)}
   end
 
   defp compute_interval(interval_in_hours) do

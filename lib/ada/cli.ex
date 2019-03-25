@@ -297,6 +297,27 @@ defmodule Ada.CLI do
     end
   end
 
+  command :preview_scheduled_task do
+    option :target_node, aliases: [:t]
+    aliases [:pst]
+    description "Previews the specified scheduled task"
+    long_description "Previews the specifed scheduled task"
+
+    argument(:id, type: :integer)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      scheduled_task = :rpc.call(target_node, CRUD, :find, [Ada.Schema.ScheduledTask, context.id])
+
+      target_node
+      |> :rpc.call(Ada.Scheduler, :preview, [scheduled_task])
+      |> IO.inspect()
+    end
+  end
+
   command :set_preference do
     option :target_node, aliases: [:t]
     description "Sets a preference on the device"

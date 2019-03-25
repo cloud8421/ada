@@ -15,15 +15,20 @@ defmodule Ada.Workflow.SendNewsByTag do
   defguard is_present(thing) when not is_nil(thing)
 
   @impl true
-  def run(params, :email, ctx) do
+  def fetch(params, ctx) do
     repo = Keyword.fetch!(ctx, :repo)
 
     with user when is_present(user) <- repo.get(User, params.user_id),
          tag <- Map.get(params, :tag),
          {:ok, stories} <- News.get(%{tag: tag}) do
-      email_body = Email.Template.news("News for #{tag}", stories)
-      {:ok, compose_email(user, tag, email_body)}
+      {:ok, %{stories: stories, tag: tag, user: user}}
     end
+  end
+
+  @impl true
+  def format(raw_data, :email, _ctx) do
+    email_body = Email.Template.news("News for #{raw_data.tag}", raw_data.stories)
+    {:ok, compose_email(raw_data.user, raw_data.tag, email_body)}
   end
 
   defp compose_email(user, tag, email_body) do

@@ -17,9 +17,13 @@ defmodule Ada.Schema.ScheduledTaskTest do
     def requirements, do: %{name: :string}
 
     @impl true
-    def run(params, :email, _ctx) do
-      name = Map.fetch!(params, :name)
-      {:ok, %Ada.Email{subject: String.upcase(name)}}
+    def fetch(params, _ctx) do
+      {:ok, %{name: String.upcase(params.name)}}
+    end
+
+    @impl true
+    def format(raw_data, :email, _ctx) do
+      {:ok, %Ada.Email{subject: raw_data.name}}
     end
   end
 
@@ -60,8 +64,8 @@ defmodule Ada.Schema.ScheduledTaskTest do
   end
 
   describe "run/1" do
-    test "it runs the contained workflow" do
-      st = %ScheduledTask{workflow_name: TestWorkflow, params: %{name: "Ada"}}
+    test "it supports email workflows" do
+      st = %ScheduledTask{workflow_name: TestWorkflow, params: %{name: "Ada"}, transport: :email}
 
       assert {:ok, %Ada.Email{subject: "ADA"}} ==
                ScheduledTask.run(st, email_api_client: TestEmailApiClient)
