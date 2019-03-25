@@ -1,5 +1,5 @@
 defmodule Ada.HTTP.Router do
-  alias Ada.HTTP.Handler
+  alias Ada.{HTTP.Handler, Schema}
 
   def dispatch(opts) do
     ui_path = Keyword.fetch!(opts, :ui_path)
@@ -8,13 +8,13 @@ defmodule Ada.HTTP.Router do
       {:_,
        [
          {'/locations/[:location_id]/activate', Handler.Location.Activate, opts},
-         collection_path('/locations', Ada.Schema.Location, opts),
-         resource_path('/locations', Ada.Schema.Location, opts),
-         collection_path('/users', Ada.Schema.User, opts),
-         resource_path('/users', Ada.Schema.User, opts),
+         collection_path('/locations', Schema.Location, opts),
+         resource_path('/locations', Schema.Location, opts),
+         collection_path('/users', Schema.User, opts),
+         resource_path('/users', Schema.User, opts),
          {'/scheduled_tasks/[:scheduled_task_id]/run', Handler.RunScheduledTask, opts},
-         collection_path('/scheduled_tasks', Ada.Schema.ScheduledTask, opts),
-         resource_path('/scheduled_tasks', Ada.Schema.ScheduledTask, opts),
+         collection_path('/scheduled_tasks', Schema.ScheduledTask, opts),
+         resource_path('/scheduled_tasks', Schema.ScheduledTask, opts),
          {'/workflows', Handler.Workflows, opts},
          {'/display/brightness', Handler.Display.Brightness, opts},
          {"/", :cowboy_static, {:priv_file, :ada, ui_path ++ '/index.html'}},
