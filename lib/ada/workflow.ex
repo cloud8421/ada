@@ -8,6 +8,9 @@ defmodule Ada.Workflow do
   @callback requirements() :: %{optional(atom()) => term()}
   @callback run(map(), transport, Keyword.t()) :: worfklow_result()
 
+  @spec transports :: [transport]
+  def transports, do: [:email]
+
   def run(workflow_name, params, transport, ctx) do
     with {:ok, normalized_params} <- validate(workflow_name, params),
          {:ok, result = %Ada.Email{}} <- workflow_name.run(normalized_params, transport, ctx) do
