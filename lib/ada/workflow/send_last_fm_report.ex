@@ -18,13 +18,15 @@ defmodule Ada.Workflow.SendLastFmReport do
   @impl true
   def fetch(params, ctx) do
     repo = Keyword.fetch!(ctx, :repo)
+    timezone = Keyword.fetch!(ctx, :timezone)
 
     with user when is_present(user) <- repo.get(User, params.user_id),
          interval_in_hours when is_present(interval_in_hours) <-
            Map.get(params, :interval_in_hours),
          {from, to} <- compute_interval(interval_in_hours),
-         {:ok, tracks} <- LastFm.get_recent(%{user: user.last_fm_username, from: from, to: to}) do
-      {:ok, %{tracks: tracks, interval_in_hours: interval_in_hours, user: user}}
+         {:ok, tracks} <- LastFm.get_recent(%{user: user.last_fm_username, from: from, to: to}),
+         report <- build_report(tracks, timezone, to) do
+      {:ok, %{report: report, interval_in_hours: interval_in_hours, user: user}}
     end
   end
 
@@ -35,7 +37,7 @@ defmodule Ada.Workflow.SendLastFmReport do
     email_body =
       Email.Template.last_fm_report(
         "LastFm report for the last #{raw_data.interval_in_hours} hours",
-        raw_data.tracks,
+        raw_data.report.tracks,
         timezone
       )
 
@@ -54,6 +56,17 @@ defmodule Ada.Workflow.SendLastFmReport do
       to: [user.email],
       subject: "LastFm report for the last #{interval_in_hours} hours",
       body_html: email_body
+    }
+  end
+
+  defp build_report(tracks, timezone, utc_now) do
+    local_now = Calendar.DateTime.shift_zone!(utc_now, timezone)
+
+    %{
+      tracks: tracks,
+      most_listened_artist: LastFm.Track.most_listened_artist(tracks),
+      count_by_hour: LastFm.Track.count_by_hour(tracks, timezone, local_now),
+      local_now: local_now
     }
   end
 end
