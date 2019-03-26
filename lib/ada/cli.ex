@@ -314,7 +314,8 @@ defmodule Ada.CLI do
 
       target_node
       |> :rpc.call(Ada.Scheduler, :preview, [scheduled_task])
-      |> IO.inspect()
+      |> Format.preview(scheduled_task)
+      |> IO.puts()
     end
   end
 

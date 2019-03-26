@@ -102,6 +102,16 @@ defmodule Ada.CLI.Format do
     header("Error running task: #{inspect(reason)}")
   end
 
+  def preview({:ok, result}, %{workflow_name: Ada.Workflow.SendLastFmReport}) do
+    Ada.CLI.Format.LastFm.format_report(result.report)
+  end
+
+  def preview({:ok, result}, _scheduled_task), do: result
+
+  def preview(error, _scheduled_task) do
+    scheduled_task_result(error)
+  end
+
   defp format_params(params, users, locations) do
     params
     |> Enum.map(fn
