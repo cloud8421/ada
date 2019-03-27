@@ -9,6 +9,16 @@ defmodule Ada.Source.LastFm.Track do
         }
 
   @doc """
+  Finds the currently playing track (if any).
+  """
+  def now_playing(tracks) do
+    case Enum.find(tracks, fn t -> t.listened_at == :now_playing end) do
+      nil -> :not_playing
+      track -> {:now_playing, track}
+    end
+  end
+
+  @doc """
   Returns the artist with the highest number of tracks in the collection.
   """
   @spec most_listened_artist([t]) :: nil | String.t()

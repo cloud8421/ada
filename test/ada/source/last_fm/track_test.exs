@@ -6,6 +6,10 @@ defmodule Ada.Source.LastFm.TrackTest do
   describe "listening stats" do
     setup [:load_tracks_fixture]
 
+    test "now_playing/1", %{tracks: tracks} do
+      assert {:now_playing, %Track{name: "Russia on Ice"}} = Track.now_playing(tracks)
+    end
+
     test "most_listened_artist/1", %{tracks: tracks} do
       assert "Porcupine Tree" == Track.most_listened_artist(tracks)
     end

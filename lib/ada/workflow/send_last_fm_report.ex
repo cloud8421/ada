@@ -64,6 +64,7 @@ defmodule Ada.Workflow.SendLastFmReport do
 
     %{
       tracks: tracks,
+      now_playing: LastFm.Track.now_playing(tracks),
       most_listened_artist: LastFm.Track.most_listened_artist(tracks),
       count_by_hour: LastFm.Track.count_by_hour(tracks, timezone, local_now),
       local_now: local_now
