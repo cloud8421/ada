@@ -13,6 +13,7 @@ defmodule Ada.CLI.Format.LastFm do
     [
       title(report.local_now),
       @break,
+      format_now_playing(report.now_playing),
       format_most_listened_artist(report.most_listened_artist),
       @break,
       format_count_by_hour(report.count_by_hour),
@@ -42,6 +43,21 @@ defmodule Ada.CLI.Format.LastFm do
     ]
   end
 
+  defp format_now_playing(:not_playing), do: []
+
+  defp format_now_playing({:now_playing, track}) do
+    [
+      @left_pad,
+      ANSI.cyan(),
+      "Now playing",
+      @break,
+      @left_pad,
+      ANSI.reset(),
+      format_track_item(track, @left_pad),
+      @break
+    ]
+  end
+
   defp format_most_listened_artist(most_listened_artist) do
     [
       @left_pad,
@@ -64,8 +80,7 @@ defmodule Ada.CLI.Format.LastFm do
       ANSI.reset(),
       @break,
       format_count_by_hour_items(count_by_hour),
-      ANSI.reset(),
-      @break
+      ANSI.reset()
     ]
   end
 
@@ -110,22 +125,27 @@ defmodule Ada.CLI.Format.LastFm do
         @left_pad,
         @dash,
         @space,
-        ANSI.yellow(),
-        t.artist,
-        ANSI.reset(),
-        @space,
-        @emdash,
-        @space,
-        ellipsis(t.album, 76 - String.length(t.artist)),
-        @break,
-        @left_pad,
-        @left_pad,
-        ANSI.green(),
-        ellipsis(t.name, 76),
-        ANSI.reset(),
-        @break
+        format_track_item(t, @left_pad <> @left_pad)
       ]
     end)
+  end
+
+  defp format_track_item(track, pad) do
+    [
+      ANSI.yellow(),
+      track.artist,
+      ANSI.reset(),
+      @space,
+      @emdash,
+      @space,
+      ellipsis(track.name, 76 - String.length(track.artist)),
+      @break,
+      pad,
+      ANSI.green(),
+      ellipsis(track.album, 76),
+      ANSI.reset(),
+      @break
+    ]
   end
 
   defp ellipsis(string, max_length) do
