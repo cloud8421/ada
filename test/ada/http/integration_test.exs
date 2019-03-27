@@ -336,6 +336,23 @@ defmodule Ada.HTTP.IntegrationTest do
   ################################### DISPLAY ####################################
   ################################################################################
 
+  describe "GET /display/brightness" do
+    test "with valid value" do
+      response = H.json_get(@base_url <> "/display/brightness")
+
+      assert %H.Response{} = response
+      assert 200 == response.status_code
+      assert %{"brightness" => 1} == response.body
+    end
+
+    test "with invalid value" do
+      response = H.json_put(@base_url <> "/display/brightness", %{brightness: "invalid"})
+
+      assert %H.Response{} = response
+      assert 400 == response.status_code
+    end
+  end
+
   describe "PUT /display/brightness" do
     test "with valid value" do
       response = H.json_put(@base_url <> "/display/brightness", %{brightness: 10})
