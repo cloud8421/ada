@@ -338,11 +338,12 @@ defmodule Ada.HTTP.IntegrationTest do
 
   describe "GET /display/brightness" do
     test "with valid value" do
+      Ada.Display.set_brightness(20)
       response = H.json_get(@base_url <> "/display/brightness")
 
       assert %H.Response{} = response
       assert 200 == response.status_code
-      assert %{"brightness" => 1} == response.body
+      assert %{"brightness" => 20} == response.body
     end
 
     test "with invalid value" do

@@ -81,8 +81,9 @@ defmodule Ada.Display do
   def off({:call, from}, {:set_brightness, brightness}, data) do
     :ok = data.driver.set_buffer(data.content)
     :ok = data.driver.set_brightness(brightness)
+    new_data = %{data | brightness: brightness}
 
-    {:next_state, :static, data, {:reply, from, :ok}}
+    {:next_state, :static, new_data, {:reply, from, :ok}}
   end
 
   def off({:call, from}, :get_brightness, data) do
@@ -115,12 +116,14 @@ defmodule Ada.Display do
 
   def static({:call, from}, :turn_off, data) do
     :ok = data.driver.set_brightness(0)
-    {:next_state, :off, data, {:reply, from, :ok}}
+    new_data = %{data | brightness: 0}
+    {:next_state, :off, new_data, {:reply, from, :ok}}
   end
 
   def static({:call, from}, {:set_brightness, brightness}, data) do
     :ok = data.driver.set_brightness(brightness)
-    {:keep_state_and_data, {:reply, from, :ok}}
+    new_data = %{data | brightness: brightness}
+    {:keep_state, new_data, {:reply, from, :ok}}
   end
 
   def static({:call, from}, :get_brightness, data) do
