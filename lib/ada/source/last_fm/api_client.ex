@@ -10,6 +10,7 @@ defmodule Ada.Source.LastFm.ApiClient do
       {"user", user},
       {"from", DateTime.to_unix(from)},
       {"to", DateTime.to_unix(to)},
+      {"limit", "200"},
       {"api_key", @api_key},
       {"format", "json"}
     ]
