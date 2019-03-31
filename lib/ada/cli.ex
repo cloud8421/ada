@@ -449,11 +449,11 @@ defmodule Ada.CLI do
         %{type: "daily", hour: String.to_integer(hour), minute: String.to_integer(minute)}
 
       ["daily", hour] ->
-        %{type: "daily", hour: String.to_integer(hour)}
+        %{type: "daily", hour: String.to_integer(hour), minute: 0}
 
       ["weekly", day_of_week, hour] ->
         %{
-          type: "daily",
+          type: "weekly",
           day_of_week: String.to_integer(day_of_week),
           hour: String.to_integer(hour)
         }
