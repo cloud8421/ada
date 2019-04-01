@@ -14,6 +14,17 @@ config :ada, Ada.Repo, adapter: Sqlite.Ecto2
 
 config :ada, :default_preferences, timezone: "Europe/London"
 
+get_env_int = fn var ->
+  case System.get_env(var) do
+    nil -> nil
+    string -> String.to_integer(string)
+  end
+end
+
+config :statix,
+  host: System.get_env("STATSD_HOST") || "localhost",
+  port: get_env_int.("STATSD_PORT") || 8125
+
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations

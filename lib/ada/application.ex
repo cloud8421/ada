@@ -31,6 +31,7 @@ defmodule Ada.Application do
     timezone = Keyword.fetch!(preferences, :timezone)
 
     [
+      {Ada.Metrics, engine: Ada.Metrics.Engine},
       Ada.PubSub,
       Ada.TimeKeeper,
       {Ada.Repo, []},
