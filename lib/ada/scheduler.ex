@@ -5,20 +5,28 @@ defmodule Ada.Scheduler do
 
   alias Ada.{Preference, PubSub, Schema.ScheduledTask, Time.Hour, Time.Minute}
 
-  def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
+  @task_opts [ordered: false, timeout: 10_000]
+
+  def start_link(ctx) do
+    GenServer.start_link(__MODULE__, ctx, name: __MODULE__)
   end
 
-  def run_many_async(scheduled_tasks, opts \\ get_opts()) do
+  def run_many_async(scheduled_tasks, ctx \\ get_ctx()) do
     Ada.TaskSupervisor
-    |> Task.Supervisor.async_stream(scheduled_tasks, __MODULE__, :run_one_sync, [opts])
+    |> Task.Supervisor.async_stream(
+      scheduled_tasks,
+      __MODULE__,
+      :run_one_sync,
+      [ctx],
+      @task_opts
+    )
     |> Stream.run()
   end
 
-  def run_one_sync(scheduled_task, opts \\ get_opts()) do
+  def run_one_sync(scheduled_task, ctx \\ get_ctx()) do
     PubSub.publish(Ada.ScheduledTask.Start, scheduled_task)
 
-    case :timer.tc(ScheduledTask, :run, [scheduled_task, opts]) do
+    case :timer.tc(ScheduledTask, :run, [scheduled_task, ctx]) do
       {elapsed_us, :ok} ->
         PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
         track_success(scheduled_task, elapsed_us)
@@ -37,67 +45,67 @@ defmodule Ada.Scheduler do
     end
   end
 
-  def preview(scheduled_task, opts \\ get_opts()) do
-    ScheduledTask.preview(scheduled_task, opts)
+  def preview(scheduled_task, ctx \\ get_ctx()) do
+    ScheduledTask.preview(scheduled_task, ctx)
   end
 
-  def get_opts do
-    GenServer.call(__MODULE__, :get_opts)
+  def get_ctx do
+    GenServer.call(__MODULE__, :get_ctx)
   end
 
   @impl true
-  def init(opts) do
+  def init(ctx) do
     subscribe!()
 
-    {:ok, opts}
+    {:ok, ctx}
   end
 
   @impl true
-  def handle_call(:get_opts, _from, opts) do
-    {:reply, opts, opts}
+  def handle_call(:get_ctx, _from, ctx) do
+    {:reply, ctx, ctx}
   end
 
   @impl true
-  def handle_info({PubSub.Broadcast, Hour, datetime}, opts) do
-    repo = Keyword.fetch!(opts, :repo)
-    timezone = Keyword.fetch!(opts, :timezone)
+  def handle_info({PubSub.Broadcast, Hour, datetime}, ctx) do
+    repo = Keyword.fetch!(ctx, :repo)
+    timezone = Keyword.fetch!(ctx, :timezone)
     local_datetime = Calendar.DateTime.shift_zone!(datetime, timezone)
 
     ScheduledTask
     |> repo.all()
     |> find_runnable_tasks(:weekly, local_datetime)
-    |> run_many_async(opts)
+    |> run_many_async(ctx)
 
-    {:noreply, opts}
+    {:noreply, ctx}
   end
 
   @impl true
-  def handle_info({PubSub.Broadcast, Minute, datetime}, opts) do
-    repo = Keyword.fetch!(opts, :repo)
-    timezone = Keyword.fetch!(opts, :timezone)
+  def handle_info({PubSub.Broadcast, Minute, datetime}, ctx) do
+    repo = Keyword.fetch!(ctx, :repo)
+    timezone = Keyword.fetch!(ctx, :timezone)
     local_datetime = Calendar.DateTime.shift_zone!(datetime, timezone)
 
     ScheduledTask
     |> repo.all()
     |> find_runnable_tasks(:hourly, local_datetime)
-    |> run_many_async(opts)
+    |> run_many_async(ctx)
 
     ScheduledTask
     |> repo.all()
     |> find_runnable_tasks(:daily, local_datetime)
-    |> run_many_async(opts)
+    |> run_many_async(ctx)
 
-    {:noreply, opts}
+    {:noreply, ctx}
   end
 
   @impl true
-  def handle_info({PubSub.Broadcast, Preference, {:timezone, timezone}}, opts) do
-    {:noreply, Keyword.put(opts, :timezone, timezone)}
+  def handle_info({PubSub.Broadcast, Preference, {:timezone, timezone}}, ctx) do
+    {:noreply, Keyword.put(ctx, :timezone, timezone)}
   end
 
   @impl true
-  def handle_info({PubSub.Broadcast, Preference, _pair}, opts) do
-    {:noreply, opts}
+  def handle_info({PubSub.Broadcast, Preference, _pair}, ctx) do
+    {:noreply, ctx}
   end
 
   defp find_runnable_tasks(scheduled_tasks, :hourly, datetime) do
