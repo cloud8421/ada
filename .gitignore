@@ -26,3 +26,5 @@ erl_crash.dump
 
 /priv/static/web-ui
 /ada
+
+/monitoring/data/influxdb
