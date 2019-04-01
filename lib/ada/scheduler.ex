@@ -27,19 +27,19 @@ defmodule Ada.Scheduler do
     PubSub.publish(Ada.ScheduledTask.Start, scheduled_task)
 
     case :timer.tc(ScheduledTask, :run, [scheduled_task, ctx]) do
-      {elapsed_us, :ok} ->
+      {duration_ms, :ok} ->
         PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
-        track_success(scheduled_task, elapsed_us)
+        track_success(scheduled_task, duration_ms)
         Logger.info(fn -> "evt=st.ok id=#{scheduled_task.id}" end)
 
-      {elapsed_us, {:ok, _value}} ->
+      {duration_ms, {:ok, _value}} ->
         PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
-        track_success(scheduled_task, elapsed_us)
+        track_success(scheduled_task, duration_ms)
         Logger.info(fn -> "evt=st.ok id=#{scheduled_task.id}" end)
 
-      {elapsed_us, error} ->
+      {duration_ms, error} ->
         PubSub.publish(Ada.ScheduledTask.End, scheduled_task)
-        track_error(scheduled_task, error, elapsed_us)
+        track_error(scheduled_task, error, duration_ms)
         Logger.error(fn -> "evt=st.error id=#{scheduled_task.id} reason=#{inspect(error)}" end)
         error
     end
@@ -132,28 +132,22 @@ defmodule Ada.Scheduler do
     PubSub.subscribe(Preference)
   end
 
-  defp track_success(scheduled_task, elapsed_us) do
-    duration = to_ms(elapsed_us)
-
+  defp track_success(scheduled_task, duration_ms) do
     meta = %{
       task_id: scheduled_task.id,
       workflow: scheduled_task.workflow_name
     }
 
-    :telemetry.execute([:scheduler, :run, :ok], %{duration: duration}, meta)
+    :telemetry.execute([:scheduler, :run, :ok], %{duration: duration_ms}, meta)
   end
 
-  defp track_error(scheduled_task, reason, elapsed_us) do
-    duration = to_ms(elapsed_us)
-
+  defp track_error(scheduled_task, reason, duration_ms) do
     meta = %{
       task_id: scheduled_task.id,
       workflow: scheduled_task.workflow_name,
       reason: reason
     }
 
-    :telemetry.execute([:scheduler, :run, :error], %{duration: duration}, meta)
+    :telemetry.execute([:scheduler, :run, :error], %{duration: duration_ms}, meta)
   end
-
-  defp to_ms(us), do: div(us, 1000)
 end

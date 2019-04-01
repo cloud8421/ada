@@ -114,27 +114,23 @@ defmodule Ada.HTTPClient do
     |> process_response(meta)
   end
 
-  defp process_response({elapsed_us, {:ok, result}}, meta) do
+  defp process_response({duration_ms, {:ok, result}}, meta) do
     {{_, status, _}, headers, body} = result
-    duration = to_ms(elapsed_us)
 
-    track_success(meta, status, body, duration)
+    track_success(meta, status, body, duration_ms)
 
     headers =
       Enum.map(headers, fn {k, v} ->
         {List.to_string(k), List.to_string(v)}
       end)
 
-    %Response{status_code: status, headers: headers, body: body, duration: duration}
+    %Response{status_code: status, headers: headers, body: body, duration: duration_ms}
   end
 
-  defp process_response({elapsed_us, {:error, reason}}, meta) do
-    duration = to_ms(elapsed_us)
-    track_failure(reason, meta, duration)
-    %ErrorResponse{message: reason, duration: duration}
+  defp process_response({duration_ms, {:error, reason}}, meta) do
+    track_failure(reason, meta, duration_ms)
+    %ErrorResponse{message: reason, duration: duration_ms}
   end
-
-  defp to_ms(us), do: div(us, 1000)
 
   defp track_success(meta, status, body, duration) do
     uri = URI.parse(meta.url)
