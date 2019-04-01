@@ -138,7 +138,7 @@ defmodule Ada.Scheduler do
       workflow: scheduled_task.workflow_name
     }
 
-    :telemetry.execute([:scheduler, :run, :ok], %{duration: duration_ms}, meta)
+    :telemetry.execute([:scheduler, :execution, :ok], %{duration: duration_ms}, meta)
   end
 
   defp track_error(scheduled_task, reason, duration_ms) do
@@ -148,6 +148,6 @@ defmodule Ada.Scheduler do
       reason: reason
     }
 
-    :telemetry.execute([:scheduler, :run, :error], %{duration: duration_ms}, meta)
+    :telemetry.execute([:scheduler, :execution, :error], %{duration: duration_ms}, meta)
   end
 end
