@@ -19,6 +19,10 @@ defmodule Ada.Setup do
     preferences
   end
 
+  def collect_vm_metrics! do
+    Ada.Metrics.Vm.start()
+  end
+
   defp db_file, do: Application.get_env(:ada, Ada.Repo)[:database]
 
   defp migrations_path(app, repo) do

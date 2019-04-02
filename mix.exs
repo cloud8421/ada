@@ -35,7 +35,8 @@ defmodule Ada.MixProject do
   def application do
     [
       mod: {Ada.Application, []},
-      extra_applications: [:logger, :runtime_tools, :inets, :ssl]
+      extra_applications: [:logger, :runtime_tools, :inets, :ssl],
+      included_applications: [:vmstats]
     ]
   end
 
@@ -52,6 +53,7 @@ defmodule Ada.MixProject do
       {:ring_logger, "~> 0.4"},
       {:toolshed, "~> 0.2"},
       {:ex_cli, "~> 0.1.6"},
+      {:vmstats, "~> 2.3"},
       {:telemetry, "~> 0.4.0"},
       {:statix, "~> 1.1"},
       {:nerves_runtime, "~> 0.6", targets: @all_targets},

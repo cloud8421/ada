@@ -12,6 +12,7 @@ defmodule Ada.Application do
     Application.ensure_all_started(:ranch)
     Ada.Setup.ensure_data_directory!()
     Ada.Setup.ensure_migrations!()
+    Ada.Setup.collect_vm_metrics!()
     preferences = Ada.Setup.load_preferences!()
 
     children = common_children(preferences) ++ children(@target, preferences)
