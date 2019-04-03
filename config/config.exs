@@ -21,9 +21,25 @@ get_env_int = fn var ->
   end
 end
 
+get_env_charlist = fn var ->
+  case System.get_env(var) do
+    nil -> nil
+    string -> String.to_charlist(string)
+  end
+end
+
 config :statix,
-  host: System.get_env("STATSD_HOST") || "localhost",
+  host: System.get_env("STATSD_HOST") || "127.0.0.1",
   port: get_env_int.("STATSD_PORT") || 8125
+
+config :logger, Logger.Backends.Telegraf,
+  level: :info,
+  facility: :local1,
+  appid: "ada",
+  format: "$message",
+  metadata: :all,
+  host: get_env_charlist.("SYSLOG_HOST") || '127.0.0.1',
+  port: get_env_int.("SYSLOG_PORT") || 6514
 
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

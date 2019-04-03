@@ -5,7 +5,7 @@ config :ada, http_port: 4000
 if Mix.env() == :test do
   config :logger, level: :error, backends: []
 else
-  config :logger, backends: [:console]
+  config :logger, backends: [:console, Logger.Backends.Telegraf]
 end
 
 config :tzdata, :data_dir, Path.expand("../data/#{Mix.env()}/tz_data", __DIR__)
