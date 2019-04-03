@@ -56,6 +56,7 @@ defmodule Ada.MixProject do
       {:vmstats, "~> 2.3"},
       {:telemetry, "~> 0.4.0"},
       {:statix, "~> 1.1"},
+      {:ex_doc, "~> 0.20.0", only: :dev, runtime: false},
       {:nerves_runtime, "~> 0.6", targets: @all_targets},
       {:nerves_init_gadget, "~> 0.4", targets: @all_targets},
       {:nerves_time, "~> 0.2.0", targets: @all_targets},
