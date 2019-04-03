@@ -22,8 +22,6 @@ config :shoehorn,
 # configuring ring_logger.
 
 config :logger,
-  handle_otp_reports: true,
-  handle_sasl_reports: true,
   backends: [RingLogger]
 
 # Authorize the device to receive firmware using your public key.
