@@ -35,12 +35,11 @@ defmodule Ada.Application do
       {Ada.Metrics.Reporter, engine: Ada.Metrics.Engine},
       Ada.PubSub,
       Ada.TimeKeeper,
-      {Ada.Repo, []},
+      Ada.Repo,
       {Task.Supervisor, name: Ada.TaskSupervisor},
-      {Ada.Scheduler,
-       [repo: Ada.Repo, email_api_client: Ada.Email.ApiClient, timezone: timezone]},
+      {Ada.Scheduler, repo: Ada.Repo, email_api_client: Ada.Email.ApiClient, timezone: timezone},
       {Ada.Backup.Uploader,
-       [repo: Ada.Repo, strategy: Ada.Backup.Strategy.Dropbox, timezone: timezone]},
+       repo: Ada.Repo, strategy: Ada.Backup.Strategy.Dropbox, timezone: timezone},
       {Ada.HTTP.Listener, listener_opts(@env, @target, preferences)}
     ]
   end
