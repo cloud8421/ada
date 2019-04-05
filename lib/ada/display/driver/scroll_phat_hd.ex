@@ -34,6 +34,11 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
   end
 
   @impl true
+  def default_content do
+    Matrix.new(@height, @width, 0)
+  end
+
+  @impl true
   def set_buffer(buffer) do
     GenServer.call(__MODULE__, {:set_buffer, buffer})
   end

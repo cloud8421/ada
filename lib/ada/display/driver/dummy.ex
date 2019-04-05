@@ -4,6 +4,11 @@ defmodule Ada.Display.Driver.Dummy do
   require Logger
 
   @impl true
+  def default_content do
+    Matrix.new(7, 17, 0)
+  end
+
+  @impl true
   def set_buffer(buffer) do
     Logger.debug(fn ->
       """

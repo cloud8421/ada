@@ -1,11 +1,33 @@
 defmodule Ada.Display do
-  @behaviour :gen_statem
+  @moduledoc """
+  Supports the following contents:
 
-  @default_content ' ADA'
+  1. Static
+
+      {:static, buffer}
+
+  2. Cyclic
+
+      {:cyclic, [{buffer, duration_ms}]}
+
+  As an example:
+
+      Ada.Display.set_content(
+        {:cycle,
+         [
+           {Ada.UI.Helpers.chars_to_matrix('A   '), 200},
+           {Ada.UI.Helpers.chars_to_matrix(' A  '), 200},
+           {Ada.UI.Helpers.chars_to_matrix('  A '), 200},
+           {Ada.UI.Helpers.chars_to_matrix('   A'), 200}
+         ]}
+      )
+  """
+
+  @behaviour :gen_statem
 
   defstruct driver: Ada.Display.Driver.Dummy,
             brightness: 1,
-            content: @default_content
+            content: nil
 
   ################################################################################
   ################################## PUBLIC API ##################################
@@ -60,7 +82,7 @@ defmodule Ada.Display do
   def init(opts) do
     driver = Keyword.get(opts, :driver, DummyDriver)
 
-    data = %__MODULE__{driver: driver}
+    data = %__MODULE__{driver: driver, content: driver.default_content()}
 
     {:ok, :off, data}
   end
