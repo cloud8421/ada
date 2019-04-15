@@ -1,4 +1,5 @@
 defmodule Ada.UI.Helpers do
+  @moduledoc false
   @height 7
   @separator Matrix.new(@height, 1, 0)
 

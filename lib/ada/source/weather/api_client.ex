@@ -1,4 +1,5 @@
 defmodule Ada.Source.Weather.ApiClient do
+  @moduledoc false
   @base_url "https://api.forecast.io"
   @exclude_opts "flags"
   @unit "si"

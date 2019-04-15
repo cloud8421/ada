@@ -1,4 +1,5 @@
 defmodule Ada.Schema.Preference do
+  @moduledoc false
   use Ecto.Schema
 
   @derive {Jason.Encoder, except: [:__struct__, :__meta__]}

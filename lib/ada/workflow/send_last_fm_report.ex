@@ -1,4 +1,5 @@
 defmodule Ada.Workflow.SendLastFmReport do
+  @moduledoc false
   @behaviour Ada.Workflow
 
   alias Ada.Schema.User

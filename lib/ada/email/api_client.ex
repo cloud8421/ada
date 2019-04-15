@@ -1,4 +1,5 @@
 defmodule Ada.Email.ApiClient do
+  @moduledoc false
   @base_url "https://api.sendgrid.com/v3"
   @api_token System.get_env("SENDGRID_API_TOKEN")
 

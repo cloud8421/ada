@@ -1,4 +1,5 @@
 defmodule Ada.Source.Weather do
+  @moduledoc false
   alias Ada.Source.Weather.ApiClient
 
   def get(params) do

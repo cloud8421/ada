@@ -1,4 +1,5 @@
 defmodule Ada.Backup.Strategy.Dropbox do
+  @moduledoc false
   @behaviour Ada.Backup.Strategy
 
   @api_token System.get_env("DROPBOX_API_TOKEN")

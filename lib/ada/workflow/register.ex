@@ -1,4 +1,5 @@
 defmodule Ada.Workflow.Register do
+  @moduledoc false
   @own_name Module.split(__MODULE__)
 
   def all do

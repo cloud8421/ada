@@ -1,4 +1,5 @@
 defmodule Ada.Metrics.Reporter do
+  @moduledoc false
   use GenServer
 
   require Logger

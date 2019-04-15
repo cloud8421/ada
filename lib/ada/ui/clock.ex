@@ -1,4 +1,5 @@
 defmodule Ada.UI.Clock do
+  @moduledoc false
   alias Ada.UI.Helpers
 
   def render(datetime) do

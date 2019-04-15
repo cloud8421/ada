@@ -1,4 +1,5 @@
 defmodule Ada.HTTP.Handler.Location.Activate do
+  @moduledoc false
   def init(req, ctx) do
     {:cowboy_rest, req, {:no_location, ctx}}
   end

@@ -1,4 +1,5 @@
 defmodule Ada.HTTP.Router do
+  @moduledoc false
   alias Ada.{HTTP.Handler, Schema}
 
   def dispatch(opts) do

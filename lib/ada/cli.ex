@@ -1,4 +1,5 @@
 defmodule Ada.CLI do
+  @moduledoc false
   use ExCLI.DSL, escript: true
 
   alias Ada.{CLI.Helpers, CLI.Format, CRUD}

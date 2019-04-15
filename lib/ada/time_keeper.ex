@@ -1,4 +1,5 @@
 defmodule Ada.TimeKeeper do
+  @moduledoc false
   use GenServer
 
   def start_link(_) do

@@ -1,4 +1,5 @@
 defmodule Ada.HTTP.Listener do
+  @moduledoc false
   require Logger
 
   def child_spec(ctx) do

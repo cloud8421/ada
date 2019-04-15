@@ -1,4 +1,5 @@
 defmodule Ada.Preferences do
+  @moduledoc false
   alias Ada.{Repo, Schema.Preference}
   import Ecto.Query
 

@@ -1,4 +1,5 @@
 defmodule Ada.HTTP.Handler.Display.Brightness do
+  @moduledoc false
   def init(req, ctx) do
     {:cowboy_rest, req, ctx}
   end

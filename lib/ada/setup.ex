@@ -1,4 +1,5 @@
 defmodule Ada.Setup do
+  @moduledoc false
   def ensure_data_directory! do
     db_file()
     |> Path.dirname()

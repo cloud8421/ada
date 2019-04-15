@@ -1,4 +1,5 @@
 defmodule Ada.Display.Driver.Dummy do
+  @moduledoc false
   @behaviour Ada.Display.Driver
 
   require Logger

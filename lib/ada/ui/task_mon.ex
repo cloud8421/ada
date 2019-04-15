@@ -1,4 +1,5 @@
 defmodule Ada.UI.TaskMon do
+  @moduledoc false
   alias Ada.UI.Helpers
 
   def render(running_tasks) do

@@ -1,4 +1,5 @@
 defmodule Ada.Display.Driver.ScrollPhatHD do
+  @moduledoc false
   use GenServer
   @behaviour Ada.Display.Driver
 

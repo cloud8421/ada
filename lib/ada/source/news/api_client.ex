@@ -1,10 +1,12 @@
 defmodule Ada.Source.News.ApiClient do
+  @moduledoc false
   @base_url "http://content.guardianapis.com"
   @api_key System.get_env("GUARDIAN_API_KEY")
 
   alias Ada.HTTPClient
 
   defmodule Story do
+    @moduledoc false
     defstruct title: nil,
               description: nil,
               thumbnail: nil,

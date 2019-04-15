@@ -1,4 +1,5 @@
 defmodule Ecto.ETF do
+  @moduledoc false
   @behaviour Ecto.Type
 
   # See http://erlang.org/doc/apps/erts/erl_ext_dist.html#id95128

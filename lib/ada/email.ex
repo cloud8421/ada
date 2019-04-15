@@ -1,4 +1,5 @@
 defmodule Ada.Email do
+  @moduledoc false
   @default_from "ada@fullyforged.com"
   @default_from_name "Ada"
 

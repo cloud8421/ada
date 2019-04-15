@@ -1,4 +1,5 @@
 defmodule Ada.CLI.Format.LastFm do
+  @moduledoc false
   alias IO.ANSI
 
   @break "\n"

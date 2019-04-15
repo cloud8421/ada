@@ -1,4 +1,5 @@
 defmodule Ada.Display.Driver do
+  @moduledoc false
   @type buffer :: term()
   @type brightness :: 1..255
 

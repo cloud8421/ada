@@ -1,4 +1,5 @@
 defmodule Ada.Metrics.Vm do
+  @moduledoc false
   @behaviour :vmstats_sink
 
   def start do

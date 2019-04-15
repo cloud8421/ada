@@ -1,4 +1,5 @@
 defmodule Ada.Schema.ScheduledTask do
+  @moduledoc false
   use Ecto.Schema
 
   alias Ada.{Schema.Frequency, Workflow}

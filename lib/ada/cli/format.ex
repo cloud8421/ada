@@ -1,4 +1,5 @@
 defmodule Ada.CLI.Format do
+  @moduledoc false
   @break "\n"
 
   def list_users(users) do

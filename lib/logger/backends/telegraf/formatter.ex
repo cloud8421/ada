@@ -1,4 +1,5 @@
 defmodule Logger.Backends.Telegraf.Formatter do
+  @moduledoc false
   use Bitwise
 
   def format(level, msg, ts, md, state) do

@@ -1,4 +1,5 @@
 defmodule Ada.Workflow.SendNewsByTag do
+  @moduledoc false
   @behaviour Ada.Workflow
   alias Ada.Schema.User
   alias Ada.Source.News

@@ -1,4 +1,5 @@
 defmodule Ada.Workflow.SendWeatherForecast do
+  @moduledoc false
   @behaviour Ada.Workflow
   alias Ada.Schema.{Location, User}
   alias Ada.Source.Weather

@@ -1,4 +1,5 @@
 defmodule Ada.Source.LastFm.Track do
+  @moduledoc false
   defstruct [:artist, :album, :name, :listened_at]
 
   @type t :: %__MODULE__{

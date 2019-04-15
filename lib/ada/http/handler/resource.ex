@@ -1,4 +1,5 @@
 defmodule Ada.HTTP.Handler.Resource do
+  @moduledoc false
   def init(req, ctx) do
     {:cowboy_rest, req, {:no_resource, ctx}}
   end

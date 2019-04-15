@@ -1,4 +1,6 @@
 defmodule Ada.CLI.Helpers do
+  @moduledoc false
+
   def connect!(cli_node, target_node) when is_binary(target_node) do
     connect!(cli_node, String.to_atom(target_node))
   end

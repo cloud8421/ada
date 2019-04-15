@@ -1,4 +1,5 @@
 defmodule Ada.Email.Template do
+  @moduledoc false
   require EEx
 
   @templates_path Path.join([Path.expand(__DIR__), "templates"])

@@ -1,4 +1,5 @@
 defmodule Ada.Scheduler do
+  @moduledoc false
   use GenServer
 
   require Logger

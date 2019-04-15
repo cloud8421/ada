@@ -1,4 +1,5 @@
 defmodule Ada.Source.LastFm.ApiClient do
+  @moduledoc false
   @base_url "https://ws.audioscrobbler.com/2.0"
   @api_key System.get_env("LAST_FM_API_KEY")
 

@@ -1,4 +1,5 @@
 defmodule Ada.HTTP.Handler.Workflows do
+  @moduledoc false
   def init(req, ctx) do
     {:cowboy_rest, req, ctx}
   end

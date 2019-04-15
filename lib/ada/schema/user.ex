@@ -1,4 +1,5 @@
 defmodule Ada.Schema.User do
+  @moduledoc false
   use Ecto.Schema
 
   schema "users" do

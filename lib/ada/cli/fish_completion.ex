@@ -1,4 +1,5 @@
 defmodule Ada.CLI.FishCompletion do
+  @moduledoc false
   # https://gist.github.com/hasit/7f80cfee0d2cc789b75f4aaea40f37e0#file-buffalo-fish
 
   def render do

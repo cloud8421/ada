@@ -1,4 +1,5 @@
 defmodule Ecto.Module do
+  @moduledoc false
   @behaviour Ecto.Type
 
   def type, do: :string

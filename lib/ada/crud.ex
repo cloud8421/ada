@@ -1,4 +1,5 @@
 defmodule Ada.CRUD do
+  @moduledoc false
   @default_ctx [repo: Ada.Repo]
 
   def find(schema, id, ctx \\ @default_ctx) do

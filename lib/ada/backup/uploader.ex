@@ -1,4 +1,5 @@
 defmodule Ada.Backup.Uploader do
+  @moduledoc false
   use GenServer
 
   require Logger

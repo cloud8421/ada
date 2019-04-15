@@ -1,4 +1,5 @@
 defmodule Ada.UI do
+  @moduledoc false
   @behaviour :gen_statem
 
   require Logger

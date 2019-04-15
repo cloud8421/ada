@@ -1,4 +1,5 @@
 defmodule Ada.Source.LastFm do
+  @moduledoc false
   alias Ada.Source.LastFm.ApiClient
 
   def get_recent(params) do

@@ -1,4 +1,5 @@
 defmodule Ada.HTTP.Handler.RunScheduledTask do
+  @moduledoc false
   def init(req, ctx) do
     {:cowboy_rest, req, {:no_scheduled_task, ctx}}
   end

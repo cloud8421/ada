@@ -1,4 +1,5 @@
 defmodule Ada.PubSub do
+  @moduledoc false
   def child_spec(_opts) do
     Registry.child_spec(keys: :duplicate, name: Ada.PubSub)
   end
