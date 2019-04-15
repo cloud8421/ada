@@ -1,4 +1,4 @@
-.PHONY: deps.get deps.outdated rpi0.firmware rpi0.burn rpi0.push host.clean-and-test host.cli host.shell host.test host.setup ssh
+.PHONY: deps.get deps.outdated rpi0.firmware rpi0.burn rpi0.push host.clean-and-test host.cli host.shell host.test host.setup ci.docs ssh
 
 deps.get:
 	MIX_TARGET=rpi0 mix deps.get
@@ -38,6 +38,9 @@ host.setup:
 	mix local.hex --force
 	mix archive.install hex nerves_bootstrap --force
 	MIX_TARGET=host mix deps.get
+
+ci.docs:
+	mix docs -o public
 
 ssh:
 	ssh ada.local
