@@ -9,15 +9,12 @@ deps.outdated:
 	MIX_TARGET=host mix hex.outdated
 
 rpi0.firmware:
-	$(MAKE) -C web-ui prod
 	MIX_TARGET=rpi0 mix firmware
 
 rpi0.burn:
-	$(MAKE) -C web-ui prod
 	MIX_TARGET=rpi0 mix do firmware, firmware.burn
 
 rpi0.push:
-	$(MAKE) -C web-ui prod
 	MIX_TARGET=rpi0 mix firmware
 	./script/upload.sh ada.local _build/rpi0_dev/nerves/images/ada.fw
 

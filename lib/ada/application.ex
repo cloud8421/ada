@@ -40,7 +40,7 @@ defmodule Ada.Application do
       {Ada.Scheduler, repo: Ada.Repo, email_api_client: Ada.Email.ApiClient, timezone: timezone},
       {Ada.Backup.Uploader,
        repo: Ada.Repo, strategy: Ada.Backup.Strategy.Dropbox, timezone: timezone},
-      {Ada.HTTP.Listener, listener_opts(@env, @target, preferences)}
+      {Ada.HTTP.Listener, listener_opts(@env, preferences)}
     ]
   end
 
@@ -67,16 +67,12 @@ defmodule Ada.Application do
     ]
   end
 
-  defp listener_opts(env, target, preferences) do
+  defp listener_opts(env, preferences) do
     preferences ++
       [
         http_port: http_port(env),
         repo: Ada.Repo,
-        email_api_client: Ada.Email.ApiClient,
-        ui_path: ui_path(target)
+        email_api_client: Ada.Email.ApiClient
       ]
   end
-
-  defp ui_path(:host), do: 'static/web-ui/build'
-  defp ui_path(_target), do: 'static/web-ui/dist'
 end

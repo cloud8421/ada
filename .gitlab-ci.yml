@@ -25,12 +25,6 @@ core:cli:
     paths:
       - ada
 
-ui:build:
-  stage: test
-  image: buildpack-deps:stretch
-  script:
-    - cd web-ui && make --jobs=4
-
 pages:
   stage: deploy
   image: elixir:latest
