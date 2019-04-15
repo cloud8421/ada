@@ -1,4 +1,8 @@
 defmodule Ada.CLI.Helpers do
+  def connect!(cli_node, target_node) when is_binary(target_node) do
+    connect!(cli_node, String.to_atom(target_node))
+  end
+
   def connect!(cli_node, target_node) do
     {:ok, _} = :net_kernel.start([cli_node, :longnames])
 
