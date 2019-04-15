@@ -391,8 +391,8 @@ defmodule Ada.CLI do
 
       :ok = :rpc.call(target_node, Application, :stop, [:ada])
 
-      :ok = :rpc.call(target_node, Application, :ensure_all_started, [:ranch])
-      :ok = :rpc.call(target_node, Application, :ensure_all_started, [:ada])
+      {:ok, _} = :rpc.call(target_node, Application, :ensure_all_started, [:ranch])
+      {:ok, _} = :rpc.call(target_node, Application, :ensure_all_started, [:ada])
 
       IO.puts("DB file pushed")
     end
