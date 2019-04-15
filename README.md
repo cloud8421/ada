@@ -1,34 +1,34 @@
 # Ada
 
-**TODO: Add description**
+Ada is personal assistant designed to run on the [Pimoroni Scroll Bot](https://shop.pimoroni.com/products/scroll-bot-pi-zero-w-project-kit) (i.e. a [Raspberry Pi Zero W ](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) and a [Scroll pHAT HD](https://shop.pimoroni.com/products/scroll-phat-hd).
 
-## Targets
+It’s powered by [Nerves Project](https://nerves-project.org) and [Elixir](https://elixir-lang.org).
 
-Nerves applications produce images for hardware targets based on the
-`MIX_TARGET` environment variable. If `MIX_TARGET` is unset, `mix` builds an
-image that runs on the host (e.g., your laptop). This is useful for executing
-logic tests, running utilities, and debugging. Other targets are represented by
-a short name like `rpi3` that maps to a Nerves system image for that platform.
-All of this logic is in the generated `mix.exs` and may be customized. For more
-information about targets see:
+## Features
 
-https://hexdocs.pm/nerves/targets.html#content
+Ada fits a specific use case: a small device, using little energy, that helps me with things I do on a daily basis. Hardware wise, the Pimoroni kit is a perfect fit: it looks cool, has a low-fi screen that I can use to report basic useful information even in bright light conditions and I can pack it with me when I travel.
 
-## Getting Started
+At this point Ada support these workflows:
 
-To start your Nerves app:
-  * `export MIX_TARGET=my_target` or prefix every command with
-    `MIX_TARGET=my_target`. For example, `MIX_TARGET=rpi3`
-  * Install dependencies with `mix deps.get`
-  * Create firmware with `mix firmware`
-  * Burn to an SD card with `mix firmware.burn`
+- Email me Guardian News about a specific topic (via [theguardian / open platform](https://open-platform.theguardian.com/documentation/)
+- Email me the weather forecast for the day at a specific location (via [Dark Sky](https://darksky.net/dev))
+- Email me what I’ve listened to in the last day/week (via [Last.fm](https://www.last.fm/api))
 
-## Learn more
+Workflows can be scheduled at hourly, daily or weekly intervals, with configurable parameters like locations or email recipients.
 
-  * Official docs: https://hexdocs.pm/nerves/getting-started.html
-  * Official website: http://www.nerves-project.org/
-  * Discussion Slack elixir-lang #nerves ([Invite](https://elixir-slackin.herokuapp.com/))
-  * Source: https://github.com/nerves-project/nerves
+The display is used primarily as a digital clock, but it can display if one or more scheduled tasks are running.
+
+Ada’s timezone can be configured and its clock is synchronised automatically.
+
+## Interaction modes
+
+Ada can be controlled by command line UI.
+
+TODO on how to use
+
+## Setup
+
+TODO on how to get everything working.
 
 ## Commit legend
 

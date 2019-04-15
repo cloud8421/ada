@@ -20,6 +20,10 @@ defmodule Ada.MixProject do
       escript: [
         main_module: Ada.CLI,
         app: nil
+      ],
+      docs: [
+        main: "readme",
+        extras: ["README.md"]
       ]
     ]
   end
