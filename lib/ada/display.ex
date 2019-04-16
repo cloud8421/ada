@@ -2,15 +2,11 @@ defmodule Ada.Display do
   @moduledoc """
   Supports the following contents:
 
-  1. Static
+  ## Static
 
-      {:static, buffer}
+      Ada.Display.set_content({:static, Ada.UI.Helpers.chars_to_matrix('1234')})
 
-  2. Cyclic
-
-      {:cyclic, [{buffer, duration_ms}]}
-
-  As an example:
+  ## Cyclic
 
       Ada.Display.set_content(
         {:cycle,
