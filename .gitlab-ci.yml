@@ -9,6 +9,11 @@ core:test:
     paths:
       - deps
       - _build
+  artifacts:
+    reports:
+      junit: ada-junit-report.xml
+    paths:
+      - ada-junit-report.xml
 
 core:cli:
   stage: test

@@ -41,6 +41,14 @@ config :logger, Logger.Backends.Telegraf,
   host: get_env_charlist.("SYSLOG_HOST") || '127.0.0.1',
   port: get_env_int.("SYSLOG_PORT") || 6514
 
+if Mix.env() == :test do
+  config :junit_formatter,
+    report_file: "junit-report.xml",
+    report_dir: ".",
+    print_report_file: true,
+    prepend_project_name?: true
+end
+
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations
