@@ -1,43 +1,81 @@
-.PHONY: deps.get deps.outdated rpi0.firmware rpi0.burn rpi0.push host.clean-and-test host.cli host.shell host.test host.setup ci.docs ssh
+# SETTINGS
 
-deps.get:
-	MIX_TARGET=rpi0 mix deps.get
-	MIX_TARGET=host mix deps.get
+ADA_NODE := ada.local
 
-deps.outdated:
-	MIX_TARGET=rpi0 mix hex.outdated
-	MIX_TARGET=host mix hex.outdated
+# DEV TOOLCHAIN
 
-rpi0.firmware:
-	MIX_TARGET=rpi0 mix firmware
+# Installs tools and dependencies, produces a firmware file
+all: dev.setup rpi0.burn
+.PHONY: all
 
-rpi0.burn:
-	MIX_TARGET=rpi0 mix do firmware, firmware.burn
+# Installs tools and dependencies
+dev.setup: dev.base deps.get
+.PHONY: dev.setup
 
-rpi0.push:
-	MIX_TARGET=rpi0 mix firmware
-	./script/upload.sh ada.local _build/rpi0_dev/nerves/images/ada.fw
-
-host.clean-and-test:
-	MIX_TARGET=host MIX_ENV=test mix do ecto.reset, test
-
-host.cli:
-	MIX_TARGET=host mix escript.build
-
-host.test:
-	MIX_TARGET=host MIX_ENV=test mix test
-
-host.shell:
-	MIX_TARGET=host iex -S mix
-
-host.setup:
+# Installs base requirements
+dev.base:
 	mix local.rebar --force
 	mix local.hex --force
 	mix archive.install hex nerves_bootstrap --force
-	MIX_TARGET=host mix deps.get
+.PHONY: dev.base
 
+# DEPENDENCIES
+
+# Fetches dependencies
+deps.get:
+	MIX_TARGET=rpi0 mix deps.get
+	MIX_TARGET=host mix deps.get
+.PHONY: deps.get
+
+# Show outdated dependencies
+deps.outdated:
+	MIX_TARGET=rpi0 mix hex.outdated
+	MIX_TARGET=host mix hex.outdated
+.PHONY: deps.outdated
+
+# FIRMWARE MANAGEMENT
+
+# Produces the firmware file
+rpi0.firmware:
+	MIX_TARGET=rpi0 mix firmware
+.PHONY: rpi0.firmware
+
+# Produces the firmware file and burns it on a SD card
+rpi0.burn:
+	MIX_TARGET=rpi0 mix do firmware, firmware.burn
+.PHONY: rpi0.burn
+
+# Updates the firmware on the device over-the-air
+rpi0.push:
+	MIX_TARGET=rpi0 mix firmware
+	./script/upload.sh $(ADA_NODE) _build/rpi0_dev/nerves/images/ada.fw
+.PHONY: rpi0.push
+
+# Connects to the running Ada instance via SSH
+rpi0.ssh:
+	ssh $(ADA_NODE)
+.PHONY: rpi0.ssh
+
+# HOST TASKS
+
+# Produces the ada CLI remote control executable
+host.cli:
+	MIX_TARGET=host mix escript.build
+.PHONY: host.cli
+
+## Runs the test suite
+host.test:
+	MIX_TARGET=host MIX_ENV=test mix test
+.PHONY: host.test
+
+## Opens a local, interactive shell
+host.shell:
+	MIX_TARGET=host iex -S mix
+.PHONY: host.shell
+
+# CI
+
+## Produces documentation suitable for CI deployment
 ci.docs:
 	mix docs -o public
-
-ssh:
-	ssh ada.local
+.PHONY: ci.docs
