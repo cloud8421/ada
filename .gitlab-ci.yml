@@ -2,9 +2,9 @@ core:test:
   stage: test
   image: elixir:latest
   before_script:
-    - make dev.setup
+    - make ci.setup
   script:
-    - make host.test
+    - make ci.test
   cache:
     paths:
       - deps
@@ -19,7 +19,7 @@ core:cli:
   stage: test
   image: elixir:latest
   before_script:
-    - make dev.setup
+    - make ci.setup
   script:
     - make host.cli
   cache:
@@ -34,7 +34,7 @@ pages:
   stage: deploy
   image: elixir:latest
   before_script:
-    - make dev.setup
+    - make ci.setup
   script:
     - make ci.docs
   cache:

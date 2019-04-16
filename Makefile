@@ -75,6 +75,14 @@ host.shell:
 
 # CI
 
+## Installs needed tools and deps for CI
+ci.setup: dev.base
+	MIX_TARGET=host mix deps.get
+
+## Runs tests on CI
+ci.test: dev.base
+	MIX_TARGET=host MIX_ENV=test mix test
+
 ## Produces documentation suitable for CI deployment
 ci.docs:
 	mix docs -o public
