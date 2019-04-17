@@ -16,7 +16,7 @@ defmodule Ada.HTTP.IntegrationTest do
       response = H.json_get(@base_url <> "/locations")
       assert %H.Response{} = response
       assert 200 == response.status_code
-      assert [] == response.body
+      assert %{"data" => []} == response.body
     end
 
     test "with locations" do
@@ -24,7 +24,7 @@ defmodule Ada.HTTP.IntegrationTest do
       response = H.json_get(@base_url <> "/locations")
       assert %H.Response{} = response
       assert 200 == response.status_code
-      assert [response_location] = response.body
+      assert %{"data" => [response_location]} = response.body
       assert Map.get(response_location, "id") == location.id
       assert Map.get(response_location, "name") == location.name
     end
@@ -117,7 +117,7 @@ defmodule Ada.HTTP.IntegrationTest do
       response = H.json_get(@base_url <> "/users")
       assert %H.Response{} = response
       assert 200 == response.status_code
-      assert [] == response.body
+      assert %{"data" => []} == response.body
     end
 
     test "with users" do
@@ -125,7 +125,7 @@ defmodule Ada.HTTP.IntegrationTest do
       response = H.json_get(@base_url <> "/users")
       assert %H.Response{} = response
       assert 200 == response.status_code
-      assert [response_user] = response.body
+      assert %{"data" => [response_user]} = response.body
       assert Map.get(response_user, "id") == user.id
       assert Map.get(response_user, "name") == user.name
     end
@@ -196,7 +196,7 @@ defmodule Ada.HTTP.IntegrationTest do
       response = H.json_get(@base_url <> "/scheduled_tasks")
       assert %H.Response{} = response
       assert 200 == response.status_code
-      assert [] == response.body
+      assert %{"data" => []} == response.body
     end
 
     test "with scheduled_tasks" do
@@ -210,7 +210,7 @@ defmodule Ada.HTTP.IntegrationTest do
       response = H.json_get(@base_url <> "/scheduled_tasks")
       assert %H.Response{} = response
       assert 200 == response.status_code
-      assert [response_scheduled_task] = response.body
+      assert %{"data" => [response_scheduled_task]} = response.body
       assert Map.get(response_scheduled_task, "id") == scheduled_task.id
 
       assert Map.get(response_scheduled_task, "workflow_name") ==
@@ -312,23 +312,25 @@ defmodule Ada.HTTP.IntegrationTest do
       assert %H.Response{} = response
       assert 200 == response.status_code
 
-      assert [
-               %{
-                 "human_name" => "Send a Last.Fm report",
-                 "name" => "Ada.Workflow.SendLastFmReport",
-                 "requirements" => ["interval_in_hours", "user_id"]
-               },
-               %{
-                 "name" => "Ada.Workflow.SendNewsByTag",
-                 "human_name" => "Send News by tag",
-                 "requirements" => ["tag", "user_id"]
-               },
-               %{
-                 "name" => "Ada.Workflow.SendWeatherForecast",
-                 "human_name" => "Send Weather forecast",
-                 "requirements" => ["location_id", "user_id"]
-               }
-             ] == response.body
+      assert %{
+               "data" => [
+                 %{
+                   "human_name" => "Send a Last.Fm report",
+                   "name" => "Ada.Workflow.SendLastFmReport",
+                   "requirements" => ["interval_in_hours", "user_id"]
+                 },
+                 %{
+                   "name" => "Ada.Workflow.SendNewsByTag",
+                   "human_name" => "Send News by tag",
+                   "requirements" => ["tag", "user_id"]
+                 },
+                 %{
+                   "name" => "Ada.Workflow.SendWeatherForecast",
+                   "human_name" => "Send Weather forecast",
+                   "requirements" => ["location_id", "user_id"]
+                 }
+               ]
+             } == response.body
     end
   end
 

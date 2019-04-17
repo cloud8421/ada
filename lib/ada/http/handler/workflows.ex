@@ -15,10 +15,11 @@ defmodule Ada.HTTP.Handler.Workflows do
   end
 
   def to_json(req, ctx) do
-    body =
+    workflows =
       Ada.Workflow.Register.with_requirements()
       |> with_compact_requirements()
-      |> Jason.encode!()
+
+    body = Jason.encode!(%{data: workflows})
 
     {body, req, ctx}
   end

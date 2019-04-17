@@ -22,12 +22,8 @@ defmodule Ada.HTTP.Handler.Collection do
 
   def to_json(req, ctx) do
     schema = Keyword.fetch!(ctx, :schema)
-
-    body =
-      schema
-      |> Ada.CRUD.list(ctx)
-      |> Jason.encode!()
-
+    resources = Ada.CRUD.list(schema, ctx)
+    body = Jason.encode!(%{data: resources})
     {body, req, ctx}
   end
 
