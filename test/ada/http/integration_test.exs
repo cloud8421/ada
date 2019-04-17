@@ -389,6 +389,21 @@ defmodule Ada.HTTP.IntegrationTest do
     end
   end
 
+  describe "GET /swagger.json" do
+    test "returns the swagger definitions" do
+      response = H.get(@base_url <> "/swagger.json")
+
+      expected_contents =
+        :code.priv_dir(:ada)
+        |> Path.join("swagger.json")
+        |> File.read!()
+
+      assert %H.Response{} = response
+      assert 200 == response.status_code
+      assert expected_contents == response.body
+    end
+  end
+
   defp db_cleanup(_config) do
     on_exit(fn ->
       Ada.Repo.delete_all(Ada.Schema.User)

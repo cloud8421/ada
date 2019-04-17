@@ -19,6 +19,15 @@ dev.base:
 	mix archive.install hex nerves_bootstrap --force
 .PHONY: dev.base
 
+# Spins up a local swagger instance with api documentation
+dev.swagger:
+	docker run \
+		-p 8080:8080 \
+		-v '$(realpath ./priv/swagger.json):/var/ada/swagger.json' \
+		-e SWAGGER_JSON=/var/ada/swagger.json \
+	swaggerapi/swagger-ui
+.PHONY: dev.swagger
+
 # DEPENDENCIES
 
 # Fetches dependencies
