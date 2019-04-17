@@ -17,6 +17,8 @@ defmodule Ada.HTTPClient do
   end
 
   def json_get(url, headers \\ [], qs_params \\ []) do
+    headers = [{"Accept", "application/json"} | headers]
+
     case get(url, headers, qs_params) do
       %Response{} = response ->
         %{response | body: Jason.decode!(response.body)}
@@ -27,6 +29,8 @@ defmodule Ada.HTTPClient do
   end
 
   def json_post(url, data, headers \\ []) do
+    headers = [{"Accept", "application/json"} | headers]
+
     case post(url, Jason.encode!(data), headers, 'application/json') do
       %Response{body: <<>>} = response ->
         response

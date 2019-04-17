@@ -337,7 +337,7 @@ defmodule Ada.HTTP.IntegrationTest do
   ################################################################################
 
   describe "GET /display/brightness" do
-    test "with valid value" do
+    test "JSON format" do
       Ada.Display.set_brightness(20)
       response = H.json_get(@base_url <> "/display/brightness")
 
@@ -346,24 +346,41 @@ defmodule Ada.HTTP.IntegrationTest do
       assert %{"brightness" => 20} == response.body
     end
 
-    test "with invalid value" do
-      response = H.json_put(@base_url <> "/display/brightness", %{brightness: "invalid"})
+    test "TEXT format" do
+      Ada.Display.set_brightness(20)
+
+      response = H.get(@base_url <> "/display/brightness", [{"Accept", "text/plain"}])
 
       assert %H.Response{} = response
-      assert 400 == response.status_code
+      assert 200 == response.status_code
+      assert "20" == response.body
     end
   end
 
   describe "PUT /display/brightness" do
-    test "with valid value" do
+    test "JSON format, with valid value" do
       response = H.json_put(@base_url <> "/display/brightness", %{brightness: 10})
 
       assert %H.Response{} = response
       assert 204 == response.status_code
     end
 
-    test "with invalid value" do
+    test "JSON format, with invalid value" do
       response = H.json_put(@base_url <> "/display/brightness", %{brightness: "invalid"})
+
+      assert %H.Response{} = response
+      assert 400 == response.status_code
+    end
+
+    test "TEXT format, with valid value" do
+      response = H.put(@base_url <> "/display/brightness", "10", [], 'text/plain')
+
+      assert %H.Response{} = response
+      assert 204 == response.status_code
+    end
+
+    test "TEXT format, with invalid value" do
+      response = H.put(@base_url <> "/display/brightness", "invalid", [], 'text/plain')
 
       assert %H.Response{} = response
       assert 400 == response.status_code
