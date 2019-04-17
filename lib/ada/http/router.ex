@@ -15,7 +15,8 @@ defmodule Ada.HTTP.Router do
          collection_path('/scheduled_tasks', Schema.ScheduledTask, opts),
          resource_path('/scheduled_tasks', Schema.ScheduledTask, opts),
          {'/workflows', Handler.Workflows, opts},
-         {'/display/brightness', Handler.Display.Brightness, opts}
+         {'/display/brightness', Handler.Display.Brightness, opts},
+         {'/swagger.json', :cowboy_static, {:priv_file, :ada, 'swagger.json'}}
        ]}
     ])
   end

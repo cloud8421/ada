@@ -1,0 +1,793 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ADA",
+    "version": "1.0",
+    "description": "HTTP api to control ADA's settings.",
+    "contact": {
+      "email": "claudio@fullyforged.com",
+      "name": "Claudio Ortolina"
+    }
+  },
+  "paths": {
+    "/display/brightness": {
+      "get": {
+        "summary": "Returns the current brightness level",
+        "operationId": "get-display-brightness",
+        "responses": {
+          "200": {
+            "description": "The current brightness",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": 10
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "brightness": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 255,
+                      "example": 10
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Display"
+        ]
+      }
+    },
+    "/locations": {
+      "get": {
+        "summary": "Returns existing locations",
+        "operationId": "get-locations",
+        "responses": {
+          "200": {
+            "description": "The list of locations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Location"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Locations"
+        ]
+      },
+      "post": {
+        "summary": "Creates a new location",
+        "operationId": "create-new-location",
+        "requestBody": {
+          "description": "The location to create",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationAttributes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The newly created location",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Locations"
+        ]
+      }
+    },
+    "/locations/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the location to operate on",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Updates a location, found via its ID",
+        "requestBody": {
+          "description": "Updates for the location",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocationAttributes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Location updated successfully."
+          },
+          "400": {
+            "description": "Invalid location params."
+          }
+        },
+        "tags": [
+          "Locations"
+        ]
+      },
+      "delete": {
+        "summary": "Deletes a location, found via its ID",
+        "responses": {
+          "204": {
+            "description": "Location deleted successfully."
+          },
+          "404": {
+            "description": "Location not found."
+          }
+        },
+        "tags": [
+          "Locations"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Returns existing users",
+        "operationId": "get-users",
+        "responses": {
+          "200": {
+            "description": "The list of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "post": {
+        "summary": "Creates a new user",
+        "operationId": "create-new-user",
+        "requestBody": {
+          "description": "The user to create",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAttributes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The newly created user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the user to operate on",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Updates a user, found via its ID",
+        "requestBody": {
+          "description": "Updates for the user",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAttributes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "User updated successfully."
+          },
+          "400": {
+            "description": "Invalid user params."
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "summary": "Deletes a user, found via its ID",
+        "responses": {
+          "204": {
+            "description": "User deleted successfully."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/scheduled_tasks": {
+      "get": {
+        "summary": "Returns existing scheduled tasks",
+        "operationId": "get-scheduled-tasks",
+        "responses": {
+          "200": {
+            "description": "The list of scheduled tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ScheduledTask"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Scheduled Tasks"
+        ]
+      },
+      "post": {
+        "summary": "Create a new scheduled task",
+        "operationId": "create-scheduled-task",
+        "requestBody": {
+          "description": "The scheduled task to create",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduledTaskAttributes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The newly created scheduled task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduledTask"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Scheduled Tasks"
+        ]
+      }
+    },
+    "/scheduled_tasks/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the scheduled task to operate on",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Updates a scheduled task, found via its ID",
+        "requestBody": {
+          "description": "Updates for the scheduled task",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduledTaskAttributes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Scheduled task updated successfully."
+          },
+          "400": {
+            "description": "Invalid scheduled task params."
+          }
+        },
+        "tags": [
+          "Scheduled Tasks"
+        ]
+      },
+      "delete": {
+        "summary": "Deletes a scheduled task, found via its ID",
+        "responses": {
+          "204": {
+            "description": "Scheduled task deleted successfully."
+          },
+          "404": {
+            "description": "Scheduled task not found."
+          }
+        },
+        "tags": [
+          "Scheduled Tasks"
+        ]
+      }
+    },
+    "/scheduled_tasks/{id}/run": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the scheduled task to operate on",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Runs a scheduled task, found via its ID",
+        "responses": {
+          "200": {
+            "description": "Scheduled task run successfully."
+          }
+        },
+        "tags": [
+          "Scheduled Tasks"
+        ]
+      }
+    },
+    "/workflows": {
+      "get": {
+        "summary": "Returns available workflows",
+        "operationId": "get-workflows",
+        "responses": {
+          "200": {
+            "description": "The list of workflows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Workflow"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Workflows"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Location": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "lat",
+          "lng"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Home"
+          },
+          "lat": {
+            "type": "number",
+            "example": 40.989802
+          },
+          "lng": {
+            "type": "number",
+            "example": 29.02785
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2019-03-13T06:13:52.997185"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2019-03-13T06:13:52.997185"
+          }
+        }
+      },
+      "LocationAttributes": {
+        "type": "object",
+        "required": [
+          "name",
+          "lat",
+          "lng"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Home"
+          },
+          "lat": {
+            "type": "number",
+            "example": 40.989802
+          },
+          "lng": {
+            "type": "number",
+            "example": 29.02785
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "email"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Claudio"
+          },
+          "email": {
+            "type": "string",
+            "example": "claudio@fullyforged.com"
+          },
+          "last_fm_username": {
+            "type": "string",
+            "example": "cloud8421"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2019-03-13T06:13:52.997185"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2019-03-13T06:13:52.997185"
+          }
+        }
+      },
+      "UserAttributes": {
+        "type": "object",
+        "required": [
+          "name",
+          "email"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Claudio"
+          },
+          "email": {
+            "type": "string",
+            "example": "claudio@fullyforged.com"
+          }
+        }
+      },
+      "ScheduledTask": {
+        "type": "object",
+        "required": [
+          "id",
+          "params",
+          "frequency",
+          "workflow_name",
+          "workflow_human_name",
+          "transport",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "params": {
+            "$ref": "#/components/schemas/WorkflowParams"
+          },
+          "frequency": {
+            "$ref": "#/components/schemas/Frequency"
+          },
+          "workflow_name": {
+            "type": "string",
+            "example": "Ada.Workflow.SendLastFmReport"
+          },
+          "workflow_human_name": {
+            "type": "string",
+            "example": "Send a Last.Fm report"
+          },
+          "transport": {
+            "type": "string",
+            "enum": [
+              "email"
+            ],
+            "example": "email"
+          },
+          "version": {
+            "type": "integer",
+            "example": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2019-03-13T06:13:52.997185"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2019-03-13T06:13:52.997185"
+          }
+        }
+      },
+      "WorkflowParams": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "name",
+            "value"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "user_id"
+            },
+            "value": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "example": 1
+            }
+          }
+        }
+      },
+      "Frequency": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "day_of_week",
+          "hour",
+          "minute",
+          "second"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "bccada57-3088-43df-b70f-52290ac4cc03"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "hourly",
+              "daily",
+              "weekly"
+            ]
+          },
+          "day_of_week": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 7,
+            "example": 2
+          },
+          "hour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 23,
+            "example": 10
+          },
+          "minute": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 59,
+            "example": 30
+          },
+          "second": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 59,
+            "example": 0
+          }
+        }
+      },
+      "ScheduledTaskAttributes": {
+        "type": "object",
+        "required": [
+          "params",
+          "frequency",
+          "workflow_name",
+          "transport"
+        ],
+        "properties": {
+          "params": {
+            "$ref": "#/components/schemas/WorkflowParams"
+          },
+          "frequency": {
+            "$ref": "#/components/schemas/FrequencyAttributes"
+          },
+          "workflow_name": {
+            "type": "string",
+            "example": "Ada.Workflow.SendLastFmReport"
+          },
+          "transport": {
+            "type": "string",
+            "enum": [
+              "email"
+            ],
+            "example": "email"
+          }
+        }
+      },
+      "FrequencyAttributes": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "hourly",
+              "daily",
+              "weekly"
+            ]
+          },
+          "day_of_week": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 7,
+            "example": 2
+          },
+          "hour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 23,
+            "example": 10
+          },
+          "minute": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 59,
+            "example": 30
+          },
+          "second": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 59,
+            "example": 0
+          }
+        }
+      },
+      "Workflow": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Ada.Workflow.SendLastFmReport"
+          },
+          "human_name": {
+            "type": "string",
+            "example": "Send a Last.Fm report"
+          },
+          "requirements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "user_id",
+              "interval_in_hours"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://ada.local",
+      "variables": {},
+      "description": "Device"
+    },
+    {
+      "url": "http://localhost:4000",
+      "variables": {},
+      "description": "Host"
+    }
+  ]
+}

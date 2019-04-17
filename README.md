@@ -22,7 +22,7 @@ Ada’s timezone can be configured and its clock is synchronised automatically.
 
 ## Interaction modes
 
-Ada can be controlled by command line UI.
+Ada can be controlled by a command line UI and an HTTP API.
 
 TODO on how to use
 
