@@ -8,7 +8,8 @@ defmodule Ada.Source.News.ApiClient do
   defmodule Story do
     @moduledoc false
     defstruct title: nil,
-              description: nil,
+              body_html: nil,
+              body_text: nil,
               thumbnail: nil,
               url: nil,
               pub_date: nil
@@ -39,9 +40,12 @@ defmodule Ada.Source.News.ApiClient do
         |> Map.get("webPublicationDate")
         |> DateTime.from_iso8601()
 
+      body_html = get_in(story_data, ["fields", "body"])
+
       %Story{
         title: Map.get(story_data, "webTitle"),
-        description: get_in(story_data, ["fields", "body"]),
+        body_html: body_html,
+        body_text: Floki.text(body_html),
         thumbnail: get_in(story_data, ["fields", "thumbnail"]),
         url: Map.get(story_data, "webUrl"),
         pub_date: pub_date

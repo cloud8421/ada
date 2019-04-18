@@ -57,6 +57,7 @@ defmodule Ada.MixProject do
       {:ring_logger, "~> 0.4"},
       {:toolshed, "~> 0.2"},
       {:ex_cli, "~> 0.1.6"},
+      {:floki, "~> 0.21.0"},
       {:vmstats, "~> 2.3"},
       {:telemetry, "~> 0.4.0"},
       {:statix, "~> 1.1"},
