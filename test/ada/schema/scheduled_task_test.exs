@@ -2,29 +2,10 @@ defmodule Ada.Schema.ScheduledTaskTest do
   use ExUnit.Case, async: true
 
   alias Ada.Schema.{Frequency, ScheduledTask}
+  alias Ada.TestWorkflow
 
   defmodule TestEmailApiClient do
     def send_email(%Ada.Email{} = email), do: {:ok, email}
-  end
-
-  defmodule TestWorkflow do
-    @behaviour Ada.Workflow
-
-    @impl true
-    def human_name, do: "Test workflow"
-
-    @impl true
-    def requirements, do: %{name: :string}
-
-    @impl true
-    def fetch(params, _ctx) do
-      {:ok, %{name: String.upcase(params.name)}}
-    end
-
-    @impl true
-    def format(raw_data, :email, _ctx) do
-      {:ok, %Ada.Email{subject: raw_data.name}}
-    end
   end
 
   describe "matches_time?/2" do
