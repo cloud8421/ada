@@ -107,6 +107,10 @@ defmodule Ada.CLI.Format do
     Ada.CLI.Format.LastFm.format_report(result.report)
   end
 
+  def preview({:ok, result}, %{workflow_name: Ada.Workflow.SendNewsByTag}) do
+    Ada.CLI.Format.News.format_news(result.tag, result.stories)
+  end
+
   def preview({:ok, result}, _scheduled_task), do: result
 
   def preview(error, _scheduled_task) do
