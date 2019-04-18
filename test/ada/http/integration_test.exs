@@ -301,6 +301,29 @@ defmodule Ada.HTTP.IntegrationTest do
     end
   end
 
+  describe "PUT /scheduled_tasks/:id/run" do
+    test "with existing scheduled_task" do
+      scheduled_task =
+        Ada.Repo.insert!(%Ada.Schema.ScheduledTask{
+          workflow_name: Ada.TestWorkflow,
+          params: %{name: "Ada"},
+          frequency: %{}
+        })
+
+      response = H.json_put(@base_url <> "/scheduled_tasks/#{scheduled_task.id}/run", %{})
+
+      assert %H.Response{} = response
+      assert 400 == response.status_code
+    end
+
+    test "without scheduled_task" do
+      response = H.json_put(@base_url <> "/scheduled_tasks/999/run", %{})
+
+      assert %H.Response{} = response
+      assert 400 == response.status_code
+    end
+  end
+
   ################################################################################
   ################################## WORKFLOWS ###################################
   ################################################################################
