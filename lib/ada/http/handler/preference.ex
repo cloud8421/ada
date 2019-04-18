@@ -38,8 +38,9 @@ defmodule Ada.HTTP.Handler.Preference do
      ], req, ctx}
   end
 
-  def to_json(req, {name, _ctx} = state) do
-    value = Ada.Preferences.get(name)
+  def to_json(req, {name, ctx} = state) do
+    preferences_module = Keyword.fetch!(ctx, :preferences_module)
+    value = preferences_module.get(name)
     {Jason.encode!(%{value: value}), req, state}
   end
 
@@ -47,12 +48,13 @@ defmodule Ada.HTTP.Handler.Preference do
     {false, req, state}
   end
 
-  def from_json(req, {name, _ctx} = state) do
+  def from_json(req, {name, ctx} = state) do
+    preferences_module = Keyword.fetch!(ctx, :preferences_module)
     {:ok, encoded, req} = :cowboy_req.read_body(req)
 
     case Jason.decode(encoded) do
       {:ok, %{"value" => value}} ->
-        Ada.Preferences.set(name, value)
+        preferences_module.set(name, value)
         {true, req, state}
 
       _other_format_or_error ->

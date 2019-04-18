@@ -72,7 +72,8 @@ defmodule Ada.Application do
       [
         http_port: http_port(env),
         repo: Ada.Repo,
-        email_api_client: Ada.Email.ApiClient
+        email_api_client: Ada.Email.ApiClient,
+        preferences_module: Ada.Preferences
       ]
   end
 end
