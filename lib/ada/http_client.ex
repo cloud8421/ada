@@ -20,6 +20,9 @@ defmodule Ada.HTTPClient do
     headers = [{"Accept", "application/json"} | headers]
 
     case get(url, headers, qs_params) do
+      %Response{body: <<>>} = response ->
+        response
+
       %Response{} = response ->
         %{response | body: Jason.decode!(response.body)}
 

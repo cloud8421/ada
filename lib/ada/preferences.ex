@@ -5,8 +5,10 @@ defmodule Ada.Preferences do
 
   @names [:timezone]
 
+  defguard is_valid_name(name) when name in @names
+
   defguard is_valid_pair(name, value)
-           when name in @names and is_binary(value)
+           when is_valid_name(name) and is_binary(value)
 
   def load_defaults! do
     defaults()
@@ -24,7 +26,7 @@ defmodule Ada.Preferences do
     Repo.all(q)
   end
 
-  def get(name) when name in @names do
+  def get(name) when is_valid_name(name) do
     Repo.get(Preference, name).value
   end
 
@@ -35,6 +37,13 @@ defmodule Ada.Preferences do
     Repo.update!(changeset)
     Ada.PubSub.publish(Ada.Preference, {name, value})
   end
+
+  for name <- @names do
+    name_string = to_string(name)
+    def cast(unquote(name_string)), do: {:ok, unquote(name)}
+  end
+
+  def cast(_unsupported_name), do: {:error, :invalid_preference_name}
 
   defp defaults do
     Application.get_env(:ada, :default_preferences, [])
