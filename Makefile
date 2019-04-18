@@ -19,7 +19,8 @@ dev.base:
 	mix archive.install hex nerves_bootstrap --force
 .PHONY: dev.base
 
-# Spins up a local swagger instance with api documentation
+# Spins up a local swagger instance with api documentation.
+# Cannot be tried out because of CORS issues.
 dev.swagger:
 	docker run \
 		-p 8080:8080 \
