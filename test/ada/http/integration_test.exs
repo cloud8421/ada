@@ -389,6 +389,46 @@ defmodule Ada.HTTP.IntegrationTest do
     end
   end
 
+  describe "GET /preferences/name" do
+    test "with valid name" do
+      response = H.json_get(@base_url <> "/preferences/timezone")
+
+      assert %H.Response{} = response
+      assert 200 == response.status_code
+      assert %{"value" => _} = response.body
+    end
+
+    test "with invalid name" do
+      response = H.json_get(@base_url <> "/preferences/non-existent")
+
+      assert %H.Response{} = response
+      assert 404 == response.status_code
+    end
+  end
+
+  describe "PUT /preferences/name" do
+    test "with invalid name" do
+      response = H.json_put(@base_url <> "/preferences/non-existent", %{value: "my-value"})
+
+      assert %H.Response{} = response
+      assert 400 == response.status_code
+    end
+
+    test "with invalid value" do
+      response = H.json_put(@base_url <> "/preferences/timezone", %{})
+
+      assert %H.Response{} = response
+      assert 400 == response.status_code
+    end
+
+    test "with valid name and value" do
+      response = H.json_put(@base_url <> "/preferences/timezone", %{value: "Europe/London"})
+
+      assert %H.Response{} = response
+      assert 204 == response.status_code
+    end
+  end
+
   describe "GET /swagger.json" do
     test "returns the swagger definitions" do
       response = H.get(@base_url <> "/swagger.json")

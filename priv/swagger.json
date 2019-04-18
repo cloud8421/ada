@@ -118,6 +118,7 @@
       ],
       "put": {
         "summary": "Updates a location, found via its ID",
+        "operationId": "update-location",
         "requestBody": {
           "description": "Updates for the location",
           "required": true,
@@ -143,6 +144,7 @@
       },
       "delete": {
         "summary": "Deletes a location, found via its ID",
+        "operationId": "delete-location",
         "responses": {
           "204": {
             "description": "Location deleted successfully."
@@ -186,7 +188,7 @@
       },
       "post": {
         "summary": "Creates a new user",
-        "operationId": "create-new-user",
+        "operationId": "create-user",
         "requestBody": {
           "description": "The user to create",
           "required": true,
@@ -229,6 +231,7 @@
       ],
       "put": {
         "summary": "Updates a user, found via its ID",
+        "operationId": "update-user",
         "requestBody": {
           "description": "Updates for the user",
           "required": true,
@@ -254,6 +257,7 @@
       },
       "delete": {
         "summary": "Deletes a user, found via its ID",
+        "operationId": "delete-user",
         "responses": {
           "204": {
             "description": "User deleted successfully."
@@ -340,6 +344,7 @@
       ],
       "put": {
         "summary": "Updates a scheduled task, found via its ID",
+        "operationId": "update-scheduled-task",
         "requestBody": {
           "description": "Updates for the scheduled task",
           "required": true,
@@ -365,6 +370,7 @@
       },
       "delete": {
         "summary": "Deletes a scheduled task, found via its ID",
+        "operationId": "delete-scheduled-task",
         "responses": {
           "204": {
             "description": "Scheduled task deleted successfully."
@@ -392,6 +398,7 @@
       ],
       "put": {
         "summary": "Runs a scheduled task, found via its ID",
+        "operationId": "run-scheduled-task",
         "responses": {
           "200": {
             "description": "Scheduled task run successfully."
@@ -428,6 +435,67 @@
         },
         "tags": [
           "Workflows"
+        ]
+      }
+    },
+    "/preferences/{name}": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "description": "Name of the preference to operate on",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Gets a preference value, found via its name",
+        "operationId": "get-preference",
+        "responses": {
+          "200": {
+            "description": "The preference value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Preference"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Preference not found"
+          }
+        },
+        "tags": [
+          "Preferences"
+        ]
+      },
+      "put": {
+        "summary": "Updates a preference, found via its name",
+        "operationId": "set-preference",
+        "requestBody": {
+          "description": "new value",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Preference"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Preference updated successfully."
+          },
+          "400": {
+            "description": "Invalid value."
+          }
+        },
+        "tags": [
+          "Preferences"
         ]
       }
     }
@@ -773,6 +841,18 @@
               "user_id",
               "interval_in_hours"
             ]
+          }
+        }
+      },
+      "Preference": {
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "example": "Europe/London"
           }
         }
       }
