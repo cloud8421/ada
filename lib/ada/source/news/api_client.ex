@@ -34,12 +34,17 @@ defmodule Ada.Source.News.ApiClient do
     data
     |> get_in(["response", "results"])
     |> Enum.map(fn story_data ->
+      {:ok, pub_date, _} =
+        story_data
+        |> Map.get("webPublicationDate")
+        |> DateTime.from_iso8601()
+
       %Story{
         title: Map.get(story_data, "webTitle"),
         description: get_in(story_data, ["fields", "body"]),
         thumbnail: get_in(story_data, ["fields", "thumbnail"]),
         url: Map.get(story_data, "webUrl"),
-        pub_date: Map.get(story_data, "webPublicationDate")
+        pub_date: pub_date
       }
     end)
   end
