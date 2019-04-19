@@ -1,102 +1,63 @@
 defmodule Ada.CLI.Format.LastFm do
   @moduledoc false
-  alias IO.ANSI
-
-  @break "\n"
-  @space " "
-  @count_item "█"
-  @left_pad "  "
-  @dash "-"
-  @emdash "—"
-  @ellipsis "…"
+  alias Ada.CLI.Markup
 
   def format_report(report) do
     [
       title(report.local_now),
-      @break,
+      Markup.break(),
       format_now_playing(report.now_playing),
+      Markup.break(),
       format_most_listened_artist(report.most_listened_artist),
-      @break,
       format_count_by_hour(report.count_by_hour),
-      @break,
+      Markup.break(),
       format_tracks(report.tracks)
     ]
     |> :erlang.iolist_to_binary()
   end
 
   defp title(local_now) do
-    title = "Last.fm report"
-    report_datetime = format_report_date(local_now)
+    left = "Last.fm report"
+    right = format_report_date(local_now)
 
-    [
-      @break,
-      @left_pad,
-      ANSI.red(),
-      title,
-      ANSI.reset(),
-      @space,
-      String.pad_leading(
-        @space <> report_datetime,
-        80 - String.length(@left_pad <> title),
-        @emdash
-      ),
-      @break
-    ]
+    Markup.double_title(left, right, 72)
   end
 
   defp format_now_playing(:not_playing), do: []
 
   defp format_now_playing({:now_playing, track}) do
     [
-      @left_pad,
-      ANSI.cyan(),
-      "Now playing",
-      @break,
-      @left_pad,
-      ANSI.reset(),
-      format_track_item(track, @left_pad),
-      @break
+      Markup.h1("Now playing"),
+      Markup.left_pad(),
+      format_track_item(track, Markup.left_pad()),
+      Markup.break()
     ]
   end
 
   defp format_most_listened_artist(most_listened_artist) do
     [
-      @left_pad,
-      ANSI.cyan(),
-      "Most listened artist",
-      @break,
-      @left_pad,
-      ANSI.reset(),
-      most_listened_artist,
-      ANSI.reset(),
-      @break
+      Markup.h1("Most listened artist"),
+      Markup.p(most_listened_artist, 72)
     ]
   end
 
   defp format_count_by_hour(count_by_hour) do
     [
-      @left_pad,
-      ANSI.cyan(),
-      "Count by hour",
-      ANSI.reset(),
-      @break,
-      format_count_by_hour_items(count_by_hour),
-      ANSI.reset()
+      Markup.h1("Count by hour"),
+      format_count_by_hour_items(count_by_hour)
     ]
   end
 
   def format_count_by_hour_items(count_by_hour) do
     Enum.map(count_by_hour, fn {dt, count} ->
       [
-        @left_pad,
+        Markup.left_pad(),
         format_hour(dt),
-        @space,
-        ANSI.white(),
-        String.duplicate(@count_item, count),
-        @space,
+        Markup.space(),
+        Markup.bar(count),
+        Markup.space(),
         Integer.to_string(count),
-        ANSI.reset(),
-        @break
+        Markup.break()
       ]
     end)
   end
@@ -111,11 +72,7 @@ defmodule Ada.CLI.Format.LastFm do
 
   defp format_tracks(tracks) do
     [
-      @left_pad,
-      ANSI.cyan(),
-      "Tracks",
-      ANSI.reset(),
-      @break,
+      Markup.h1("Tracks"),
       format_track_items(tracks)
     ]
   end
@@ -123,42 +80,22 @@ defmodule Ada.CLI.Format.LastFm do
   defp format_track_items(tracks) do
     Enum.map(tracks, fn t ->
       [
-        @left_pad,
-        @dash,
-        @space,
-        format_track_item(t, @left_pad <> @left_pad)
+        Markup.left_pad(),
+        Markup.dash(),
+        format_track_item(t, Markup.left_pad() <> Markup.left_pad())
       ]
     end)
   end
 
   defp format_track_item(track, pad) do
     [
-      ANSI.yellow(),
-      track.artist,
-      ANSI.reset(),
-      @space,
-      @emdash,
-      @space,
-      ellipsis(track.name, 76 - String.length(track.artist)),
-      @break,
+      Markup.secondary(track.artist),
+      Markup.emdash(),
+      Markup.ellipsis(track.name, 72 - String.length(track.artist)),
+      Markup.break(),
       pad,
-      ANSI.green(),
-      ellipsis(track.album, 76),
-      ANSI.reset(),
-      @break
+      Markup.tertiary(Markup.ellipsis(track.album, 72)),
+      Markup.break()
     ]
-  end
-
-  defp ellipsis(string, max_length) do
-    if String.length(string) >= max_length do
-      truncated_string =
-        string
-        |> String.slice(0, max_length - 1)
-        |> String.trim_trailing()
-
-      truncated_string <> @ellipsis
-    else
-      string
-    end
   end
 end
