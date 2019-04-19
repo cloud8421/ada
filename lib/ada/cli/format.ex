@@ -111,6 +111,10 @@ defmodule Ada.CLI.Format do
     Ada.CLI.Format.News.format_news(result.tag, result.stories)
   end
 
+  def preview({:ok, result}, %{workflow_name: Ada.Workflow.SendWeatherForecast}) do
+    Ada.CLI.Format.Weather.format_report(result.weather_report, result.location)
+  end
+
   def preview({:ok, result}, _scheduled_task), do: result
 
   def preview(error, _scheduled_task) do
