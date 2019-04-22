@@ -41,10 +41,12 @@ defmodule Ada.Workflow do
   module.
   """
 
+  @type t :: module
   @type raw_data :: term()
   @type transport :: :email
   @type ctx :: Keyword.t()
   @type validation_errors :: [{atom(), Ecto.Changeset.error()}]
+  @type requirements :: %{optional(atom()) => term()}
 
   @doc "Returns a human readable workflow name"
   @callback human_name() :: String.t()
@@ -58,7 +60,7 @@ defmodule Ada.Workflow do
   <https://hexdocs.pm/ecto/2.2.9/Ecto.Schema.html#module-primitive-types> for a
   list of available types.
   """
-  @callback requirements() :: %{optional(atom()) => term()}
+  @callback requirements() :: requirements()
 
   @doc """
   Given some starting params, return data ready to be formatted.
@@ -89,7 +91,7 @@ defmodule Ada.Workflow do
   Params are validated and formatted data is checked for compatibility with the
   chosen transport.
   """
-  @spec run(module, map, transport, Keyword.t()) :: {:ok, Ada.Email.t()} | {:error, term()}
+  @spec run(t, map, transport, Keyword.t()) :: {:ok, Ada.Email.t()} | {:error, term()}
   def run(workflow_name, params, transport, ctx) do
     with {:ok, normalized_params} <- validate(workflow_name, params),
          {:ok, raw_data} <- workflow_name.fetch(normalized_params, ctx),
@@ -102,7 +104,7 @@ defmodule Ada.Workflow do
   @doc """
   Executes a workflow's fetch phase, returning the resulting raw data.
   """
-  @spec raw_data(module, map, Keyword.t()) :: {:ok, raw_data} | {:error, term}
+  @spec raw_data(t, map, Keyword.t()) :: {:ok, raw_data} | {:error, term}
   def raw_data(workflow_name, params, ctx) do
     case validate(workflow_name, params) do
       {:ok, normalized_params} ->
@@ -116,7 +118,7 @@ defmodule Ada.Workflow do
   @doc """
   Validates that the passed module name is actually a workflow.
   """
-  @spec valid_name?(module) :: boolean
+  @spec valid_name?(t) :: boolean
   def valid_name?(workflow_name) do
     Code.ensure_loaded?(workflow_name) and
       function_exported?(workflow_name, :requirements, 0) and
@@ -127,7 +129,7 @@ defmodule Ada.Workflow do
   @doc """
   Validates a map of params according to a workflows's requirements specification.
   """
-  @spec validate(module, map) :: {:ok, map} | {:error, :invalid_params, validation_errors}
+  @spec validate(t, map) :: {:ok, map} | {:error, :invalid_params, validation_errors}
   def validate(workflow_name, params) do
     changeset = validate_params(workflow_name, params)
 
@@ -142,7 +144,7 @@ defmodule Ada.Workflow do
   Normalizes a workflow name to string, avoiding issue in the conversion
   between a module atom and a string.
   """
-  @spec normalize_name(module | String.t()) :: String.t()
+  @spec normalize_name(t | String.t()) :: String.t()
   def normalize_name(workflow_name) when is_atom(workflow_name) do
     inspect(workflow_name)
   end
