@@ -15,7 +15,7 @@ defmodule Ada.Application do
     Ada.Setup.collect_vm_metrics!()
     preferences = Ada.Setup.load_preferences!()
 
-    children = common_children(preferences) ++ children(@target, preferences)
+    children = common_children(preferences) ++ children(preferences)
     opts = [strategy: :one_for_one, name: Ada.Supervisor]
     Supervisor.start_link(children, opts)
   end
@@ -44,27 +44,29 @@ defmodule Ada.Application do
     ]
   end
 
-  defp children(:host, preferences) do
-    timezone = Keyword.fetch!(preferences, :timezone)
+  if @target == :host do
+    defp children(preferences) do
+      timezone = Keyword.fetch!(preferences, :timezone)
 
-    [
-      {Ada.Display, driver: Ada.Display.Driver.Dummy},
-      {Ada.UI, display: Ada.Display, timezone: timezone}
-      # Starts a worker by calling: Ada.Worker.start_link(arg)
-      # {Ada.Worker, arg},
-    ]
-  end
+      [
+        {Ada.Display, driver: Ada.Display.Driver.Dummy},
+        {Ada.UI, display: Ada.Display, timezone: timezone}
+        # Starts a worker by calling: Ada.Worker.start_link(arg)
+        # {Ada.Worker, arg},
+      ]
+    end
+  else
+    defp children(preferences) do
+      timezone = Keyword.fetch!(preferences, :timezone)
 
-  defp children(_device_target, preferences) do
-    timezone = Keyword.fetch!(preferences, :timezone)
-
-    [
-      {Ada.Display.Driver.ScrollPhatHD, []},
-      {Ada.Display, driver: Ada.Display.Driver.ScrollPhatHD},
-      {Ada.UI, display: Ada.Display, timezone: timezone}
-      # Starts a worker by calling: Ada.Worker.start_link(arg)
-      # {Ada.Worker, arg},
-    ]
+      [
+        {Ada.Display.Driver.ScrollPhatHD, []},
+        {Ada.Display, driver: Ada.Display.Driver.ScrollPhatHD},
+        {Ada.UI, display: Ada.Display, timezone: timezone}
+        # Starts a worker by calling: Ada.Worker.start_link(arg)
+        # {Ada.Worker, arg},
+      ]
+    end
   end
 
   defp listener_opts(env, preferences) do

@@ -102,7 +102,7 @@ defmodule Ada.Workflow do
   @doc """
   Executes a workflow's fetch phase, returning the resulting raw data.
   """
-  @spec raw_data(module, map, Kewyord.t()) :: {:ok, raw_data} | {:error, term}
+  @spec raw_data(module, map, Keyword.t()) :: {:ok, raw_data} | {:error, term}
   def raw_data(workflow_name, params, ctx) do
     case validate(workflow_name, params) do
       {:ok, normalized_params} ->
