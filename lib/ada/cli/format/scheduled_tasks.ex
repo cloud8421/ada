@@ -3,6 +3,7 @@ defmodule Ada.CLI.Format.ScheduledTasks do
 
   def format_scheduled_tasks(scheduled_tasks, users, locations) do
     [
+      Markup.break(),
       Markup.title("Scheduled Tasks"),
       Markup.break(),
       Enum.map(scheduled_tasks, fn st -> format_scheduled_task(st, users, locations) end)
