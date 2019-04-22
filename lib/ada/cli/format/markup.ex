@@ -50,6 +50,19 @@ defmodule Ada.CLI.Markup do
     [WordWrap.paragraph(contents, max_length, @left_pad), @break]
   end
 
+  def list_item(name, values) when is_list(values) do
+    [
+      h2(name <> ":"),
+      Enum.map(values, fn {k, v} ->
+        [@left_pad, @left_pad, "- #{k}: #{v}", @break]
+      end)
+    ]
+  end
+
+  def list_item(name, value) do
+    [@left_pad, secondary(name <> ":"), @space, value, @break]
+  end
+
   def primary(contents) do
     ANSI.format([:cyan, contents], true)
   end
