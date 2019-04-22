@@ -63,6 +63,7 @@ defmodule Ada.MixProject do
       {:statix, "~> 1.1"},
       {:junit_formatter, "~> 3.0", only: :test},
       {:ex_doc, "~> 0.20.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.6", only: :dev, runtime: false},
       {:nerves_runtime, "~> 0.6", targets: @all_targets},
       {:nerves_init_gadget, "~> 0.4", targets: @all_targets},
       {:nerves_time, "~> 0.2.0", targets: @all_targets},
