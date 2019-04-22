@@ -12,6 +12,16 @@ defmodule Ada.Schema.Frequency do
     field :second, :integer, default: 0
   end
 
+  @type t :: %__MODULE__{
+          id: nil | String.t(),
+          type: String.t(),
+          day_of_week: 1..7,
+          hour: 0..23,
+          minute: 0..59,
+          second: 0..59
+        }
+
+  @spec changeset(t, map()) :: Ecto.Changeset.t()
   def changeset(frequency, params) do
     frequency
     |> Ecto.Changeset.cast(params, [:type, :day_of_week, :hour, :minute, :second])
@@ -22,10 +32,16 @@ defmodule Ada.Schema.Frequency do
     |> Ecto.Changeset.validate_inclusion(:second, 0..59)
   end
 
+  @spec hourly?(t) :: boolean()
   def hourly?(frequency), do: frequency.type == "hourly"
+
+  @spec daily?(t) :: boolean()
   def daily?(frequency), do: frequency.type == "daily"
+
+  @spec weekly?(t) :: boolean()
   def weekly?(frequency), do: frequency.type == "weekly"
 
+  @spec matches_time?(t, DateTime.t()) :: boolean()
   def matches_time?(frequency, datetime) do
     case frequency do
       %{type: "weekly", day_of_week: day_of_week, hour: hour} ->

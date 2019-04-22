@@ -10,12 +10,24 @@ defmodule Ada.Schema.User do
     timestamps()
   end
 
+  @type t :: %__MODULE__{
+          __meta__: term(),
+          id: String.t(),
+          name: String.t(),
+          email: String.t(),
+          last_fm_username: String.t(),
+          inserted_at: DateTime.t(),
+          updated_at: DateTime.t()
+        }
+
+  @spec changeset(t, map()) :: Ecto.Changeset.t()
   def changeset(user, params \\ %{}) do
     user
     |> Ecto.Changeset.cast(params, [:name, :email, :last_fm_username])
     |> Ecto.Changeset.validate_required([:name, :email])
   end
 
+  @spec gravatar_url(t) :: String.t()
   def gravatar_url(user) do
     "https://www.gravatar.com/avatar/" <> md5(user.email)
   end

@@ -47,6 +47,8 @@ defmodule Ada.Workflow do
   @type ctx :: Keyword.t()
   @type validation_errors :: [{atom(), Ecto.Changeset.error()}]
   @type requirements :: %{optional(atom()) => term()}
+  @type run_result :: {:ok, Ada.Email.t()} | {:error, term()}
+  @type raw_data_result :: {:ok, raw_data} | {:error, term()}
 
   @doc "Returns a human readable workflow name"
   @callback human_name() :: String.t()
@@ -91,7 +93,7 @@ defmodule Ada.Workflow do
   Params are validated and formatted data is checked for compatibility with the
   chosen transport.
   """
-  @spec run(t, map, transport, Keyword.t()) :: {:ok, Ada.Email.t()} | {:error, term()}
+  @spec run(t, map, transport, Keyword.t()) :: run_result()
   def run(workflow_name, params, transport, ctx) do
     with {:ok, normalized_params} <- validate(workflow_name, params),
          {:ok, raw_data} <- workflow_name.fetch(normalized_params, ctx),
@@ -104,7 +106,7 @@ defmodule Ada.Workflow do
   @doc """
   Executes a workflow's fetch phase, returning the resulting raw data.
   """
-  @spec raw_data(t, map, Keyword.t()) :: {:ok, raw_data} | {:error, term}
+  @spec raw_data(t, map, Keyword.t()) :: raw_data_result()
   def raw_data(workflow_name, params, ctx) do
     case validate(workflow_name, params) do
       {:ok, normalized_params} ->

@@ -16,6 +16,19 @@ defmodule Ada.Schema.ScheduledTask do
     timestamps()
   end
 
+  @type t :: %__MODULE__{
+          __meta__: term(),
+          id: String.t(),
+          version: pos_integer(),
+          workflow_name: Workflow.t(),
+          params: map(),
+          transport: Workflow.transport(),
+          frequency: Frequency.t(),
+          inserted_at: DateTime.t(),
+          updated_at: DateTime.t()
+        }
+
+  @spec changeset(t, map) :: Ecto.Changeset.t()
   def changeset(scheduled_task, params \\ %{}) do
     scheduled_task
     |> Ecto.Changeset.cast(params, [:version, :workflow_name, :params, :transport])
@@ -32,16 +45,19 @@ defmodule Ada.Schema.ScheduledTask do
   @doc """
   Returns true for an hourly task.
   """
+  @spec hourly?(t) :: bool()
   def hourly?(%__MODULE__{frequency: frequency}), do: Frequency.hourly?(frequency)
 
   @doc """
   Returns true for a daily task.
   """
+  @spec daily?(t) :: bool()
   def daily?(%__MODULE__{frequency: frequency}), do: Frequency.daily?(frequency)
 
   @doc """
   Returns true for a weekly task.
   """
+  @spec weekly?(t) :: bool()
   def weekly?(%__MODULE__{frequency: frequency}), do: Frequency.weekly?(frequency)
 
   @doc """
@@ -50,11 +66,13 @@ defmodule Ada.Schema.ScheduledTask do
   - same hour, same minute and zero seconds for a daily task
   - same minute and second for a hourly task
   """
+  @spec matches_time?(t, DateTime.t()) :: bool()
   def matches_time?(st, datetime), do: Frequency.matches_time?(st.frequency, datetime)
 
   @doc """
   Runs a scheduled task resolving the contained workflow.
   """
+  @spec run(t, Keyword.t()) :: Workflow.run_result()
   def run(st, ctx \\ []) do
     Workflow.run(st.workflow_name, st.params, st.transport, ctx)
   end
@@ -63,6 +81,7 @@ defmodule Ada.Schema.ScheduledTask do
   Previews the results of a scheduled task by looking at
   its raw data.
   """
+  @spec preview(t, Keyword.t()) :: Workflow.raw_data_result()
   def preview(st, ctx \\ []) do
     Workflow.raw_data(st.workflow_name, st.params, ctx)
   end

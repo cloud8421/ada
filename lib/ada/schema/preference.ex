@@ -11,6 +11,15 @@ defmodule Ada.Schema.Preference do
     timestamps()
   end
 
+  @type t :: %__MODULE__{
+          __meta__: term(),
+          name: nil | atom(),
+          value: nil | String.t(),
+          inserted_at: nil | DateTime.t(),
+          updated_at: nil | DateTime.t()
+        }
+
+  @spec changeset(t, map()) :: Ecto.Changeset.t()
   def changeset(preference, params \\ %{}) do
     preference
     |> Ecto.Changeset.cast(params, [:name, :value])
