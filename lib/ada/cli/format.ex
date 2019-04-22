@@ -1,23 +1,8 @@
 defmodule Ada.CLI.Format do
   @moduledoc false
-  @break "\n"
 
   def list_users(users) do
-    preamble = header("System Users")
-
-    list =
-      users
-      |> Enum.map(fn user ->
-        [
-          list_item("ID", user.id),
-          list_item("Name", user.name),
-          list_item("Email", user.email),
-          list_item("Last.fm", user.last_fm_username || "not set")
-        ]
-      end)
-      |> Enum.intersperse(@break)
-
-    :erlang.iolist_to_binary([preamble, @break, @break, list])
+    Ada.CLI.Format.Users.format_users(users)
   end
 
   def user_created({:ok, user}) do
@@ -124,9 +109,5 @@ defmodule Ada.CLI.Format do
 
   defp header(text) do
     IO.ANSI.magenta() <> text <> IO.ANSI.reset()
-  end
-
-  defp list_item(k, v) do
-    "#{IO.ANSI.yellow()}#{k}: #{IO.ANSI.white()}#{v}#{IO.ANSI.reset()}\n"
   end
 end
