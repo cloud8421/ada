@@ -60,6 +60,22 @@ defmodule Ada.CLI.Format do
     header("Error creating location: #{inspect(changeset.errors)}")
   end
 
+  def location_updated({:ok, location}) do
+    header("Updated location with ID #{location.id}")
+  end
+
+  def location_updated({:error, changeset}) do
+    header("Error updating location: #{inspect(changeset.errors)}")
+  end
+
+  def location_deleted({:ok, location}) do
+    header("Deleted location with ID #{location.id}")
+  end
+
+  def location_deleted({:error, changeset}) do
+    header("Error deleting location: #{inspect(changeset.errors)}")
+  end
+
   def scheduled_task_created({:ok, scheduled_task}) do
     header("Created scheduled_task with ID #{scheduled_task.id}")
   end

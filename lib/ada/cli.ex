@@ -180,6 +180,52 @@ defmodule Ada.CLI do
     end
   end
 
+  command :update_location do
+    option :target_node, aliases: [:t]
+    aliases [:ul]
+    description "Updates an existing location"
+    long_description "Updates an existing location"
+
+    argument(:id, type: :integer)
+    option(:lat)
+    option(:lng)
+    option(:name)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      location = :rpc.call(target_node, CRUD, :find, [Ada.Schema.Location, context.id])
+
+      target_node
+      |> :rpc.call(CRUD, :update, [Ada.Schema.Location, location, context])
+      |> Format.location_updated()
+      |> IO.puts()
+    end
+  end
+
+  command :delete_location do
+    option :target_node, aliases: [:t]
+    aliases [:dl]
+    description "Deletes a system location"
+    long_description "Deletes a system location"
+
+    argument(:id, type: :integer)
+
+    run context do
+      target_node = Map.get(context, :target_node, @default_target_node)
+
+      Helpers.connect!(@cli_node, target_node)
+
+      location = :rpc.call(target_node, CRUD, :find, [Ada.Schema.Location, context.id])
+
+      :rpc.call(target_node, CRUD, :delete, [location])
+      |> Format.location_deleted()
+      |> IO.puts()
+    end
+  end
+
   command :create_scheduled_task do
     option :target_node, aliases: [:t]
     aliases [:cst]
