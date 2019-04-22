@@ -1,7 +1,7 @@
 defmodule Ada.HTTP.IntegrationTest do
   use ExUnit.Case, async: true
 
-  alias Ada.HTTPClient, as: H
+  alias Ada.HTTP.Client, as: H
 
   @base_url "http://localhost:#{Ada.Application.http_port()}"
 

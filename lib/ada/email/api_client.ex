@@ -3,8 +3,6 @@ defmodule Ada.Email.ApiClient do
   @base_url "https://api.sendgrid.com/v3"
   @api_token System.get_env("SENDGRID_API_TOKEN")
 
-  alias Ada.HTTPClient
-
   def send_email(email) do
     payload =
       email
@@ -13,7 +11,7 @@ defmodule Ada.Email.ApiClient do
 
     url = @base_url <> "/mail/send"
 
-    case HTTPClient.post(url, payload, default_headers()) do
+    case Ada.HTTP.Client.post(url, payload, default_headers()) do
       resp = %{status_code: 202} ->
         {:ok, resp}
 

@@ -1,4 +1,4 @@
-defmodule Ada.HTTPClient do
+defmodule Ada.HTTP.Client do
   @moduledoc """
   Simple http client based on httpc.
   """

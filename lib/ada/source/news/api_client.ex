@@ -3,7 +3,7 @@ defmodule Ada.Source.News.ApiClient do
   @base_url "http://content.guardianapis.com"
   @api_key System.get_env("GUARDIAN_API_KEY")
 
-  alias Ada.HTTPClient
+  alias Ada.HTTP
 
   defmodule Story do
     @moduledoc false
@@ -19,14 +19,14 @@ defmodule Ada.Source.News.ApiClient do
     url = Path.join([@base_url, "search"])
     qs_params = %{"tag" => tag, "show-fields" => "body,thumbnail", "api-key" => @api_key}
 
-    case HTTPClient.json_get(url, [], qs_params) do
-      %HTTPClient.Response{status_code: 200, body: body} ->
+    case HTTP.Client.json_get(url, [], qs_params) do
+      %HTTP.Client.Response{status_code: 200, body: body} ->
         {:ok, parse_stories(body)}
 
-      %HTTPClient.Response{status_code: status_code, body: body} ->
+      %HTTP.Client.Response{status_code: status_code, body: body} ->
         {:error, {status_code, body}}
 
-      %HTTPClient.ErrorResponse{message: message} ->
+      %HTTP.Client.ErrorResponse{message: message} ->
         {:error, message}
     end
   end

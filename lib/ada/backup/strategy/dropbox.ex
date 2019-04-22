@@ -7,7 +7,7 @@ defmodule Ada.Backup.Strategy.Dropbox do
   @api_base_url "https://api.dropboxapi.com/2"
   @app_namespace "/ada-v1"
 
-  alias Ada.HTTPClient
+  alias Ada.HTTP
 
   @impl true
   def configured? do
@@ -16,17 +16,17 @@ defmodule Ada.Backup.Strategy.Dropbox do
 
   @impl true
   def list_files do
-    with %HTTPClient.Response{status_code: 200, body: body} <- do_list_files(),
+    with %HTTP.Client.Response{status_code: 200, body: body} <- do_list_files(),
          {:ok, decoded} <- Jason.decode(body) do
       decoded
       |> Map.get("entries")
       |> Enum.filter(fn e -> Map.get(e, ".tag") == "file" end)
       |> Enum.map(fn e -> Map.get(e, "path_display") end)
     else
-      %HTTPClient.Response{status_code: 200, body: body} ->
+      %HTTP.Client.Response{status_code: 200, body: body} ->
         Jason.decode(body)
 
-      %HTTPClient.Response{} = response ->
+      %HTTP.Client.Response{} = response ->
         {:error, response}
 
       error_response ->
@@ -36,11 +36,11 @@ defmodule Ada.Backup.Strategy.Dropbox do
 
   @impl true
   def upload_file(name, contents) do
-    with %HTTPClient.Response{status_code: 200, body: body} <- do_upload_file(name, contents),
+    with %HTTP.Client.Response{status_code: 200, body: body} <- do_upload_file(name, contents),
          {:ok, decoded} <- Jason.decode(body) do
       Map.fetch(decoded, "path_display")
     else
-      %HTTPClient.Response{} = response ->
+      %HTTP.Client.Response{} = response ->
         {:error, response}
 
       error ->
@@ -51,10 +51,10 @@ defmodule Ada.Backup.Strategy.Dropbox do
   @impl true
   def download_file(path) do
     case do_download_file(path) do
-      %HTTPClient.Response{status_code: 200, body: body} ->
+      %HTTP.Client.Response{status_code: 200, body: body} ->
         {:ok, body}
 
-      %HTTPClient.Response{} = response ->
+      %HTTP.Client.Response{} = response ->
         {:error, response}
 
       error_response ->
@@ -69,7 +69,7 @@ defmodule Ada.Backup.Strategy.Dropbox do
       "Authorization" => "Bearer #{@api_token}"
     }
 
-    HTTPClient.post(
+    HTTP.Client.post(
       @api_base_url <> "/files/list_folder",
       Jason.encode!(body),
       headers,
@@ -86,7 +86,7 @@ defmodule Ada.Backup.Strategy.Dropbox do
       "Dropbox-API-Arg" => Jason.encode!(dropbox_api_args)
     }
 
-    HTTPClient.post(
+    HTTP.Client.post(
       @content_base_url <> "/files/upload",
       contents,
       headers,
@@ -102,7 +102,7 @@ defmodule Ada.Backup.Strategy.Dropbox do
       "Dropbox-API-Arg" => Jason.encode!(dropbox_api_args)
     }
 
-    HTTPClient.post(
+    HTTP.Client.post(
       @content_base_url <> "/files/download",
       <<>>,
       headers,
