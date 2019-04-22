@@ -28,3 +28,6 @@ erl_crash.dump
 /ada
 
 /monitoring/data/influxdb
+
+/priv/plts/*.plt
+/priv/plts/*.plt.hash

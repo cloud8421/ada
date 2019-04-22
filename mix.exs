@@ -24,6 +24,9 @@ defmodule Ada.MixProject do
       docs: [
         main: "readme",
         extras: ["README.md"]
+      ],
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ]
     ]
   end
