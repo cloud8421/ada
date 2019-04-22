@@ -18,11 +18,14 @@ defmodule Ada.Workflow.SendNewsByTag do
   @impl true
   def fetch(params, ctx) do
     repo = Keyword.fetch!(ctx, :repo)
+    timezone = Keyword.fetch!(ctx, :timezone)
 
     with user when is_present(user) <- repo.get(User, params.user_id),
          tag <- Map.get(params, :tag),
-         {:ok, stories} <- News.get(%{tag: tag}) do
-      {:ok, %{stories: stories, tag: tag, user: user}}
+         {:ok, stories} <- News.get(%{tag: tag}),
+         stories <- localize_pub_date(stories, timezone),
+         most_recent_story <- find_most_recent_story(stories) do
+      {:ok, %{stories: stories, tag: tag, user: user, most_recent_story: most_recent_story}}
     end
   end
 
@@ -38,5 +41,15 @@ defmodule Ada.Workflow.SendNewsByTag do
       subject: "News for #{tag}",
       body_html: email_body
     }
+  end
+
+  defp find_most_recent_story(stories) do
+    Enum.max_by(stories, fn story -> DateTime.to_unix(story.pub_date, :millisecond) end)
+  end
+
+  def localize_pub_date(stories, timezone) do
+    Enum.map(stories, fn story ->
+      %{story | pub_date: Calendar.DateTime.shift_zone!(story.pub_date, timezone)}
+    end)
   end
 end

@@ -3,12 +3,19 @@ defmodule Ada.CLI.Format.News do
 
   alias Ada.CLI.Markup
 
-  def format_news(tag, stories) do
+  def format_news(tag, stories, most_recent_story) do
     [
-      Markup.title("News for #{tag}"),
+      title(tag, most_recent_story),
       Markup.break(),
       Enum.map(stories, &format_story/1)
     ]
+  end
+
+  defp title(tag, most_recent_story) do
+    left = "News for #{tag}"
+    right = format_news_pub_date(most_recent_story.pub_date)
+
+    Markup.double_title(left, right, 72)
   end
 
   defp format_story(story) do

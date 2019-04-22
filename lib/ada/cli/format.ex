@@ -108,7 +108,7 @@ defmodule Ada.CLI.Format do
   end
 
   def preview({:ok, result}, %{workflow_name: Ada.Workflow.SendNewsByTag}) do
-    Ada.CLI.Format.News.format_news(result.tag, result.stories)
+    Ada.CLI.Format.News.format_news(result.tag, result.stories, result.most_recent_story)
   end
 
   def preview({:ok, result}, %{workflow_name: Ada.Workflow.SendWeatherForecast}) do
