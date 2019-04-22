@@ -24,6 +24,8 @@ core:dialyzer:
     - make ci.dialyzer
   cache:
     paths:
+      - deps
+      - _build
       - priv/plts
 
 core:cli:
