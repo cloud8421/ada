@@ -1,80 +1,82 @@
 defmodule Ada.CLI.Format do
   @moduledoc false
 
+  alias Ada.CLI.Markup
+
   def list_users(users) do
     Ada.CLI.Format.Users.format_users(users)
   end
 
   def user_created({:ok, user}) do
-    header("Created User with ID #{user.id}")
+    display_result("Created User with ID #{user.id}")
   end
 
   def user_created({:error, changeset}) do
-    header("Error creating user: #{inspect(changeset.errors)}")
+    display_result("Error creating user: #{inspect(changeset.errors)}")
   end
 
   def user_updated({:ok, user}) do
-    header("Updated User with ID #{user.id}")
+    display_result("Updated User with ID #{user.id}")
   end
 
   def user_updated({:error, changeset}) do
-    header("Error updating user: #{inspect(changeset.errors)}")
+    display_result("Error updating user: #{inspect(changeset.errors)}")
   end
 
   def user_deleted({:ok, user}) do
-    header("Deleted User with ID #{user.id}")
+    display_result("Deleted User with ID #{user.id}")
   end
 
   def user_deleted({:error, changeset}) do
-    header("Error deleting user: #{inspect(changeset.errors)}")
+    display_result("Error deleting user: #{inspect(changeset.errors)}")
   end
 
   def brightness_changed(:ok) do
-    header("Brightness updated successfully")
+    display_result("Brightness updated successfully")
   end
 
   def brightness_changed(error) do
-    header("Error updating brightness: #{inspect(error)}")
+    display_result("Error updating brightness: #{inspect(error)}")
   end
 
   def location_created({:ok, location}) do
-    header("Created location with ID #{location.id}")
+    display_result("Created location with ID #{location.id}")
   end
 
   def location_created({:error, changeset}) do
-    header("Error creating location: #{inspect(changeset.errors)}")
+    display_result("Error creating location: #{inspect(changeset.errors)}")
   end
 
   def location_updated({:ok, location}) do
-    header("Updated location with ID #{location.id}")
+    display_result("Updated location with ID #{location.id}")
   end
 
   def location_updated({:error, changeset}) do
-    header("Error updating location: #{inspect(changeset.errors)}")
+    display_result("Error updating location: #{inspect(changeset.errors)}")
   end
 
   def location_deleted({:ok, location}) do
-    header("Deleted location with ID #{location.id}")
+    display_result("Deleted location with ID #{location.id}")
   end
 
   def location_deleted({:error, changeset}) do
-    header("Error deleting location: #{inspect(changeset.errors)}")
+    display_result("Error deleting location: #{inspect(changeset.errors)}")
   end
 
   def scheduled_task_created({:ok, scheduled_task}) do
-    header("Created scheduled_task with ID #{scheduled_task.id}")
+    display_result("Created scheduled_task with ID #{scheduled_task.id}")
   end
 
   def scheduled_task_created({:error, changeset}) do
-    header("Error creating scheduled_task: #{inspect(changeset.errors)}")
+    display_result("Error creating scheduled_task: #{inspect(changeset.errors)}")
   end
 
   def scheduled_task_updated({:ok, scheduled_task}) do
-    header("Updated Scheduled Task with ID #{scheduled_task.id}")
+    display_result("Updated Scheduled Task with ID #{scheduled_task.id}")
   end
 
   def scheduled_task_updated({:error, changeset}) do
-    header("Error updating Scheduled Task: #{inspect(changeset.errors)}")
+    display_result("Error updating Scheduled Task: #{inspect(changeset.errors)}")
   end
 
   def list_scheduled_tasks(scheduled_tasks, users, locations) do
@@ -82,11 +84,11 @@ defmodule Ada.CLI.Format do
   end
 
   def scheduled_task_result(:ok) do
-    header("Task run successfully")
+    display_result("Task run successfully")
   end
 
   def scheduled_task_result({:error, reason}) do
-    header("Error running task: #{inspect(reason)}")
+    display_result("Error running task: #{inspect(reason)}")
   end
 
   def preview({:ok, result}, %{workflow_name: Ada.Workflow.SendLastFmReport}) do
@@ -107,7 +109,7 @@ defmodule Ada.CLI.Format do
     scheduled_task_result(error)
   end
 
-  defp header(text) do
-    IO.ANSI.magenta() <> text <> IO.ANSI.reset()
+  defp display_result(text) do
+    [Markup.break(), Markup.title(text)]
   end
 end
