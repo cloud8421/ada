@@ -1,4 +1,5 @@
 defmodule Ada.CLI.Format.ScheduledTasks do
+  @moduledoc false
   alias Ada.CLI.Markup
 
   def format_scheduled_tasks(scheduled_tasks, users, locations) do

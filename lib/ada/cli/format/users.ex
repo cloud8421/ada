@@ -1,4 +1,5 @@
 defmodule Ada.CLI.Format.Users do
+  @moduledoc false
   alias Ada.CLI.Markup
 
   def format_users(users) do

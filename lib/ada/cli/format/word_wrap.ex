@@ -1,4 +1,5 @@
 defmodule Ada.CLI.Format.WordWrap do
+  @moduledoc false
   # Adapted from https://rosettacode.org/wiki/Word_wrap#Elixir
 
   def paragraph(string, max_line_length, left_pad) do
