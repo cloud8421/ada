@@ -75,6 +75,10 @@ ci.test: ## Runs tests on CI
 	MIX_TARGET=host MIX_ENV=test mix test
 .PHONY: ci.test
 
+ci.dialyzer: ## Runs Dialyzer on CI
+	MIX_TARGET=host mix dialyzer --halt-exit-status
+.PHONY: ci.dialyzer
+
 ci.docs: ## Produces documentation suitable for CI deployment
 	mix docs -o public
 .PHONY: ci.docs

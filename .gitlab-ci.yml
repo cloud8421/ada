@@ -15,6 +15,17 @@ core:test:
     paths:
       - ada-junit-report.xml
 
+core:dialyzer:
+  stage: test
+  image: elixir:latest
+  before_script:
+    - make ci.setup
+  script:
+    - make ci.dialyzer
+  cache:
+    paths:
+      - priv/plts
+
 core:cli:
   stage: test
   image: elixir:latest
