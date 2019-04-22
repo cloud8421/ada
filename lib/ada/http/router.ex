@@ -17,6 +17,7 @@ defmodule Ada.HTTP.Router do
          {'/workflows', Handler.Workflows, opts},
          {'/preferences/[:preference_name]', Handler.Preference, opts},
          {'/display/brightness', Handler.Display.Brightness, opts},
+         {'/swagger-ui', :cowboy_static, {:priv_file, :ada, 'static/swagger-ui.html'}},
          {'/swagger.json', :cowboy_static, {:priv_file, :ada, 'swagger.json'}}
        ]}
     ])
