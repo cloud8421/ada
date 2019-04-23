@@ -4,19 +4,24 @@ defmodule Ada.Backup.Uploader do
 
   require Logger
 
-  alias Ada.{Preference, PubSub, Schema.Frequency, Time.Hour}
+  alias Ada.{Backup.Strategy, Preference, PubSub, Schema.Frequency, Time.Hour}
 
   # Backup every night at 3am
   @frequency %Frequency{type: "daily", hour: 3}
 
+  @type start_opts :: [{:strategy, module}]
+
+  @spec start_link(start_opts) :: GenServer.on_start()
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
+  @spec save_today :: {:ok, Strategy.path()} | no_return
   def save_today do
     GenServer.call(__MODULE__, :save_today)
   end
 
+  @spec save_now :: {:ok, Strategy.path()} | no_return
   def save_now do
     GenServer.call(__MODULE__, :save_now)
   end
