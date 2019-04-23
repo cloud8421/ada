@@ -3,18 +3,9 @@ defmodule Ada.Source.News.ApiClient do
   @base_url "http://content.guardianapis.com"
   @api_key System.get_env("GUARDIAN_API_KEY")
 
-  alias Ada.HTTP
+  alias Ada.{HTTP, Source.News.Story}
 
-  defmodule Story do
-    @moduledoc false
-    defstruct title: nil,
-              body_html: nil,
-              body_text: nil,
-              thumbnail: nil,
-              url: nil,
-              pub_date: nil
-  end
-
+  @spec search_by_tag(String.t()) :: {:ok, [Story.t()]} | {:error, term}
   def search_by_tag(tag) do
     url = Path.join([@base_url, "search"])
     qs_params = %{"tag" => tag, "show-fields" => "body,thumbnail", "api-key" => @api_key}
