@@ -15,7 +15,7 @@ defmodule Ada.Schema.User do
           id: String.t(),
           name: String.t(),
           email: String.t(),
-          last_fm_username: String.t(),
+          last_fm_username: Ada.Source.LastFm.username(),
           inserted_at: DateTime.t(),
           updated_at: DateTime.t()
         }

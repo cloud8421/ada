@@ -5,6 +5,8 @@ defmodule Ada.Source.LastFm.ApiClient do
 
   alias Ada.{HTTP, Source.LastFm.Track}
 
+  @spec get_recent(Ada.Source.LastFm.username(), DateTime.t(), DateTime.t()) ::
+          {:ok, [Track.t()]} | {:error, term()}
   def get_recent(user, from, to) do
     qs_params = [
       {"method", "user.getrecenttracks"},
@@ -28,6 +30,7 @@ defmodule Ada.Source.LastFm.ApiClient do
     end
   end
 
+  @spec parse_response(map()) :: [Track.t()]
   def parse_response(response) do
     tracks = get_in(response, ["recenttracks", "track"])
 

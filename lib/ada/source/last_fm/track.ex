@@ -12,6 +12,7 @@ defmodule Ada.Source.LastFm.Track do
   @doc """
   Finds the currently playing track (if any).
   """
+  @spec now_playing([t]) :: {:now_playing, t} | :not_playing
   def now_playing(tracks) do
     case Enum.find(tracks, fn t -> t.listened_at == :now_playing end) do
       nil -> :not_playing
