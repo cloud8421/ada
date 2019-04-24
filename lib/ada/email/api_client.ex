@@ -1,8 +1,20 @@
 defmodule Ada.Email.ApiClient do
-  @moduledoc false
+  @moduledoc """
+  This module allows sending a `Ada.Email` struct via the Sendgrid API
+  (documentation available at <https://sendgrid.com/docs/API_Reference/api_v3.html>).
+  """
+
   @base_url "https://api.sendgrid.com/v3"
   @api_token System.get_env("SENDGRID_API_TOKEN")
 
+  @doc """
+  Synchronously sends an email.
+  """
+  @spec send_email(Ada.Email.t()) ::
+          {:ok, map()}
+          | {:error, :server_down, map()}
+          | {:error, :unauthorized, map()}
+          | {:error, :invalid_data, map()}
   def send_email(email) do
     payload =
       email
@@ -29,21 +41,21 @@ defmodule Ada.Email.ApiClient do
   @doc """
   Converts an email to a sendgrid payload that can be POSTed directly.
 
-  iex> alias Ada.Email
-  iex> alias Email.ApiClient
-  iex> %Email{to: ["user@example.com"], cc: ["cc@example.com"], bcc: ["bcc@example.com"], reply_to: "reply@example.com"}
-  ...> |> ApiClient.to_sendgrid_payload
-  %{personalizations: [%{to: [%{email: "user@example.com"}],
-                         cc: [%{email: "cc@example.com"}],
-                         bcc: [%{email: "bcc@example.com"}],
-                         subject: "default email subject"}],
-    from: %{email: "ada@fullyforged.com",
-            name: "Ada"},
-    reply_to: %{email: "reply@example.com"},
-    content: [%{type: "text/plain",
-                value: "Plain text default body"},
-              %{type: "text/html",
-                value: "<p>html default body</p>"}]}
+      iex> alias Ada.Email
+      iex> alias Email.ApiClient
+      iex> %Email{to: ["user@example.com"], cc: ["cc@example.com"], bcc: ["bcc@example.com"], reply_to: "reply@example.com"}
+      ...> |> ApiClient.to_sendgrid_payload
+      %{personalizations: [%{to: [%{email: "user@example.com"}],
+                             cc: [%{email: "cc@example.com"}],
+                             bcc: [%{email: "bcc@example.com"}],
+                             subject: "default email subject"}],
+        from: %{email: "ada@fullyforged.com",
+                name: "Ada"},
+        reply_to: %{email: "reply@example.com"},
+        content: [%{type: "text/plain",
+                    value: "Plain text default body"},
+                  %{type: "text/html",
+                    value: "<p>html default body</p>"}]}
 
   """
   @spec to_sendgrid_payload(Ada.Email.t()) :: map
