@@ -1,5 +1,11 @@
 defmodule Ada.Schema.Frequency do
-  @moduledoc false
+  @moduledoc """
+  The module expresses the idea of something that can be repeated at regular intervals.
+
+  While it's used mainly with `Ada.Schema.ScheduledTask`, it can be applied to other use cases.
+
+  See `t:t/0` for details.
+  """
   use Ecto.Schema
 
   @derive {Jason.Encoder, except: [:__struct__, :__meta__]}
@@ -12,6 +18,11 @@ defmodule Ada.Schema.Frequency do
     field :second, :integer, default: 0
   end
 
+  @typedoc """
+  A frequency is determined by a type (hourly, daily or weekly) and day of the week, hour, minute and second.
+
+  Depending on the type, some fields are irrelevant (e.g. minutes for a weekly frequency).
+  """
   @type t :: %__MODULE__{
           id: nil | String.t(),
           type: String.t(),
@@ -21,6 +32,9 @@ defmodule Ada.Schema.Frequency do
           second: 0..59
         }
 
+  @doc """
+  Returns a changeset, starting from a frequency and a map of attributes to change.
+  """
   @spec changeset(t, map()) :: Ecto.Changeset.t()
   def changeset(frequency, params) do
     frequency
@@ -32,15 +46,25 @@ defmodule Ada.Schema.Frequency do
     |> Ecto.Changeset.validate_inclusion(:second, 0..59)
   end
 
+  @doc "Returns true for a hourly frequency."
   @spec hourly?(t) :: boolean()
   def hourly?(frequency), do: frequency.type == "hourly"
 
+  @doc "Returns true for a daily frequency."
   @spec daily?(t) :: boolean()
   def daily?(frequency), do: frequency.type == "daily"
 
+  @doc "Returns true for a weekly frequency."
   @spec weekly?(t) :: boolean()
   def weekly?(frequency), do: frequency.type == "weekly"
 
+  @doc """
+  Returns true for a frequency that matches a given datetime, where matching is defined as:
+
+  - same day of the week, hour and zero minutes and seconds for a weekly frequency
+  - same hour, same minute and zero seconds for a daily frequency
+  - same minute and second for a hourly frequency
+  """
   @spec matches_time?(t, DateTime.t()) :: boolean()
   def matches_time?(frequency, datetime) do
     case frequency do

@@ -1,5 +1,9 @@
 defmodule Ada.Schema.User do
-  @moduledoc false
+  @moduledoc """
+  Represents a system user, identified by a numeric ID.
+
+  Fields are defined in combination with workflows (see `Ada.Worfklow`)
+  """
   use Ecto.Schema
 
   schema "users" do
@@ -20,6 +24,9 @@ defmodule Ada.Schema.User do
           updated_at: DateTime.t()
         }
 
+  @doc """
+  Returns a changeset starting from a user and a map of attributes to set.
+  """
   @spec changeset(t, map()) :: Ecto.Changeset.t()
   def changeset(user, params \\ %{}) do
     user
@@ -27,6 +34,9 @@ defmodule Ada.Schema.User do
     |> Ecto.Changeset.validate_required([:name, :email])
   end
 
+  @doc """
+  Given a user, returns their gravatar url.
+  """
   @spec gravatar_url(t) :: String.t()
   def gravatar_url(user) do
     "https://www.gravatar.com/avatar/" <> md5(user.email)

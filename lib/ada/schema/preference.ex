@@ -1,5 +1,10 @@
 defmodule Ada.Schema.Preference do
-  @moduledoc false
+  @moduledoc """
+  A preference is a pair of key, value settings which
+  affect the behaviour of the entire application.
+
+  One example is the preferred timezone.
+  """
   use Ecto.Schema
 
   @derive {Jason.Encoder, except: [:__struct__, :__meta__]}
@@ -19,6 +24,9 @@ defmodule Ada.Schema.Preference do
           updated_at: nil | DateTime.t()
         }
 
+  @doc """
+  Returns a changeset, starting from a preference and a map of attributes to change.
+  """
   @spec changeset(t, map()) :: Ecto.Changeset.t()
   def changeset(preference, params \\ %{}) do
     preference

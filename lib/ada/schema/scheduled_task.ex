@@ -1,5 +1,11 @@
 defmodule Ada.Schema.ScheduledTask do
-  @moduledoc false
+  @moduledoc """
+  Represents a boilerplate for the recurring execution of a workflow.
+
+  Captures the workflow to run, its frequency and params.
+
+  See `t:t/0` for more details.
+  """
   use Ecto.Schema
 
   alias Ada.{Schema.Frequency, Workflow}
@@ -16,6 +22,15 @@ defmodule Ada.Schema.ScheduledTask do
     timestamps()
   end
 
+  @typedoc """
+  A scheduled task is mainly defined by:
+
+  - a workflow name, deciding the workflow that needs to be run
+  - a frequency, determining how often the task is run (see `Ada.Schema.Frequency`)
+  - a map of params, which are going to be passed to the workflow when run
+  - a transport, deciding the transport used to communicate the workflow result
+    to the relevant user
+  """
   @type t :: %__MODULE__{
           __meta__: term(),
           id: String.t(),
@@ -28,6 +43,9 @@ defmodule Ada.Schema.ScheduledTask do
           updated_at: DateTime.t()
         }
 
+  @doc """
+  Returns a changeset, starting from a scheduled task and a map of attributes to change.
+  """
   @spec changeset(t, map) :: Ecto.Changeset.t()
   def changeset(scheduled_task, params \\ %{}) do
     scheduled_task
@@ -39,7 +57,9 @@ defmodule Ada.Schema.ScheduledTask do
     |> Ecto.Changeset.validate_change(:workflow_name, workflow_name_validator())
   end
 
+  @doc false
   defguard is_valid_hourly_spec?(minute, second) when minute in 0..59 and second in 0..59
+  @doc false
   defguard is_valid_daily_spec?(hour, minute) when hour in 0..23 and minute in 0..59
 
   @doc """
@@ -63,6 +83,7 @@ defmodule Ada.Schema.ScheduledTask do
   @doc """
   Returns true for a task that matches a given datetime, where matching is defined as:
 
+  - same day of the week, hour and zero minutes and seconds for a weekly task
   - same hour, same minute and zero seconds for a daily task
   - same minute and second for a hourly task
   """

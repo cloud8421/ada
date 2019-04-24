@@ -1,5 +1,9 @@
 defmodule Ada.Schema.Location do
-  @moduledoc false
+  @moduledoc """
+  Represents a location (e.g. home or office).
+
+  See `t:t/0` for details.
+  """
   use Ecto.Schema
 
   @derive {Jason.Encoder, except: [:__struct__, :__meta__]}
@@ -13,6 +17,9 @@ defmodule Ada.Schema.Location do
     timestamps()
   end
 
+  @typedoc """
+  A location is defined primarily by a name and its lat/lng coordinates.
+  """
   @type t :: %__MODULE__{
           __meta__: term(),
           id: String.t(),
@@ -24,6 +31,9 @@ defmodule Ada.Schema.Location do
           updated_at: DateTime.t()
         }
 
+  @doc """
+  Returns a changeset, starting from a location and a map of attributes to change.
+  """
   @spec changeset(t, map()) :: Ecto.Changeset.t()
   def changeset(location, params \\ %{}) do
     location
@@ -31,6 +41,7 @@ defmodule Ada.Schema.Location do
     |> Ecto.Changeset.validate_required([:name, :lat, :lng])
   end
 
+  @doc false
   @spec activate_changeset(t) :: Ecto.Changeset.t()
   def activate_changeset(location) do
     Ecto.Changeset.change(location, %{active: true})
