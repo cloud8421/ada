@@ -1,7 +1,15 @@
 defmodule Ada.CLI.FishCompletion do
-  @moduledoc false
-  # https://gist.github.com/hasit/7f80cfee0d2cc789b75f4aaea40f37e0#file-buffalo-fish
+  @moduledoc """
+  Provides autocomplete settings for the Fish shell.
 
+  Kudos to <https://gist.github.com/hasit/7f80cfee0d2cc789b75f4aaea40f37e0#file-buffalo-fish> for
+  the extensive examples.
+  """
+
+  @doc """
+  Returns a string containing autocomplete directives extracted
+  from the `Ada.CLI` module layout.
+  """
   def render do
     Ada.CLI.commands()
     |> Enum.map(fn command ->
