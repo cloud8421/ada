@@ -1,5 +1,9 @@
 defmodule Ada.Backup.Uploader do
-  @moduledoc false
+  @moduledoc """
+  Controls the upload of the database file to the configured backup
+  location.
+  """
+
   use GenServer
 
   require Logger
@@ -11,21 +15,31 @@ defmodule Ada.Backup.Uploader do
 
   @type start_opts :: [{:strategy, module}]
 
+  @doc """
+  Starts the uploaded process. Requires a strategy.
+  """
   @spec start_link(start_opts) :: GenServer.on_start()
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
+  @doc """
+  Saves a copy of the database, naming it with today's date.
+  """
   @spec save_today :: {:ok, Strategy.path()} | no_return
   def save_today do
     GenServer.call(__MODULE__, :save_today)
   end
 
+  @doc """
+  Saves a copy of the database, naming it with the current timestamp.
+  """
   @spec save_now :: {:ok, Strategy.path()} | no_return
   def save_now do
     GenServer.call(__MODULE__, :save_now)
   end
 
+  @doc false
   @impl true
   def init(opts) do
     state = Enum.into(opts, %{})
@@ -40,16 +54,19 @@ defmodule Ada.Backup.Uploader do
     end
   end
 
+  @doc false
   @impl true
   def handle_call(:save_today, _from, state) do
     {:reply, upload_db(get_today(), state.strategy, state.repo), state}
   end
 
+  @doc false
   @impl true
   def handle_call(:save_now, _from, state) do
     {:reply, upload_db(get_now(), state.strategy, state.repo), state}
   end
 
+  @doc false
   @impl true
   def handle_info({PubSub.Broadcast, Hour, datetime}, state) do
     local_datetime = Calendar.DateTime.shift_zone!(datetime, state.timezone)
