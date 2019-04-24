@@ -1,13 +1,33 @@
+stages:
+  - deps
+  - test
+  - deploy
+
+core:deps:
+  stage: deps
+  image: elixir:latest
+  script:
+    - make ci.setup
+  artifacts:
+    paths:
+      - deps
+      - _build
+  cache:
+    paths:
+      - deps
+      - _build
+
 core:test:
   stage: test
   image: elixir:latest
+  dependencies:
+    - core:deps
   before_script:
-    - make ci.setup
+    - make ci.base
   script:
     - make ci.test
   cache:
     paths:
-      - deps
       - _build
   artifacts:
     reports:
@@ -18,27 +38,25 @@ core:test:
 core:dialyzer:
   stage: test
   image: elixir:latest
+  dependencies:
+    - core:deps
   before_script:
-    - make ci.setup
+    - make ci.base
   script:
     - make ci.dialyzer
   cache:
     paths:
-      - deps
-      - _build
       - priv/plts
 
 core:cli:
   stage: test
   image: elixir:latest
+  dependencies:
+    - core:deps
   before_script:
-    - make ci.setup
+    - make ci.base
   script:
     - make host.cli
-  cache:
-    paths:
-      - deps
-      - _build
   artifacts:
     paths:
       - ada
@@ -46,14 +64,12 @@ core:cli:
 pages:
   stage: deploy
   image: elixir:latest
+  dependencies:
+    - core:deps
   before_script:
-    - make ci.setup
+    - make ci.base
   script:
     - make ci.docs
-  cache:
-    paths:
-      - deps
-      - _build
   artifacts:
     paths:
     - public

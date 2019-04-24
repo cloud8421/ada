@@ -67,8 +67,12 @@ host.shell: ## Opens a local, interactive shell
 
 # CI
 
-ci.setup: dev.base ## Installs needed tools and deps for CI
+ci.base: dev.base ## Installs needed tools for CI
+.PHONY: ci.base
+
+ci.setup: ci.base ## Installs needed tools and deps for CI
 	MIX_TARGET=host mix deps.get
+	MIX_TARGET=host MIX_ENV=test mix deps.get
 .PHONY: ci.setup
 
 ci.test: ## Runs tests on CI
