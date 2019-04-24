@@ -3,7 +3,7 @@
 ADA_NODE := ada.local
 
 help:
-	@grep -E '^[a-zA-Z_-].+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-14s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-].+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-18s\033[0m %s\n", $$1, $$2}'
 .PHONY: help
 
 # DEV TOOLCHAIN
@@ -11,7 +11,7 @@ help:
 all: dev.setup rpi0.burn ## Installs tools and dependencies, produces a firmware file
 .PHONY: all
 
-dev.setup: dev.base deps.get ## Installs tools and dependencies
+dev.setup: dev.base dev.deps-get ## Installs tools and dependencies
 .PHONY: dev.setup
 
 dev.base: ## Installs base requirements
@@ -20,17 +20,20 @@ dev.base: ## Installs base requirements
 	mix archive.install hex nerves_bootstrap --force
 .PHONY: dev.base
 
-# DEPENDENCIES
-
-deps.get: ## Fetches dependencies
+dev.deps-get: ## Fetches dependencies
 	MIX_TARGET=rpi0 mix deps.get
 	MIX_TARGET=host mix deps.get
 .PHONY: deps.get
 
-deps.outdated: ## Show outdated dependencies
-	MIX_TARGET=rpi0 mix hex.outdated
-	MIX_TARGET=host mix hex.outdated
+dev.deps-outdated: ## Show outdated dependencies
+	MIX_TARGET=rpi0 mix hex.outdated || true
+	MIX_TARGET=host mix hex.outdated || true
 .PHONY: deps.outdated
+
+dev.deps-update: ## Updates all dependencies
+	MIX_TARGET=rpi0 mix deps.update --all
+	MIX_TARGET=host mix deps.update --all
+.PHONY: deps.update
 
 # FIRMWARE MANAGEMENT
 
@@ -60,6 +63,14 @@ host.cli: ## Produces the ada CLI remote control executable
 host.test: ## Runs the test suite
 	MIX_TARGET=host MIX_ENV=test mix test
 .PHONY: host.test
+
+host.dialyzer: ## Runs Dialyzer on host
+	MIX_TARGET=host mix dialyzer
+.PHONY: host.dialyzer
+
+host.docs: ## Produces documentation on host
+	mix docs
+.PHONY: host.docs
 
 host.shell: ## Opens a local, interactive shell
 	MIX_TARGET=host iex -S mix
