@@ -23,7 +23,17 @@ defmodule Ada.MixProject do
       ],
       docs: [
         main: "readme",
-        extras: ["README.md"]
+        extras: ["README.md"],
+        groups_for_modules: [
+          "Core Schemas": ~r/Schema/,
+          "Data backups": ~r/Backup/,
+          "Display management": ~r/Display/,
+          "Preference management": ~r/Preference/,
+          "External services": [Ada.Email.ApiClient, Ada.HTTP.Client],
+          Workflows: ~r/Workflow/,
+          CLI: ~r/CLI/,
+          "Metrics and logs": [Logger.Backends.Telegraf]
+        ]
       ],
       dialyzer: [
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
