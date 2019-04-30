@@ -1,24 +1,22 @@
-defmodule Ada.Email.ApiClient do
+defmodule Ada.Email.Adapter.Sendgrid do
   @moduledoc """
-  This module allows sending a `Ada.Email` struct via the Sendgrid API
+  Implements the `Ada.Email.Adapter` behaviour on top of the Sendgrid API
   (documentation available at <https://sendgrid.com/docs/API_Reference/api_v3.html>).
   """
+
+  @behaviour Ada.Email.Adapter
 
   @base_url "https://api.sendgrid.com/v3"
   @api_token System.get_env("SENDGRID_API_TOKEN")
 
-  @doc """
-  Synchronously sends an email.
-  """
   @spec send_email(Ada.Email.t()) ::
           {:ok, map()}
-          | {:error, :server_down, map()}
-          | {:error, :unauthorized, map()}
-          | {:error, :invalid_data, map()}
+          | {:error, {:server_down | :unauthorized | :invalid_data, map()}}
+  @impl true
   def send_email(email) do
     payload =
       email
-      |> to_sendgrid_payload
+      |> to_payload
       |> Jason.encode!()
 
     url = @base_url <> "/mail/send"
@@ -28,13 +26,13 @@ defmodule Ada.Email.ApiClient do
         {:ok, resp}
 
       resp = %{status_code: 500} ->
-        {:error, :server_down, Jason.decode!(resp.body)}
+        {:error, {:server_down, Jason.decode!(resp.body)}}
 
       resp = %{status_code: 401} ->
-        {:error, :unauthorized, Jason.decode!(resp.body)}
+        {:error, {:unauthorized, Jason.decode!(resp.body)}}
 
       resp ->
-        {:error, :invalid_data, Jason.decode!(resp.body)}
+        {:error, {:invalid_data, Jason.decode!(resp.body)}}
     end
   end
 
@@ -42,9 +40,9 @@ defmodule Ada.Email.ApiClient do
   Converts an email to a sendgrid payload that can be POSTed directly.
 
       iex> alias Ada.Email
-      iex> alias Email.ApiClient
+      iex> alias Email.Adapter.Sendgrid
       iex> %Email{to: ["user@example.com"], cc: ["cc@example.com"], bcc: ["bcc@example.com"], reply_to: "reply@example.com"}
-      ...> |> ApiClient.to_sendgrid_payload
+      ...> |> Sendgrid.to_payload
       %{personalizations: [%{to: [%{email: "user@example.com"}],
                              cc: [%{email: "cc@example.com"}],
                              bcc: [%{email: "bcc@example.com"}],
@@ -58,8 +56,8 @@ defmodule Ada.Email.ApiClient do
                     value: "<p>html default body</p>"}]}
 
   """
-  @spec to_sendgrid_payload(Ada.Email.t()) :: map
-  def to_sendgrid_payload(email) do
+  @spec to_payload(Ada.Email.t()) :: map
+  def to_payload(email) do
     base = %{
       personalizations: [
         %{to: Enum.map(email.to, fn to -> %{email: to} end), subject: email.subject}

@@ -1,5 +1,7 @@
 defmodule Ada.Email do
-  @moduledoc false
+  @moduledoc """
+  Represents an email that can be sent via different adapters.
+  """
   @default_from "ada@fullyforged.com"
   @default_from_name "Ada"
 
@@ -25,6 +27,9 @@ defmodule Ada.Email do
           body_html: String.t()
         }
 
+  @doc false
   def default_from, do: @default_from
+
+  @doc false
   def default_from_name, do: @default_from_name
 end

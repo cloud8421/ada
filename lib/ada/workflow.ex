@@ -166,8 +166,8 @@ defmodule Ada.Workflow do
   defp validate_result(_incompatible_result, :email), do: {:error, :incompatible_result}
 
   defp apply_transport(email, :email, ctx) do
-    email_api_client = Keyword.fetch!(ctx, :email_api_client)
+    email_adapter = Keyword.fetch!(ctx, :email_adapter)
 
-    email_api_client.send_email(email)
+    email_adapter.send_email(email)
   end
 end

@@ -28,6 +28,7 @@ defmodule Ada.MixProject do
           "Core Schemas": ~r/Schema/,
           "Data backups": ~r/Backup/,
           "Display management": ~r/Display/,
+          Email: ~r/Email/,
           "Preference management": ~r/Preference/,
           "External services": [Ada.Email.ApiClient, Ada.HTTP.Client],
           Workflows: ~r/Workflow/,

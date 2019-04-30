@@ -4,7 +4,9 @@ defmodule Ada.Schema.ScheduledTaskTest do
   alias Ada.Schema.{Frequency, ScheduledTask}
   alias Ada.TestWorkflow
 
-  defmodule TestEmailApiClient do
+  defmodule TestEmailAdapter do
+    @behaviour Ada.Email.Adapter
+
     def send_email(%Ada.Email{} = email), do: {:ok, email}
   end
 
@@ -49,7 +51,7 @@ defmodule Ada.Schema.ScheduledTaskTest do
       st = %ScheduledTask{workflow_name: TestWorkflow, params: %{name: "Ada"}, transport: :email}
 
       assert {:ok, %Ada.Email{subject: "ADA"}} ==
-               ScheduledTask.run(st, email_api_client: TestEmailApiClient)
+               ScheduledTask.run(st, email_adapter: TestEmailAdapter)
     end
   end
 

@@ -37,7 +37,8 @@ defmodule Ada.Application do
       Ada.TimeKeeper,
       Ada.Repo,
       {Task.Supervisor, name: Ada.TaskSupervisor},
-      {Ada.Scheduler, repo: Ada.Repo, email_api_client: Ada.Email.ApiClient, timezone: timezone},
+      {Ada.Scheduler,
+       repo: Ada.Repo, email_adapter: Ada.Email.Adapter.Sendgrid, timezone: timezone},
       {Ada.Backup.Uploader,
        repo: Ada.Repo, strategy: Ada.Backup.Strategy.Dropbox, timezone: timezone},
       {Ada.HTTP.Listener, listener_opts(@env, preferences)}
@@ -74,7 +75,7 @@ defmodule Ada.Application do
       [
         http_port: http_port(env),
         repo: Ada.Repo,
-        email_api_client: Ada.Email.ApiClient,
+        email_adapter: Ada.Email.Adapter.Sendgrid,
         preferences_module: Ada.Preferences
       ]
   end
