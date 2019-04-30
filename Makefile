@@ -23,17 +23,17 @@ dev.base: ## Installs base requirements
 dev.deps-get: ## Fetches dependencies
 	MIX_TARGET=rpi0 mix deps.get
 	MIX_TARGET=host mix deps.get
-.PHONY: deps.get
+.PHONY: dev.deps-get
 
 dev.deps-outdated: ## Show outdated dependencies
 	MIX_TARGET=rpi0 mix hex.outdated || true
 	MIX_TARGET=host mix hex.outdated || true
-.PHONY: deps.outdated
+.PHONY: dev.deps-outdated
 
 dev.deps-update: ## Updates all dependencies
 	MIX_TARGET=rpi0 mix deps.update --all
 	MIX_TARGET=host mix deps.update --all
-.PHONY: deps.update
+.PHONY: dev.deps-update
 
 # FIRMWARE MANAGEMENT
 
