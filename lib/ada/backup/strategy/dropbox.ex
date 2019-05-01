@@ -65,9 +65,9 @@ defmodule Ada.Backup.Strategy.Dropbox do
   defp do_list_files() do
     body = %{"path" => @app_namespace, "recursive" => true}
 
-    headers = %{
-      "Authorization" => "Bearer #{@api_token}"
-    }
+    headers = [
+      {"Authorization", "Bearer #{@api_token}"}
+    ]
 
     HTTP.Client.post(
       @api_base_url <> "/files/list_folder",
@@ -81,10 +81,10 @@ defmodule Ada.Backup.Strategy.Dropbox do
     path = Path.join([@app_namespace, name])
     dropbox_api_args = %{"path" => path, "mode" => "overwrite", "mute" => true}
 
-    headers = %{
-      "Authorization" => "Bearer #{@api_token}",
-      "Dropbox-API-Arg" => Jason.encode!(dropbox_api_args)
-    }
+    headers = [
+      {"Authorization", "Bearer #{@api_token}"},
+      {"Dropbox-API-Arg", Jason.encode!(dropbox_api_args)}
+    ]
 
     HTTP.Client.post(
       @content_base_url <> "/files/upload",
@@ -97,10 +97,10 @@ defmodule Ada.Backup.Strategy.Dropbox do
   defp do_download_file(path) do
     dropbox_api_args = %{"path" => path}
 
-    headers = %{
-      "Authorization" => "Bearer #{@api_token}",
-      "Dropbox-API-Arg" => Jason.encode!(dropbox_api_args)
-    }
+    headers = [
+      {"Authorization", "Bearer #{@api_token}"},
+      {"Dropbox-API-Arg", Jason.encode!(dropbox_api_args)}
+    ]
 
     HTTP.Client.post(
       @content_base_url <> "/files/download",

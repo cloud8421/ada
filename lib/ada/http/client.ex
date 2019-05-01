@@ -3,19 +3,30 @@ defmodule Ada.HTTP.Client do
   Simple http client based on httpc.
   """
 
+  @type headers :: [{String.t(), String.t()}]
+
   defmodule Response do
     @moduledoc false
     defstruct status_code: 100,
               headers: [],
               body: <<>>,
               duration: 0
+
+    @type t :: %__MODULE__{
+            status_code: integer(),
+            headers: Ada.HTTP.Client.headers(),
+            body: term(),
+            duration: pos_integer
+          }
   end
 
   defmodule ErrorResponse do
     @moduledoc false
     defstruct message: nil, duration: 0
+    @type t :: %__MODULE__{message: String.t(), duration: pos_integer}
   end
 
+  @spec json_get(String.t(), headers(), Enum.t()) :: Response.t() | ErrorResponse.t()
   def json_get(url, headers \\ [], qs_params \\ []) do
     headers = [{"Accept", "application/json"} | headers]
 
@@ -31,6 +42,7 @@ defmodule Ada.HTTP.Client do
     end
   end
 
+  @spec json_post(String.t(), term(), headers()) :: Response.t() | ErrorResponse.t()
   def json_post(url, data, headers \\ []) do
     headers = [{"Accept", "application/json"} | headers]
 
@@ -46,6 +58,7 @@ defmodule Ada.HTTP.Client do
     end
   end
 
+  @spec json_put(String.t(), term(), headers()) :: Response.t() | ErrorResponse.t()
   def json_put(url, data, headers \\ []) do
     case put(url, Jason.encode!(data), headers, 'application/json') do
       %Response{body: <<>>} = response ->
@@ -59,6 +72,7 @@ defmodule Ada.HTTP.Client do
     end
   end
 
+  @spec get(String.t(), headers(), Enum.t()) :: Response.t() | ErrorResponse.t()
   def get(url, headers \\ [], qs_params \\ %{}) do
     headers =
       Enum.map(headers, fn {k, v} ->
@@ -75,6 +89,7 @@ defmodule Ada.HTTP.Client do
     |> process_response(meta)
   end
 
+  @spec post(String.t(), binary(), headers(), charlist()) :: Response.t() | ErrorResponse.t()
   def post(url, body, headers \\ [], content_type \\ 'application/json') do
     headers =
       Enum.map(headers, fn {k, v} ->
@@ -91,6 +106,7 @@ defmodule Ada.HTTP.Client do
     |> process_response(meta)
   end
 
+  @spec put(String.t(), binary(), headers(), charlist()) :: Response.t() | ErrorResponse.t()
   def put(url, body, headers \\ [], content_type \\ 'application/json') do
     headers =
       Enum.map(headers, fn {k, v} ->
@@ -107,6 +123,7 @@ defmodule Ada.HTTP.Client do
     |> process_response(meta)
   end
 
+  @spec delete(String.t(), headers()) :: Response.t() | ErrorResponse.t()
   def delete(url, headers \\ []) do
     headers =
       Enum.map(headers, fn {k, v} ->
