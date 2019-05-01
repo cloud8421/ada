@@ -20,6 +20,7 @@ jobs:
             - v1-dialyzer-cache-{{ .Branch }}
             - v1-dialyzer-cache
       - run: make ci.setup
+      - run: make ci.compile
       - run: make ci.test
       - store_test_results:
           path: test/mix

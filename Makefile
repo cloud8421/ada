@@ -86,6 +86,10 @@ ci.setup: ci.base ## Installs needed tools and deps for CI
 	MIX_TARGET=host MIX_ENV=test mix deps.get
 .PHONY: ci.setup
 
+ci.compile: ## Compiles the codebase
+	MIX_TARGET=host mix compile
+.PHONY: ci.compile
+
 ci.test: test/mix ## Runs tests on CI
 	MIX_TARGET=host MIX_ENV=test mix test
 .PHONY: ci.test
