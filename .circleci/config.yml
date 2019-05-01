@@ -24,9 +24,6 @@ jobs:
       - run: make ci.test
       - store_test_results:
           path: test/mix
-      - store_artifacts:
-          path: test/mix
-          destination: test-results
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
           paths:
