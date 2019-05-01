@@ -66,5 +66,4 @@ jobs:
           destination: cli
       - run: make ci.docs
       - store_artifacts:
-          path: public
-          destination: docs
+          path: docs.tar.gz

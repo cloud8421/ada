@@ -106,5 +106,6 @@ ci.dialyzer: ## Runs Dialyzer on CI
 .PHONY: ci.dialyzer
 
 ci.docs: ## Produces documentation suitable for CI deployment
-	mix docs -o public
+	mix docs
+	tar -czvf docs.tar.gz doc
 .PHONY: ci.docs
