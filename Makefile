@@ -86,9 +86,12 @@ ci.setup: ci.base ## Installs needed tools and deps for CI
 	MIX_TARGET=host MIX_ENV=test mix deps.get
 .PHONY: ci.setup
 
-ci.test: ## Runs tests on CI
+ci.test: test/mix ## Runs tests on CI
 	MIX_TARGET=host MIX_ENV=test mix test
 .PHONY: ci.test
+
+test/mix:
+	mkdir -p $@
 
 ci.dialyzer: ## Runs Dialyzer on CI
 	MIX_TARGET=host mix dialyzer --halt-exit-status

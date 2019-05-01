@@ -44,7 +44,7 @@ config :logger, Logger.Backends.Telegraf,
 if Mix.env() == :test do
   config :junit_formatter,
     report_file: "junit-report.xml",
-    report_dir: ".",
+    report_dir: "test/mix",
     print_report_file: true,
     prepend_project_name?: true
 end
