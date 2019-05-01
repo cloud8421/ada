@@ -76,6 +76,10 @@ host.shell: ## Opens a local, interactive shell
 	MIX_TARGET=host iex -S mix
 .PHONY: host.shell
 
+host.ci-build: ## Uses CircleCI to simulate a CI run locally
+	circleci build
+.PHONY: host.ci-build
+
 # CI
 
 ci.base: dev.base ## Installs needed tools for CI
