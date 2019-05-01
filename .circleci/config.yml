@@ -9,6 +9,7 @@ jobs:
           keys:
             - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
             - v1-build-cache-{{ .Branch }}
+            - v1-dialyzer-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - run: make ci.setup
       - run: make ci.test
       - store_test_results:
@@ -24,3 +25,16 @@ jobs:
           key: v1-build-cache-{{ .Branch }}
           paths:
             - _build
+      - run: make ci.dialyzer
+      - save_cache:
+          key: v1-dialyzer-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          paths:
+            - priv/plts
+      - run: make host.cli
+      - store_artifacts:
+          path: ada
+          destination: cli
+      - run: make ci.docs
+      - store_artifacts:
+          path: public
+          destination: docs
