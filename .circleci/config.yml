@@ -23,7 +23,7 @@ jobs:
       - run: make ci.compile
       - run: make ci.test
       - store_test_results:
-          path: test/mix
+          path: test/reports
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
           paths:

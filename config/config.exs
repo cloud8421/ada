@@ -43,10 +43,10 @@ config :logger, Logger.Backends.Telegraf,
 
 if Mix.env() == :test do
   config :junit_formatter,
-    report_file: "junit-report.xml",
-    report_dir: "test/mix",
+    report_file: "results.xml",
+    report_dir: "test/reports/ex_unit",
     print_report_file: true,
-    prepend_project_name?: true
+    prepend_project_name?: false
 end
 
 # Import target specific config. This must remain at the bottom

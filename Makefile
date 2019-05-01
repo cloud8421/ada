@@ -94,11 +94,11 @@ ci.compile: ## Compiles the codebase
 	MIX_TARGET=host mix compile
 .PHONY: ci.compile
 
-ci.test: test/mix ## Runs tests on CI
+ci.test: test/reports/ex_unit ## Runs tests on CI
 	MIX_TARGET=host MIX_ENV=test mix test
 .PHONY: ci.test
 
-test/mix:
+test/reports/ex_unit:
 	mkdir -p $@
 
 ci.dialyzer: ## Runs Dialyzer on CI
