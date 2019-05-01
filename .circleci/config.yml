@@ -6,3 +6,18 @@ jobs:
     steps:
       - checkout
       - run: make ci.setup
+      - restore_cache:
+          keys:
+            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v1-build-cache-{{ .Branch }}
+      - run: make ci.test
+      - store_test_results:
+          path: ada-junit-report.xml
+      - save_cache:
+          key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          paths:
+            - deps
+      - save_cache:
+          key: v1-build-cache-{{ .Branch }}
+          paths:
+            - _build
