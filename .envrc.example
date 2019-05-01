@@ -1,9 +1,17 @@
-export FORECAST_IO_API_KEY='<api-key>'
-export SENDGRID_API_TOKEN='<api-token>'
-export GUARDIAN_API_KEY='<api-key>'
+# INTEGRATION SECRETS
 export DROPBOX_API_TOKEN='<dropbox-api-token>'
+export FORECAST_IO_API_KEY='<api-key>'
 export GOOGLE_MAPS_API_KEY='<google-maps-api-key>'
+export GUARDIAN_API_KEY='<api-key>'
 export LAST_FM_API_KEY='<last.fm-api-key>'
+export SENDGRID_API_TOKEN='<api-token>'
 
+# METRICS SERVER
+export STATSD_HOST=127.0.0.1
+export STATSD_PORT=8125
+export SYSLOG_HOST=127.0.0.1
+export SYSLOG_PORT=6514
+
+# NETWORK
 export WIFI_PASS='<wifi-pass>'
 export WIFI_SSID='<wifi-ssid>'
