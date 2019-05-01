@@ -1,5 +1,7 @@
 # Ada
 
+[![CircleCI](https://circleci.com/gh/cloud8421/ada.svg?style=svg&circle-token=e4d5543095470815e9108a94840d4e57c4f77070)](https://circleci.com/gh/cloud8421/ada)
+
 Ada is personal assistant designed to run on the [Pimoroni Scroll Bot](https://shop.pimoroni.com/products/scroll-bot-pi-zero-w-project-kit) (i.e. a [Raspberry Pi Zero W ](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) and a [Scroll pHAT HD](https://shop.pimoroni.com/products/scroll-phat-hd).
 
 It’s powered by [Nerves Project](https://nerves-project.org) and [Elixir](https://elixir-lang.org).
