@@ -8,8 +8,17 @@ jobs:
       - restore_cache:
           keys:
             - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v1-mix-cache-{{ .Branch }}
+            - v1-mix-cache
+      - restore_cache:
+          keys:
             - v1-build-cache-{{ .Branch }}
+            - v1-build-cache
+      - restore_cache:
+          keys:
             - v1-dialyzer-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v1-dialyzer-cache-{{ .Branch }}
+            - v1-dialyzer-cache
       - run: make ci.setup
       - run: make ci.test
       - store_test_results:
@@ -22,12 +31,32 @@ jobs:
           paths:
             - deps
       - save_cache:
+          key: v1-mix-cache-{{ .Branch }}
+          paths:
+            - deps
+      - save_cache:
+          key: v1-mix-cache
+          paths:
+            - deps
+      - save_cache:
           key: v1-build-cache-{{ .Branch }}
+          paths:
+            - _build
+      - save_cache:
+          key: v1-build-cache
           paths:
             - _build
       - run: make ci.dialyzer
       - save_cache:
           key: v1-dialyzer-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          paths:
+            - priv/plts
+      - save_cache:
+          key: v1-dialyzer-cache-{{ .Branch }}
+          paths:
+            - priv/plts
+      - save_cache:
+          key: v1-dialyzer-cache
           paths:
             - priv/plts
       - run: make host.cli
