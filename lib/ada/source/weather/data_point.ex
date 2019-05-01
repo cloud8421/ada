@@ -5,4 +5,12 @@ defmodule Ada.Source.Weather.DataPoint do
             summary: "",
             icon: "",
             timestamp: 0
+
+  @type t :: %__MODULE__{
+          temperature: float,
+          apparent_temperature: float,
+          summary: String.t(),
+          icon: String.t(),
+          timestamp: DateTime.t()
+        }
 end

@@ -7,6 +7,7 @@ defmodule Ada.Source.Weather.ApiClient do
 
   alias Ada.{HTTP, Source.Weather.Report, Source.Weather.DataPoint}
 
+  @spec get_by_location(float(), float()) :: {:ok, Report.t()} | {:error, term}
   def get_by_location(lat, lng) do
     lat_lng = "#{lat},#{lng}"
     url = Path.join([@base_url, "forecast", @api_key, lat_lng])
@@ -32,11 +33,11 @@ defmodule Ada.Source.Weather.ApiClient do
       currently:
         raw_data
         |> Map.get("currently")
-        |> parse_data_point,
+        |> parse_data_point(),
       data_points:
         raw_data
         |> get_in(["hourly", "data"])
-        |> parse_data_points
+        |> parse_data_points()
     }
   end
 
