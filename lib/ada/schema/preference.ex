@@ -16,10 +16,13 @@ defmodule Ada.Schema.Preference do
     timestamps()
   end
 
+  @type name :: atom()
+  @type value :: nil | String.t()
+
   @type t :: %__MODULE__{
           __meta__: term(),
-          name: nil | atom(),
-          value: nil | String.t(),
+          name: name(),
+          value: value(),
           inserted_at: nil | DateTime.t(),
           updated_at: nil | DateTime.t()
         }

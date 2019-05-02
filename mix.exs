@@ -27,9 +27,9 @@ defmodule Ada.MixProject do
         groups_for_modules: [
           "Core Schemas": ~r/Schema/,
           "Data backups": ~r/Backup/,
+          "Data management": ~r/Preference|CRUD/,
           "Display management": ~r/Display/,
           Email: ~r/Email/,
-          "Preference management": ~r/Preference/,
           "External services": [Ada.Email.ApiClient, Ada.HTTP.Client],
           Workflows: ~r/Workflow/,
           CLI: ~r/CLI/,
