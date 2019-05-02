@@ -6,9 +6,11 @@ Ada is personal assistant designed to run on the [Pimoroni Scroll Bot](https://s
 
 It’s powered by [Nerves Project](https://nerves-project.org) and [Elixir](https://elixir-lang.org).
 
+![Ada Device](ada.jpg).
+
 ## Features
 
-Ada fits a specific use case: a small device, using little energy, that helps me with things I do on a daily basis. Hardware wise, the Pimoroni kit is a perfect fit: it looks cool, has a low-fi screen that I can use to report basic useful information even in bright light conditions and I can pack it with me when I travel.
+Ada fits a specific use case: a small device, using little energy, that helps me with things I do on a daily basis. Hardware-wise, the Pimoroni kit is a perfect fit: it looks cool, has a low-fi screen that I can use to report basic useful information even in bright light conditions and I can pack it with me when I travel.
 
 At this point Ada support these workflows:
 
@@ -24,13 +26,71 @@ Ada’s timezone can be configured and its clock is synchronised automatically.
 
 ## Interaction modes
 
-Ada can be controlled by a command line UI and an HTTP API.
+Ada can be controlled by a command line UI (CLI) and an HTTP API.
 
-TODO on how to use
+### CLI interaction
+
+The CLI can be setup by [following these instructions](#Build-the-CLI). To function, it requires the ability to connect to the running device via the Erlang distribution. By default, it will assume that the target device is available at `ada.local`.
+
+Running `./ada` will show a list of available commands. If you happen to use the [Fish shell](https://fishshell.com), you can run `./ada fish_autocomplete | source` to load basic completions for the current shell (pull requests are welcome to support other shells!).
+
+Generally speaking, with the CLI you can:
+
+- control the display brightness
+- manage device data (users, locations, tasks)
+- manage device preferences
+- run or preview tasks
+- backup the database with the active backup strategy
+- pull the device database to a local file
+- restore the device database from a local file
+
+### HTTP interaction
+
+HTTP api documentation is available at `http://ada.local/swagger-ui`.
 
 ## Setup
 
-TODO on how to get everything working.
+First of all, we need working installations of Elixir and Erlang. The recommended way to achieve this is via [asdf](https://asdf-vm.com/#/). Once it's installed and working, you can run `asdf install` from the project root to install the correct versions required by Ada (see the `.tool-versions` file for details).
+
+Next, make sure you setup the required environment variables as detailed in `.envrc.example`. We recommend using a program such as [direnv](https://direnv.net) to make this process automatic.
+
+To support over-the-air updates, the firmware requires an ssh public key at `~/.ssh/id_rsa.pub`. This is not needed unless you try to produce a firmware file.
+
+Once they're setup, you can run `make dev.setup` to install required tools and dependencies. Note that this will not install system-wide dependencies which are required to burn the Ada firmware to a card (see the MacOS and Linux sections at <https://hexdocs.pm/nerves/installation.html#content> for details).
+
+At this stage, you should be able to perform the most common tasks:
+
+### Running tests
+
+You can run `make host.test`.
+
+### Build the CLI
+
+You can run `make host.cli`, which will leave you with the `ada` executable in the current directory. You can move it anywhere, but to function properly it requires a compatible version of Erlang available globally. You can checkout the [asdf documentation](https://asdf-vm.com/#/core-manage-versions?id=set-current-version) to configure that.
+
+### Run dialyzer
+
+You can run `make host.dialyzer` to perform a static analysis of the source code to find type inconsistencies. The first time you run it might take a while, it will be considerably faster after that.
+
+### Build docs
+
+You can run `make host.docs`.
+
+### Open a local iex session
+
+You can run `make host.shell`.
+
+### Produce a firmware
+
+You can run `make rpi0.firmware` to produce a firmware file. Running `make rpi0.burn` will produce a file and try to burn it to a SD/MicroSD card if possible.
+
+### Update the device on the fly
+
+You can run `make rpi0.push` to perform a over-the-air device update.
+
+### Remote shell to the running device
+
+You can run `make rpi0.ssh`.
 
 ## Commit legend
 
@@ -38,3 +98,4 @@ TODO on how to get everything working.
 - [C] Chore
 - [B] Bugfix
 - [D] Documentation
+- [R] Refactor
