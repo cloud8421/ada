@@ -33,7 +33,8 @@ defmodule Ada.MixProject do
           "External services": [Ada.Email.ApiClient, Ada.HTTP.Client],
           Workflows: ~r/Workflow/,
           CLI: ~r/CLI/,
-          "Metrics and logs": [Logger.Backends.Telegraf]
+          "Metrics and logs": [Logger.Backends.Telegraf],
+          Utilities: [Ada.PubSub]
         ]
       ],
       dialyzer: [
