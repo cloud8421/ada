@@ -92,6 +92,10 @@ You can run `make rpi0.push` to perform a over-the-air device update.
 
 You can run `make rpi0.ssh`.
 
+## Data backups
+
+Ada is capable of backing up its own db file at 3am every night. To do that, it uses a configured backup strategy (with Dropbox being the one currently implemented). To activate it, it's enough to define a `DROPBOX_API_TOKEN` env variable (the token can be created at <https://www.dropbox.com/developers/apps>).
+
 ## Commit legend
 
 - [F] Feature
