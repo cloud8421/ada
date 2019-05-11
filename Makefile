@@ -80,6 +80,13 @@ host.ci-build: ## Uses CircleCI to simulate a CI run locally
 	circleci build
 .PHONY: host.ci-build
 
+host.push-docs: ## Builds docs locally, pushes them to Github as pages
+	mix docs -o docs
+	git add docs/
+	git commit -am '[D] Update docs on gh-pages'
+	git subtree push --prefix docs origin gh-pages
+	rm -rf docs
+
 # CI
 
 ci.base: dev.base ## Installs needed tools for CI
