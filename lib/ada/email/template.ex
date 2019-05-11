@@ -31,7 +31,7 @@ defmodule Ada.Email.Template do
     :def,
     :last_fm_report_template,
     Path.join(@templates_path, "last_fm_report.html.eex"),
-    [:tracks]
+    [:tracks, :chart_url]
   )
 
   def weather(location_name, report) do
@@ -46,9 +46,15 @@ defmodule Ada.Email.Template do
     layout_template(@style_css, "News for #{source_name}", stories_template(stories))
   end
 
-  def last_fm_report(report_name, tracks, timezone) do
+  def last_fm_report(report_name, tracks, timezone, local_now) do
     tracks_in_local_time = Enum.map(tracks, fn t -> shift_to_local_time(t, timezone) end)
-    layout_template(@style_css, report_name, last_fm_report_template(tracks_in_local_time))
+    chart_url = chart_url(tracks_in_local_time, timezone, local_now)
+
+    layout_template(
+      @style_css,
+      report_name,
+      last_fm_report_template(tracks_in_local_time, chart_url)
+    )
   end
 
   defp format_weather_datetime(datetime) do
@@ -76,5 +82,31 @@ defmodule Ada.Email.Template do
 
   defp format_listened_at(datetime) do
     DateTime.to_iso8601(datetime)
+  end
+
+  defp chart_url(tracks, timezone, local_now) do
+    counted_by_hour = Ada.Source.LastFm.Track.count_by_hour(tracks, timezone, local_now)
+
+    labels =
+      counted_by_hour
+      |> Keyword.keys()
+      |> Enum.map(fn dt -> Calendar.Strftime.strftime!(dt, "%x, %H:00") end)
+
+    payload = %{
+      type: "bar",
+      data: %{
+        labels: labels,
+        datasets: [
+          %{label: "Count by hour", data: Keyword.values(counted_by_hour)}
+        ]
+      }
+    }
+
+    encoded_payload =
+      payload
+      |> Jason.encode!()
+      |> String.replace(~s("), "'")
+
+    "https://quickchart.io/chart?width=500&height=300&c=#{encoded_payload}"
   end
 end

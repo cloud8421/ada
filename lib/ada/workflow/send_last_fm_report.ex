@@ -39,7 +39,8 @@ defmodule Ada.Workflow.SendLastFmReport do
       Email.Template.last_fm_report(
         "LastFm report for the last #{raw_data.interval_in_hours} hours",
         raw_data.report.tracks,
-        timezone
+        timezone,
+        raw_data.report.local_now
       )
 
     {:ok, compose_email(raw_data.user, raw_data.interval_in_hours, email_body)}
