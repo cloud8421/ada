@@ -1,5 +1,9 @@
 defmodule Ada.Display.Driver.ScrollPhatHD do
   @moduledoc false
+
+  # Huge thanks to Ju Liu (@arkham) for porting this code from its
+  # original Python source.
+
   use GenServer
   @behaviour Ada.Display.Driver
 
