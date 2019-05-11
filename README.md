@@ -48,6 +48,19 @@ Generally speaking, with the CLI you can:
 - pull the device database to a local file
 - restore the device database from a local file
 
+As an example, we can add a new user and setup a news digest about UK news, sent every day at 9am:
+
+```
+$ ./ada create_user mary mary@example.com
+
+  Created User with ID 3
+
+$ ./ada create_scheduled_task send_news_by_tag daily:9 --user_id 3 --tag 'uk/uk'
+
+  Created scheduled_task with ID 9
+
+```
+
 ### HTTP interaction
 
 HTTP api documentation is available at `http://ada.local/swagger-ui`.
