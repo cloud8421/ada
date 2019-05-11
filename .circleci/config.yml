@@ -3,6 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/elixir:latest
+    filters:
+      branches:
+        ignore:
+          - gh-pages
     steps:
       - checkout
       - restore_cache:
