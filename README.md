@@ -24,6 +24,10 @@ The display is used primarily as a digital clock, but it can display if one or m
 
 Ada’s timezone can be configured and its clock is synchronised automatically.
 
+Ada’s default email adapter is [Sendgrid](https://sendgrid.com/docs/for-developers/sending-email/api-getting-started/).
+
+Ada’s default backup strategy uses [Dropbox via a custom app](https://www.dropbox.com/developers/apps).
+
 ## Interaction modes
 
 Ada can be controlled by a command line UI (CLI) and an HTTP API.
@@ -74,7 +78,7 @@ You can run `make host.dialyzer` to perform a static analysis of the source code
 
 ### Build docs
 
-You can run `make host.docs`.
+You can run `make host.docs`. Key parts of the source are documented, so this should help in case you feel like contributing.
 
 ### Open a local iex session
 
