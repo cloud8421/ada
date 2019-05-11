@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.20.2">
+    <meta name="project" content="ada v0.1.0">
+    <title>Ada.Backup.Strategy — ada v0.1.0</title>
+    <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
+    <script src="dist/sidebar_items-99168804b0.js"></script>
+      <script src="docs_config.js"></script>
+    <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
+    
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+    <div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button">
+      <span class="icon-cross" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" id="search-list" class="search-input" placeholder="Search..." aria-label="Search" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+ada      </a>
+      <h2 class="sidebar-projectVersion">
+        v0.1.0
+      </h2>
+    </div>
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="app-vsn">ada v0.1.0</small>
+Ada.Backup.Strategy <small>behaviour</small>              </h1>
+
+
+        <section id="moduledoc">
+<p>The <a href="#content"><code class="inline">Ada.Backup.Strategy</code></a> behaviour defines a module capable
+of backing up and restoring files from a specific provider.</p>
+        </section>
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:contents/0">contents()</a>
+  </div>
+    <div class="summary-synopsis"><p>The contents of the backup file</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:name/0">name()</a>
+  </div>
+    <div class="summary-synopsis"><p>The name to use when saving the file</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:path/0">path()</a>
+  </div>
+    <div class="summary-synopsis"><p>The path where a backup is stored</p></div>
+</div>
+  </div>
+  <div class="summary-callbacks summary">
+    <h2>
+      <a href="#callbacks">Callbacks</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:configured?/0">configured?()</a>
+  </div>
+    <div class="summary-synopsis"><p>This callback should check if the module is properly setup, e.g.
+if any access token is present.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:download_file/1">download_file(path)</a>
+  </div>
+    <div class="summary-synopsis"><p>Download a file at a given path, returning its contents.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:list_files/0">list_files()</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns a list of paths where backups are stored. Each one of these paths
+should be compatible with the <code class="inline">download_file/1</code> callback.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:upload_file/2">upload_file(name, contents)</a>
+  </div>
+    <div class="summary-synopsis"><p>Uploads a file with the specified contents under the given name, returning
+its path.</p></div>
+</div>
+  </div>
+        </section>
+
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Types          </h1>
+          <div class="types-list">
+<section class="detail" id="t:contents/0">
+    <div class="detail-header">
+    <a href="#t:contents/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">contents()</span>
+        
+      <div class="specs">
+          <pre>contents() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">binary</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>The contents of the backup file</p>
+  </section>
+</section>
+<section class="detail" id="t:name/0">
+    <div class="detail-header">
+    <a href="#t:name/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">name()</span>
+        
+      <div class="specs">
+          <pre>name() :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>The name to use when saving the file</p>
+  </section>
+</section>
+<section class="detail" id="t:path/0">
+    <div class="detail-header">
+    <a href="#t:path/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">path()</span>
+        
+      <div class="specs">
+          <pre>path() :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>The path where a backup is stored</p>
+  </section>
+</section>
+          </div>
+        </section>
+        <section id="callbacks" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#callbacks">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Callbacks          </h1>
+          <div class="callbacks-list">
+<section class="detail" id="c:configured?/0">
+    <div class="detail-header">
+    <a href="#c:configured?/0" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">configured?()</span>
+        
+      <div class="specs">
+          <pre>configured?() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>This callback should check if the module is properly setup, e.g.
+if any access token is present.</p>
+<p>The function will be invoked at application boot. If it returns <code class="inline">false</code>,
+backups will be disabled.</p>
+  </section>
+</section>
+<section class="detail" id="c:download_file/1">
+    <div class="detail-header">
+    <a href="#c:download_file/1" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">download_file(path)</span>
+        
+      <div class="specs">
+          <pre>download_file(<a href="#t:path/0">path</a>()) :: {:ok, <a href="#t:contents/0">contents</a>()} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Download a file at a given path, returning its contents.</p>
+  </section>
+</section>
+<section class="detail" id="c:list_files/0">
+    <div class="detail-header">
+    <a href="#c:list_files/0" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">list_files()</span>
+        
+      <div class="specs">
+          <pre>list_files() :: {:ok, [<a href="#t:path/0">path</a>()]} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Returns a list of paths where backups are stored. Each one of these paths
+should be compatible with the <code class="inline">download_file/1</code> callback.</p>
+  </section>
+</section>
+<section class="detail" id="c:upload_file/2">
+    <div class="detail-header">
+    <a href="#c:upload_file/2" class="detail-link" title="Link to this callback">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this callback</span>
+    </a>
+    <h1 class="signature">upload_file(name, contents)</span>
+        
+      <div class="specs">
+          <pre>upload_file(<a href="#t:name/0">name</a>(), <a href="#t:contents/0">contents</a>()) :: {:ok, <a href="#t:path/0">path</a>()} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Uploads a file with the specified contents under the given name, returning
+its path.</p>
+  </section>
+</section>
+          </div>
+        </section>
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.20.2),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  
+  </body>
+</html>
+
