@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.20.2">
+    <meta name="project" content="ada v0.1.0">
+    <title>Ada.Schema.ScheduledTask — ada v0.1.0</title>
+    <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
+    <script src="dist/sidebar_items-99168804b0.js"></script>
+      <script src="docs_config.js"></script>
+    <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
+    
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+    <div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button">
+      <span class="icon-cross" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" id="search-list" class="search-input" placeholder="Search..." aria-label="Search" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="readme.html" class="sidebar-projectName">
+ada      </a>
+      <h2 class="sidebar-projectVersion">
+        v0.1.0
+      </h2>
+    </div>
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="app-vsn">ada v0.1.0</small>
+Ada.Schema.ScheduledTask              </h1>
+
+
+        <section id="moduledoc">
+<p>Represents a boilerplate for the recurring execution of a workflow.</p>
+<p>Captures the workflow to run, its frequency and params.</p>
+<p>See <a href="#t:t/0"><code class="inline">t/0</code></a> for more details.</p>
+        </section>
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+  </div>
+    <div class="summary-synopsis"><p>A scheduled task is mainly defined by</p></div>
+</div>
+  </div>
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#changeset/2">changeset(scheduled_task, params \\ %{})</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns a changeset, starting from a scheduled task and a map of attributes to change.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#daily?/1">daily?(scheduled_task)</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns true for a daily task.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#hourly?/1">hourly?(scheduled_task)</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns true for an hourly task.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#matches_time?/2">matches_time?(st, datetime)</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns true for a task that matches a given datetime, where matching is defined as</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#preview/2">preview(st, ctx \\ [])</a>
+  </div>
+    <div class="summary-synopsis"><p>Previews the results of a scheduled task by looking at
+its raw data.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#run/2">run(st, ctx \\ [])</a>
+  </div>
+    <div class="summary-synopsis"><p>Runs a scheduled task resolving the contained workflow.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#weekly?/1">weekly?(scheduled_task)</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns true for a weekly task.</p></div>
+</div>
+  </div>
+        </section>
+
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Types          </h1>
+          <div class="types-list">
+<section class="detail" id="t:t/0">
+    <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">t()</span>
+        
+      <div class="specs">
+          <pre>t() :: %Ada.Schema.ScheduledTask{
+  __meta__: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>(),
+  frequency: <a href="Ada.Schema.Frequency.html#t:t/0">Ada.Schema.Frequency.t</a>(),
+  id: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(),
+  inserted_at: <a href="https://hexdocs.pm/elixir/DateTime.html#t:t/0">DateTime.t</a>(),
+  params: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>(),
+  transport: <a href="Ada.Workflow.html#t:transport/0">Ada.Workflow.transport</a>(),
+  updated_at: <a href="https://hexdocs.pm/elixir/DateTime.html#t:t/0">DateTime.t</a>(),
+  version: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">pos_integer</a>(),
+  workflow_name: <a href="Ada.Workflow.html#t:t/0">Ada.Workflow.t</a>()
+}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>A scheduled task is mainly defined by:</p>
+<ul>
+<li>a workflow name, deciding the workflow that needs to be run
+</li>
+<li>a frequency, determining how often the task is run (see <a href="Ada.Schema.Frequency.html"><code class="inline">Ada.Schema.Frequency</code></a>)
+</li>
+<li>a map of params, which are going to be passed to the workflow when run
+</li>
+<li>a transport, deciding the transport used to communicate the workflow result
+  to the relevant user
+</li>
+</ul>
+  </section>
+</section>
+          </div>
+        </section>
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions          </h1>
+          <div class="functions-list">
+<section class="detail" id="changeset/2">
+  
+    <span id="changeset/1"></span>
+  <div class="detail-header">
+    <a href="#changeset/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">changeset(scheduled_task, params \\ %{})</span>
+        
+      <div class="specs">
+          <pre>changeset(<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>()) :: <a href="https://hexdocs.pm/ecto/2.2.9/Ecto.Changeset.html#t:t/0">Ecto.Changeset.t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Returns a changeset, starting from a scheduled task and a map of attributes to change.</p>
+  </section>
+</section>
+<section class="detail" id="daily?/1">
+    <div class="detail-header">
+    <a href="#daily?/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">daily?(scheduled_task)</span>
+        
+      <div class="specs">
+          <pre>daily?(<a href="#t:t/0">t</a>()) :: bool()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Returns true for a daily task.</p>
+  </section>
+</section>
+<section class="detail" id="hourly?/1">
+    <div class="detail-header">
+    <a href="#hourly?/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">hourly?(scheduled_task)</span>
+        
+      <div class="specs">
+          <pre>hourly?(<a href="#t:t/0">t</a>()) :: bool()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Returns true for an hourly task.</p>
+  </section>
+</section>
+<section class="detail" id="matches_time?/2">
+    <div class="detail-header">
+    <a href="#matches_time?/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">matches_time?(st, datetime)</span>
+        
+      <div class="specs">
+          <pre>matches_time?(<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/DateTime.html#t:t/0">DateTime.t</a>()) :: bool()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Returns true for a task that matches a given datetime, where matching is defined as:</p>
+<ul>
+<li>same day of the week, hour and zero minutes and seconds for a weekly task
+</li>
+<li>same hour, same minute and zero seconds for a daily task
+</li>
+<li>same minute and second for a hourly task
+</li>
+</ul>
+  </section>
+</section>
+<section class="detail" id="preview/2">
+  
+    <span id="preview/1"></span>
+  <div class="detail-header">
+    <a href="#preview/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">preview(st, ctx \\ [])</span>
+        
+      <div class="specs">
+          <pre>preview(<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()) :: <a href="Ada.Workflow.html#t:raw_data_result/0">Ada.Workflow.raw_data_result</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Previews the results of a scheduled task by looking at
+its raw data.</p>
+  </section>
+</section>
+<section class="detail" id="run/2">
+  
+    <span id="run/1"></span>
+  <div class="detail-header">
+    <a href="#run/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">run(st, ctx \\ [])</span>
+        
+      <div class="specs">
+          <pre>run(<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()) :: <a href="Ada.Workflow.html#t:run_result/0">Ada.Workflow.run_result</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Runs a scheduled task resolving the contained workflow.</p>
+  </section>
+</section>
+<section class="detail" id="weekly?/1">
+    <div class="detail-header">
+    <a href="#weekly?/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">weekly?(scheduled_task)</span>
+        
+      <div class="specs">
+          <pre>weekly?(<a href="#t:t/0">t</a>()) :: bool()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Returns true for a weekly task.</p>
+  </section>
+</section>
+          </div>
+        </section>
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.20.2),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  
+  </body>
+</html>
+
