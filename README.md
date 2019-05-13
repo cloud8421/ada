@@ -61,6 +61,25 @@ $ ./ada create_scheduled_task send_news_by_tag daily:9 --user_id 3 --tag 'uk/uk'
 
 ```
 
+You can run a task (irrespectively of its frequency) with:
+
+```
+$ ./ada run_scheduled_task 9
+```
+
+If you're interested in previewing its data, the CLI can render a
+shell-friendly version of a task's result with:
+
+```
+$ ./ada preview_scheduled_task 9
+```
+
+Current tasks render as follows:
+
+![Last.fm report shell preview](https://github.com/cloud8421/ada/blob/master/screenshots/last_fm.png?raw=true)
+![Weather report shell preview](https://github.com/cloud8421/ada/blob/master/screenshots/weather.png?raw=true)
+![News report shell preview](https://github.com/cloud8421/ada/blob/master/screenshots/news.png?raw=true)
+
 ### HTTP interaction
 
 HTTP api documentation is available at `http://ada.local/swagger-ui`.
