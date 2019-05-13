@@ -57,6 +57,7 @@ jobs:
           key: v1-dialyzer-cache
           paths:
             - priv/plts
+          when: always
       - run: make host.cli
       - store_artifacts:
           path: ada
