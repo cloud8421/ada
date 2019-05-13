@@ -7,54 +7,54 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
+            - v2-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v2-mix-cache-{{ .Branch }}
+            - v2-mix-cache
       - restore_cache:
           keys:
-            - v1-build-cache-{{ .Branch }}
-            - v1-build-cache
+            - v2-build-cache-{{ .Branch }}
+            - v2-build-cache
       - restore_cache:
           keys:
-            - v1-dialyzer-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-dialyzer-cache-{{ .Branch }}
-            - v1-dialyzer-cache
+            - v2-dialyzer-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v2-dialyzer-cache-{{ .Branch }}
+            - v2-dialyzer-cache
       - run: make ci.setup
       - run: make ci.compile
       - run: make ci.test
       - store_test_results:
           path: test/reports
       - save_cache:
-          key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          key: v2-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
           paths:
             - deps
       - save_cache:
-          key: v1-mix-cache-{{ .Branch }}
+          key: v2-mix-cache-{{ .Branch }}
           paths:
             - deps
       - save_cache:
-          key: v1-mix-cache
+          key: v2-mix-cache
           paths:
             - deps
       - save_cache:
-          key: v1-build-cache-{{ .Branch }}
+          key: v2-build-cache-{{ .Branch }}
           paths:
             - _build
       - save_cache:
-          key: v1-build-cache
+          key: v2-build-cache
           paths:
             - _build
       - run: make ci.dialyzer
       - save_cache:
-          key: v1-dialyzer-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          key: v2-dialyzer-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
           paths:
             - priv/plts
       - save_cache:
-          key: v1-dialyzer-cache-{{ .Branch }}
+          key: v2-dialyzer-cache-{{ .Branch }}
           paths:
             - priv/plts
       - save_cache:
-          key: v1-dialyzer-cache
+          key: v2-dialyzer-cache
           paths:
             - priv/plts
           when: always
@@ -69,13 +69,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v1-mix-cache-{{ .Branch }}
-            - v1-mix-cache
+            - v2-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v2-mix-cache-{{ .Branch }}
+            - v2-mix-cache
       - restore_cache:
           keys:
-            - v1-build-cache-{{ .Branch }}
-            - v1-build-cache
+            - v2-build-cache-{{ .Branch }}
+            - v2-build-cache
       - run: make ci.setup
       - run: make ci.compile
       - run: make ci.docs
