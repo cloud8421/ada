@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.20.2">
     <meta name="project" content="ada v0.1.0">
-    <title>Ada.Backup.Uploader — ada v0.1.0</title>
+    <title>Ada.CLI — ada v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
     <script src="dist/sidebar_items-6d2ab9f206.js"></script>
       <script src="docs_config.js"></script>
@@ -67,8 +67,8 @@ ada      </a>
 
       <h1>
         <small class="app-vsn">ada v0.1.0</small>
-Ada.Backup.Uploader        
-          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L1" title="View Source" class="view-source" rel="help">
+Ada.CLI        
+          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli.ex#L1" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -76,8 +76,45 @@ Ada.Backup.Uploader
 
 
         <section id="moduledoc">
-<p>Controls the upload of the database file to the configured backup
-location.</p>
+<p>Remotely control an Ada device via the Elixir distribution.</p>
+<p>Among other things, the CLI allows to:</p>
+<ul>
+<li>control the display brightness
+</li>
+<li>manage device data (users, locations, tasks)
+</li>
+<li>manage device preferences
+</li>
+<li>run or preview tasks
+</li>
+<li>backup the database with the active backup strategy
+</li>
+<li>pull the device database to a local file
+</li>
+<li>restore the device database from a local file
+</li>
+</ul>
+<p>By default, it will try to connect to <code class="inline">ada@ada.local</code>, but
+all commands support a <code class="inline">-t</code> to specify a different node name.</p>
+<p>In addition, it relies on the release&#39;s erlang cookie (as specified in
+<code class="inline">rel/vm.args</code>) and the one used by the CLI (as specified in
+<code class="inline">lib/ada/cli/helpers.ex</code>) to be identical.</p>
+<p>As an example, we can add a new user and setup a news digest about UK news, sent every day at 9am:</p>
+<pre><code class="nohighlight makeup elixir"><span class="err">$</span><span class="w"> </span><span class="o">.</span><span class="o">/</span><span class="n">ada</span><span class="w"> </span><span class="n">create_user</span><span class="w"> </span><span class="n">mary</span><span class="w"> </span><span class="n">mary</span><span class="na">@example</span><span class="o">.</span><span class="n">com</span><span class="w">
+
+  </span><span class="nc">Created</span><span class="w"> </span><span class="nc">User</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="nc">ID</span><span class="w"> </span><span class="mi">3</span><span class="w">
+
+</span><span class="err">$</span><span class="w"> </span><span class="o">.</span><span class="o">/</span><span class="n">ada</span><span class="w"> </span><span class="n">create_scheduled_task</span><span class="w"> </span><span class="n">send_news_by_tag</span><span class="w"> </span><span class="n">daily</span><span class="p">:</span><span class="mi">9</span><span class="w"> </span><span class="o">--</span><span class="n">user_id</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">--</span><span class="n">tag</span><span class="w"> </span><span class="sc">&#39;uk/uk&#39;</span><span class="w">
+
+  </span><span class="nc">Created</span><span class="w"> </span><span class="n">scheduled_task</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="nc">ID</span><span class="w"> </span><span class="mi">9</span><span class="w">
+</span></code></pre>
+<p>You can run a task (irrespectively of its frequency) with:</p>
+<pre><code class="nohighlight makeup elixir"><span class="err">$</span><span class="w"> </span><span class="o">.</span><span class="o">/</span><span class="n">ada</span><span class="w"> </span><span class="n">run_scheduled_task</span><span class="w"> </span><span class="mi">9</span></code></pre>
+<p>If you&#39;re interested in previewing its data, the CLI can render a
+shell-friendly version of a task&#39;s result with:</p>
+<pre><code class="nohighlight makeup elixir"><span class="err">$</span><span class="w"> </span><span class="o">.</span><span class="o">/</span><span class="n">ada</span><span class="w"> </span><span class="n">preview_scheduled_task</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">less</span><span class="w"> </span><span class="o">-</span><span class="n">r</span></code></pre>
+<p>As shown in the example, you can pipe the result to <code class="inline">less -r</code> to scroll down
+via keyboard in ANSI colors.</p>
         </section>
 
         <section id="summary" class="details-list">
@@ -88,76 +125,33 @@ location.</p>
             </a>
             Summary
           </h1>
-  <div class="summary-types summary">
-    <h2>
-      <a href="#types">Types</a>
-    </h2>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:start_opts/0">start_opts()</a>
-  </div>
-</div>
-  </div>
   <div class="summary-functions summary">
     <h2>
       <a href="#functions">Functions</a>
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#child_spec/1">child_spec(init_arg)</a>
+    <a href="#commands/0">commands()</a>
   </div>
-    <div class="summary-synopsis"><p>Returns a specification to start this module under a supervisor.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#save_now/0">save_now()</a>
+    <a href="#default_command/0">default_command()</a>
   </div>
-    <div class="summary-synopsis"><p>Saves a copy of the database, naming it with the current timestamp.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#save_today/0">save_today()</a>
+    <a href="#main/1">main(args)</a>
   </div>
-    <div class="summary-synopsis"><p>Saves a copy of the database, naming it with today&#39;s date.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#start_link/1">start_link(opts)</a>
+    <a href="#name/0">name()</a>
   </div>
-    <div class="summary-synopsis"><p>Starts the uploaded process. Requires a strategy.</p></div>
 </div>
   </div>
         </section>
 
-        <section id="types" class="details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#types">
-              <span class="icon-link" aria-hidden="true"></span>
-              <span class="sr-only">Link to this section</span>
-            </a>
-Types          </h1>
-          <div class="types-list">
-<section class="detail" id="t:start_opts/0">
-    <div class="detail-header">
-    <a href="#t:start_opts/0" class="detail-link" title="Link to this type">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this type</span>
-    </a>
-    <h1 class="signature">start_opts()</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L16" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-        
-      <div class="specs">
-          <pre>start_opts() :: [{:strategy, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">module</a>()}]</pre>
-      </div>
-  </div>
-  <section class="docstring">
-  </section>
-</section>
-          </div>
-        </section>
         <section id="functions" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#functions">
@@ -166,81 +160,64 @@ Types          </h1>
             </a>
 Functions          </h1>
           <div class="functions-list">
-<section class="detail" id="child_spec/1">
+<section class="detail" id="commands/0">
     <div class="detail-header">
-    <a href="#child_spec/1" class="detail-link" title="Link to this function">
+    <a href="#commands/0" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">child_spec(init_arg)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L7" class="view-source" rel="help" title="View Source">
+    <h1 class="signature">commands()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli.ex#L528" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
           </div>
   <section class="docstring">
-<p>Returns a specification to start this module under a supervisor.</p>
-<p>See <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>.</p>
   </section>
 </section>
-<section class="detail" id="save_now/0">
+<section class="detail" id="default_command/0">
     <div class="detail-header">
-    <a href="#save_now/0" class="detail-link" title="Link to this function">
+    <a href="#default_command/0" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">save_now()</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L38" class="view-source" rel="help" title="View Source">
+    <h1 class="signature">default_command()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli.ex#L55" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
-      <div class="specs">
-          <pre>save_now() :: {:ok, <a href="Ada.Backup.Strategy.html#t:path/0">Ada.Backup.Strategy.path</a>()} | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
-      </div>
-  </div>
+          </div>
   <section class="docstring">
-<p>Saves a copy of the database, naming it with the current timestamp.</p>
   </section>
 </section>
-<section class="detail" id="save_today/0">
+<section class="detail" id="main/1">
     <div class="detail-header">
-    <a href="#save_today/0" class="detail-link" title="Link to this function">
+    <a href="#main/1" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">save_today()</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L30" class="view-source" rel="help" title="View Source">
+    <h1 class="signature">main(args)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli.ex#L55" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
-      <div class="specs">
-          <pre>save_today() :: {:ok, <a href="Ada.Backup.Strategy.html#t:path/0">Ada.Backup.Strategy.path</a>()} | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
-      </div>
-  </div>
+          </div>
   <section class="docstring">
-<p>Saves a copy of the database, naming it with today&#39;s date.</p>
   </section>
 </section>
-<section class="detail" id="start_link/1">
+<section class="detail" id="name/0">
     <div class="detail-header">
-    <a href="#start_link/1" class="detail-link" title="Link to this function">
+    <a href="#name/0" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">start_link(opts)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L22" class="view-source" rel="help" title="View Source">
+    <h1 class="signature">name()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli.ex#L55" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
-      <div class="specs">
-          <pre>start_link(<a href="#t:start_opts/0">start_opts</a>()) :: <a href="https://hexdocs.pm/elixir/GenServer.html#t:on_start/0">GenServer.on_start</a>()</pre>
-      </div>
-  </div>
+          </div>
   <section class="docstring">
-<p>Starts the uploaded process. Requires a strategy.</p>
   </section>
 </section>
           </div>

@@ -1,11 +1,11 @@
-dist/search_items-1d23cfc346.js
+dist/search_items-aca5ac7af9.js
 dist/html-d9f58a6320b5bfa6dd77.css
 dist/html-d9f58a6320b5bfa6dd77.js
 dist/html/fonts/icomoon.eot
 dist/html/fonts/icomoon.svg
 dist/html/fonts/icomoon.ttf
 dist/html/fonts/icomoon.woff
-dist/sidebar_items-7722b02d10.js
+dist/sidebar_items-6d2ab9f206.js
 api-reference.html
 readme.html
 search.html
@@ -27,6 +27,7 @@ Ada.Email.Adapter.Sendgrid.html
 Ada.Email.Quickchart.html
 Ada.HTTP.Client.html
 Ada.Workflow.html
+Ada.CLI.html
 Ada.CLI.FishCompletion.html
 Ada.CLI.Helpers.html
 Ada.CLI.Markup.html
