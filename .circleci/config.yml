@@ -96,7 +96,7 @@ jobs:
             git config user.name "ci-build"
       - run:
           name: Deploy docs to gh-pages branch
-          command: gh-pages --dist doc
+          command: gh-pages --dist doc/_ci_build
 
 workflows:
   version: 2
