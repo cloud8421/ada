@@ -1,7 +1,7 @@
 defmodule Ada.Email.Quickchart do
   @moduledoc """
   Minimal DSL and functions to create image charts
-  via https://quickchart.io.
+  via <https://quickchart.io>.
 
   Doesn't support all api options (yet).
   """
