@@ -71,8 +71,11 @@ If you're interested in previewing its data, the CLI can render a
 shell-friendly version of a task's result with:
 
 ```
-$ ./ada preview_scheduled_task 9
+$ ./ada preview_scheduled_task 9 | less -r
 ```
+
+As shown in the example, you can pipe the result to `less -r` to scroll down
+via keyboard in ANSI colors.
 
 Current tasks render as follows:
 
