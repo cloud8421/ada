@@ -1,19 +1,68 @@
 defmodule Ada.CLI do
-  @moduledoc false
+  @default_target_node :"ada@ada.local"
+  @cli_node :"cli@127.0.0.1"
+
+  @moduledoc """
+  Remotely control an Ada device via the Elixir distribution.
+
+  Among other things, the CLI allows to:
+
+  - control the display brightness
+  - manage device data (users, locations, tasks)
+  - manage device preferences
+  - run or preview tasks
+  - backup the database with the active backup strategy
+  - pull the device database to a local file
+  - restore the device database from a local file
+
+  By default, it will try to connect to `#{@default_target_node}`, but
+  all commands support a `-t` to specify a different node name.
+
+  In addition, it relies on the release's erlang cookie (as specified in
+  `rel/vm.args`) and the one used by the CLI (as specified in
+  `lib/ada/cli/helpers.ex`) to be identical.
+
+  As an example, we can add a new user and setup a news digest about UK news, sent every day at 9am:
+
+  ```
+  $ ./ada create_user mary mary@example.com
+
+    Created User with ID 3
+
+  $ ./ada create_scheduled_task send_news_by_tag daily:9 --user_id 3 --tag 'uk/uk'
+
+    Created scheduled_task with ID 9
+
+  ```
+
+  You can run a task (irrespectively of its frequency) with:
+
+  ```
+  $ ./ada run_scheduled_task 9
+  ```
+
+  If you're interested in previewing its data, the CLI can render a
+  shell-friendly version of a task's result with:
+
+  ```
+  $ ./ada preview_scheduled_task 9 | less -r
+  ```
+
+  As shown in the example, you can pipe the result to `less -r` to scroll down
+  via keyboard in ANSI colors.
+  """
+
   use ExCLI.DSL, escript: true
 
   alias Ada.{CLI.Helpers, CLI.Format, CRUD}
 
-  @default_target_node :"ada@ada.local"
-  @cli_node :"cli@127.0.0.1"
-
   name "ada"
-  description "Control a given Ada instance"
 
-  long_description """
-  Describe scope of commands.
-  Describe node name and cookie requirements.
+  description """
+  Remotely control an Ada device via the Erlang distribution.
   """
+
+  long_description @moduledoc
 
   command :list_users do
     option :target_node, aliases: [:t]
