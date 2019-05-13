@@ -80,12 +80,6 @@ host.ci-build: ## Uses CircleCI to simulate a CI run locally
 	circleci build
 .PHONY: host.ci-build
 
-host.push-docs: ## Builds docs locally, pushes them to Github as pages
-	mix docs -o docs
-	git add docs/
-	git commit -m '[D] Update docs on gh-pages'
-	git subtree push --prefix docs origin gh-pages
-
 # CI
 
 ci.base: dev.base ## Installs needed tools for CI
@@ -112,6 +106,6 @@ ci.dialyzer: ## Runs Dialyzer on CI
 .PHONY: ci.dialyzer
 
 ci.docs: ## Produces documentation suitable for CI deployment
-	mix docs
-	tar -czvf docs.tar.gz doc
+	mkdir -p doc/_ci_build
+	mix docs -o doc/_ci_build
 .PHONY: ci.docs

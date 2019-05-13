@@ -3,10 +3,6 @@ jobs:
   build:
     docker:
       - image: circleci/elixir:latest
-    filters:
-      branches:
-        ignore:
-          - gh-pages
     steps:
       - checkout
       - restore_cache:
@@ -65,7 +61,58 @@ jobs:
       - store_artifacts:
           path: ada
           destination: cli
+  docs-build:
+    docker:
+      - image: circleci/elixir:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v1-mix-cache-{{ .Branch }}
+            - v1-mix-cache
+      - restore_cache:
+          keys:
+            - v1-build-cache-{{ .Branch }}
+            - v1-build-cache
+      - run: make ci.setup
+      - run: make ci.compile
       - run: make ci.docs
-      - store_artifacts:
-          path: docs.tar.gz
-          destination: docs.tar.gz
+      - persist_to_workspace:
+          root: doc
+          paths: _ci_build
+  docs-deploy:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: doc
+      - run:
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "cloud8421@gmail.com"
+            git config user.name "ci-build"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: gh-pages --dist doc
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
+      - docs-build:
+          filters:
+            branches:
+              only: master
+      - docs-deploy:
+          requires:
+            - build
+            - docs-build
+          filters:
+            branches:
+              only: master
