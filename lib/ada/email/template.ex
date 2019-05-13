@@ -7,6 +7,8 @@ defmodule Ada.Email.Template do
   @external_resource @style_css_file
   @style_css File.read!(@style_css_file)
 
+  alias Ada.Email.Quickchart
+
   EEx.function_from_file(:def, :layout_template, Path.join(@templates_path, "layout.html.eex"), [
     :style,
     :title,
@@ -92,21 +94,9 @@ defmodule Ada.Email.Template do
       |> Keyword.keys()
       |> Enum.map(fn dt -> Calendar.Strftime.strftime!(dt, "%x, %H:00") end)
 
-    payload = %{
-      type: "bar",
-      data: %{
-        labels: labels,
-        datasets: [
-          %{label: "Count by hour", data: Keyword.values(counted_by_hour)}
-        ]
-      }
-    }
-
-    encoded_payload =
-      payload
-      |> Jason.encode!()
-      |> String.replace(~s("), "'")
-
-    "https://quickchart.io/chart?width=500&height=300&c=#{encoded_payload}"
+    Quickchart.new("bar")
+    |> Quickchart.add_labels(labels)
+    |> Quickchart.add_dataset("Count by hour", Keyword.values(counted_by_hour))
+    |> Quickchart.to_url()
   end
 end
