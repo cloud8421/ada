@@ -6,7 +6,9 @@ Ada is personal assistant designed to run on the [Pimoroni Scroll Bot](https://s
 
 It’s powered by [Nerves Project](https://nerves-project.org) and [Elixir](https://elixir-lang.org).
 
-![Ada Device](https://github.com/cloud8421/ada/blob/master/ada.jpg?raw=true)
+<p align="center">
+  <img alt="Ada Device" src="https://github.com/cloud8421/ada/blob/master/ada.jpg?raw=true">
+</p>
 
 ## Features
 
@@ -79,9 +81,15 @@ via keyboard in ANSI colors.
 
 Current tasks render as follows:
 
-![Last.fm report shell preview](https://github.com/cloud8421/ada/blob/master/screenshots/last_fm.png?raw=true)
-![Weather report shell preview](https://github.com/cloud8421/ada/blob/master/screenshots/weather.png?raw=true)
-![News report shell preview](https://github.com/cloud8421/ada/blob/master/screenshots/news.png?raw=true)
+<p align="center">
+  <img alt="Last.fm report shell preview" src="https://github.com/cloud8421/ada/blob/master/screenshots/last_fm.png?raw=true">
+</p>
+<p align="center">
+  <img alt="Weather report shell preview" src="https://github.com/cloud8421/ada/blob/master/screenshots/weather.png?raw=true">
+</p>
+<p align="center">
+  <img alt="News report shell preview" src="https://github.com/cloud8421/ada/blob/master/screenshots/news.png?raw=true">
+</p>
 
 ### HTTP interaction
 
