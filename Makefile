@@ -105,7 +105,11 @@ ci.dialyzer: ## Runs Dialyzer on CI
 	MIX_TARGET=host mix dialyzer --halt-exit-status
 .PHONY: ci.dialyzer
 
-ci.docs: ## Produces documentation suitable for CI deployment
+ci.docs-build: ## Produces documentation suitable for CI deployment
 	mkdir -p doc/_ci_build
 	mix docs -o doc/_ci_build
-.PHONY: ci.docs
+.PHONY: ci.docs-build
+
+ci.docs-deploy: ## Deploys documentation built on CI
+	gh-pages --dotfiles --dist doc/_ci_build
+.PHONY: ci.docs-deploy
