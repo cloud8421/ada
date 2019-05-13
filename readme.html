@@ -129,6 +129,15 @@ ada      </a>
 
   </span><span class="nc">Created</span><span class="w"> </span><span class="n">scheduled_task</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="nc">ID</span><span class="w"> </span><span class="mi">9</span><span class="w">
 </span></code></pre>
+<p>You can run a task (irrespectively of its frequency) with:</p>
+<pre><code class="nohighlight makeup elixir"><span class="err">$</span><span class="w"> </span><span class="o">.</span><span class="o">/</span><span class="n">ada</span><span class="w"> </span><span class="n">run_scheduled_task</span><span class="w"> </span><span class="mi">9</span></code></pre>
+<p>If you&#39;re interested in previewing its data, the CLI can render a
+shell-friendly version of a task&#39;s result with:</p>
+<pre><code class="nohighlight makeup elixir"><span class="err">$</span><span class="w"> </span><span class="o">.</span><span class="o">/</span><span class="n">ada</span><span class="w"> </span><span class="n">preview_scheduled_task</span><span class="w"> </span><span class="mi">9</span></code></pre>
+<p>Current tasks render as follows:</p>
+<p><img src="https://github.com/cloud8421/ada/blob/master/screenshots/last_fm.png?raw=true" alt="Last.fm report shell preview"/>
+<img src="https://github.com/cloud8421/ada/blob/master/screenshots/weather.png?raw=true" alt="Weather report shell preview"/>
+<img src="https://github.com/cloud8421/ada/blob/master/screenshots/news.png?raw=true" alt="News report shell preview"/></p>
 <h3 id="http-interaction" class="section-heading">
   <a href="#http-interaction" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
   HTTP interaction
