@@ -67,15 +67,20 @@ ada      </a>
 
       <h1>
         <small class="app-vsn">ada v0.1.0</small>
-Ada.PubSub              </h1>
+Ada.PubSub        
+          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/pub_sub.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+      </h1>
 
 
         <section id="moduledoc">
 <p>Provides a single-node pub-sub infrastructure on top of <a href="https://hexdocs.pm/elixir/Registry.html"><code class="inline">Registry</code></a>.</p>
 <p>It needs to be added to the application supervision tree:</p>
-<pre><code class="nohighlight makeup elixir"><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="0886602490-1">[</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5175759396-1">[</span><span class="w">
   </span><span class="nc">Ada.PubSub</span><span class="w">
-</span><span class="p" data-group-id="0886602490-1">]</span></code></pre>
+</span><span class="p" data-group-id="5175759396-1">]</span></code></pre>
 <p>See <a href="#subscribe/1"><code class="inline">subscribe/1</code></a> and <a href="#publish/2"><code class="inline">publish/2</code></a> for usage details.</p>
         </section>
 
@@ -122,6 +127,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">publish(topic, message)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/pub_sub.ex#L33" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>publish(<a href="https://hexdocs.pm/elixir/Registry.html#t:key/0">Registry.key</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()) :: :ok</pre>
@@ -138,6 +147,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">subscribe(topic)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/pub_sub.ex#L24" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>subscribe(<a href="https://hexdocs.pm/elixir/Registry.html#t:key/0">Registry.key</a>()) :: :ok</pre>

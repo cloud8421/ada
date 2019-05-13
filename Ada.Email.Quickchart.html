@@ -67,7 +67,12 @@ ada      </a>
 
       <h1>
         <small class="app-vsn">ada v0.1.0</small>
-Ada.Email.Quickchart              </h1>
+Ada.Email.Quickchart        
+          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+      </h1>
 
 
         <section id="moduledoc">
@@ -171,6 +176,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">chart_type()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L18" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>chart_type() :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()</pre>
@@ -186,6 +195,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">data()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L21" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>data() :: [<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">number</a>()]</pre>
@@ -201,6 +214,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">dataset()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L22" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>dataset() :: %{label: <a href="#t:label/0">label</a>(), data: <a href="#t:data/0">data</a>()}</pre>
@@ -216,6 +233,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">dimension()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L20" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>dimension() :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">pos_integer</a>()</pre>
@@ -231,6 +252,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">label()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L19" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>label() :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()</pre>
@@ -246,6 +271,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">t()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L24" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>t() :: %Ada.Email.Quickchart{
@@ -276,6 +305,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">add_dataset(chart, label, data)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L98" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>add_dataset(<a href="#t:t/0">t</a>(), <a href="#t:label/0">label</a>(), <a href="#t:data/0">data</a>()) :: <a href="#t:t/0">t</a>()</pre>
@@ -283,14 +316,14 @@ Functions          </h1>
   </div>
   <section class="docstring">
 <p>Given a chart, add a new dataset, identified by its label and data.</p>
-<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="7410031304-1">(</span><span class="p" data-group-id="7410031304-1">)</span><span class="w">
-</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">add_dataset</span><span class="p" data-group-id="7410031304-2">(</span><span class="s">&quot;Sales&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7410031304-3">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p" data-group-id="7410031304-3">]</span><span class="p" data-group-id="7410031304-2">)</span><span class="w">
-</span><span class="p" data-group-id="7410031304-4">%</span><span class="nc" data-group-id="7410031304-4">Ada.Email.Quickchart</span><span class="p" data-group-id="7410031304-4">{</span><span class="w">
-  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7410031304-5">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7410031304-6">[</span><span class="p" data-group-id="7410031304-7">%{</span><span class="ss">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Sales&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7410031304-8">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p" data-group-id="7410031304-8">]</span><span class="p" data-group-id="7410031304-7">}</span><span class="p" data-group-id="7410031304-6">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7410031304-9">[</span><span class="p" data-group-id="7410031304-9">]</span><span class="p" data-group-id="7410031304-5">}</span><span class="p">,</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="4655974331-1">(</span><span class="p" data-group-id="4655974331-1">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">add_dataset</span><span class="p" data-group-id="4655974331-2">(</span><span class="s">&quot;Sales&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="4655974331-3">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p" data-group-id="4655974331-3">]</span><span class="p" data-group-id="4655974331-2">)</span><span class="w">
+</span><span class="p" data-group-id="4655974331-4">%</span><span class="nc" data-group-id="4655974331-4">Ada.Email.Quickchart</span><span class="p" data-group-id="4655974331-4">{</span><span class="w">
+  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4655974331-5">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4655974331-6">[</span><span class="p" data-group-id="4655974331-7">%{</span><span class="ss">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Sales&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4655974331-8">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p" data-group-id="4655974331-8">]</span><span class="p" data-group-id="4655974331-7">}</span><span class="p" data-group-id="4655974331-6">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4655974331-9">[</span><span class="p" data-group-id="4655974331-9">]</span><span class="p" data-group-id="4655974331-5">}</span><span class="p">,</span><span class="w">
   </span><span class="ss">height</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w">
   </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">,</span><span class="w">
   </span><span class="ss">width</span><span class="p">:</span><span class="w"> </span><span class="mi">516</span><span class="w">
-</span><span class="p" data-group-id="7410031304-4">}</span></code></pre>
+</span><span class="p" data-group-id="4655974331-4">}</span></code></pre>
   </section>
 </section>
 <section class="detail" id="add_labels/2">
@@ -300,6 +333,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">add_labels(chart, labels)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L81" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>add_labels(<a href="#t:t/0">t</a>(), [<a href="#t:label/0">label</a>()]) :: <a href="#t:t/0">t</a>()</pre>
@@ -307,14 +344,14 @@ Functions          </h1>
   </div>
   <section class="docstring">
 <p>Given a chart, add general labels.</p>
-<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="4822716117-1">(</span><span class="p" data-group-id="4822716117-1">)</span><span class="w">
-</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">add_labels</span><span class="p" data-group-id="4822716117-2">(</span><span class="p" data-group-id="4822716117-3">[</span><span class="s">&quot;May&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;June&quot;</span><span class="p" data-group-id="4822716117-3">]</span><span class="p" data-group-id="4822716117-2">)</span><span class="w">
-</span><span class="p" data-group-id="4822716117-4">%</span><span class="nc" data-group-id="4822716117-4">Ada.Email.Quickchart</span><span class="p" data-group-id="4822716117-4">{</span><span class="w">
-  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4822716117-5">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4822716117-6">[</span><span class="p" data-group-id="4822716117-6">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4822716117-7">[</span><span class="s">&quot;May&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;June&quot;</span><span class="p" data-group-id="4822716117-7">]</span><span class="p" data-group-id="4822716117-5">}</span><span class="p">,</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8226122230-1">(</span><span class="p" data-group-id="8226122230-1">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">add_labels</span><span class="p" data-group-id="8226122230-2">(</span><span class="p" data-group-id="8226122230-3">[</span><span class="s">&quot;May&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;June&quot;</span><span class="p" data-group-id="8226122230-3">]</span><span class="p" data-group-id="8226122230-2">)</span><span class="w">
+</span><span class="p" data-group-id="8226122230-4">%</span><span class="nc" data-group-id="8226122230-4">Ada.Email.Quickchart</span><span class="p" data-group-id="8226122230-4">{</span><span class="w">
+  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8226122230-5">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8226122230-6">[</span><span class="p" data-group-id="8226122230-6">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8226122230-7">[</span><span class="s">&quot;May&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;June&quot;</span><span class="p" data-group-id="8226122230-7">]</span><span class="p" data-group-id="8226122230-5">}</span><span class="p">,</span><span class="w">
   </span><span class="ss">height</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w">
   </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">,</span><span class="w">
   </span><span class="ss">width</span><span class="p">:</span><span class="w"> </span><span class="mi">516</span><span class="w">
-</span><span class="p" data-group-id="4822716117-4">}</span></code></pre>
+</span><span class="p" data-group-id="8226122230-4">}</span></code></pre>
   </section>
 </section>
 <section class="detail" id="new/1">
@@ -326,6 +363,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">new(type \\ &quot;bar&quot;)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L50" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>new(<a href="#t:chart_type/0">chart_type</a>()) :: <a href="#t:t/0">t</a>()</pre>
@@ -333,20 +374,20 @@ Functions          </h1>
   </div>
   <section class="docstring">
 <p>Given a chart type, return a new chart. Defaults to bar</p>
-<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8593868095-1">(</span><span class="p" data-group-id="8593868095-1">)</span><span class="w">
-</span><span class="p" data-group-id="8593868095-2">%</span><span class="nc" data-group-id="8593868095-2">Ada.Email.Quickchart</span><span class="p" data-group-id="8593868095-2">{</span><span class="w">
-  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8593868095-3">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8593868095-4">[</span><span class="p" data-group-id="8593868095-4">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8593868095-5">[</span><span class="p" data-group-id="8593868095-5">]</span><span class="p" data-group-id="8593868095-3">}</span><span class="p">,</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="3378476912-1">(</span><span class="p" data-group-id="3378476912-1">)</span><span class="w">
+</span><span class="p" data-group-id="3378476912-2">%</span><span class="nc" data-group-id="3378476912-2">Ada.Email.Quickchart</span><span class="p" data-group-id="3378476912-2">{</span><span class="w">
+  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3378476912-3">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3378476912-4">[</span><span class="p" data-group-id="3378476912-4">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3378476912-5">[</span><span class="p" data-group-id="3378476912-5">]</span><span class="p" data-group-id="3378476912-3">}</span><span class="p">,</span><span class="w">
   </span><span class="ss">height</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w">
   </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">,</span><span class="w">
   </span><span class="ss">width</span><span class="p">:</span><span class="w"> </span><span class="mi">516</span><span class="w">
-</span><span class="p" data-group-id="8593868095-2">}</span><span class="w">
-</span><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8593868095-6">(</span><span class="s">&quot;line&quot;</span><span class="p" data-group-id="8593868095-6">)</span><span class="w">
-</span><span class="p" data-group-id="8593868095-7">%</span><span class="nc" data-group-id="8593868095-7">Ada.Email.Quickchart</span><span class="p" data-group-id="8593868095-7">{</span><span class="w">
-  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8593868095-8">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8593868095-9">[</span><span class="p" data-group-id="8593868095-9">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8593868095-10">[</span><span class="p" data-group-id="8593868095-10">]</span><span class="p" data-group-id="8593868095-8">}</span><span class="p">,</span><span class="w">
+</span><span class="p" data-group-id="3378476912-2">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="3378476912-6">(</span><span class="s">&quot;line&quot;</span><span class="p" data-group-id="3378476912-6">)</span><span class="w">
+</span><span class="p" data-group-id="3378476912-7">%</span><span class="nc" data-group-id="3378476912-7">Ada.Email.Quickchart</span><span class="p" data-group-id="3378476912-7">{</span><span class="w">
+  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3378476912-8">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3378476912-9">[</span><span class="p" data-group-id="3378476912-9">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3378476912-10">[</span><span class="p" data-group-id="3378476912-10">]</span><span class="p" data-group-id="3378476912-8">}</span><span class="p">,</span><span class="w">
   </span><span class="ss">height</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w">
   </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;line&quot;</span><span class="p">,</span><span class="w">
   </span><span class="ss">width</span><span class="p">:</span><span class="w"> </span><span class="mi">516</span><span class="w">
-</span><span class="p" data-group-id="8593868095-7">}</span></code></pre>
+</span><span class="p" data-group-id="3378476912-7">}</span></code></pre>
   </section>
 </section>
 <section class="detail" id="set_dimensions/3">
@@ -356,6 +397,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">set_dimensions(chart, width, height)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L64" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>set_dimensions(<a href="#t:t/0">t</a>(), <a href="#t:dimension/0">dimension</a>(), <a href="#t:dimension/0">dimension</a>()) :: <a href="#t:t/0">t</a>()</pre>
@@ -363,14 +408,14 @@ Functions          </h1>
   </div>
   <section class="docstring">
 <p>Given a chart, set its dimensions.</p>
-<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="6442404032-1">(</span><span class="p" data-group-id="6442404032-1">)</span><span class="w">
-</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">set_dimensions</span><span class="p" data-group-id="6442404032-2">(</span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="6442404032-2">)</span><span class="w">
-</span><span class="p" data-group-id="6442404032-3">%</span><span class="nc" data-group-id="6442404032-3">Ada.Email.Quickchart</span><span class="p" data-group-id="6442404032-3">{</span><span class="w">
-  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6442404032-4">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6442404032-5">[</span><span class="p" data-group-id="6442404032-5">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6442404032-6">[</span><span class="p" data-group-id="6442404032-6">]</span><span class="p" data-group-id="6442404032-4">}</span><span class="p">,</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="2216850695-1">(</span><span class="p" data-group-id="2216850695-1">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">set_dimensions</span><span class="p" data-group-id="2216850695-2">(</span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="2216850695-2">)</span><span class="w">
+</span><span class="p" data-group-id="2216850695-3">%</span><span class="nc" data-group-id="2216850695-3">Ada.Email.Quickchart</span><span class="p" data-group-id="2216850695-3">{</span><span class="w">
+  </span><span class="ss">data</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2216850695-4">%{</span><span class="ss">datasets</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2216850695-5">[</span><span class="p" data-group-id="2216850695-5">]</span><span class="p">,</span><span class="w"> </span><span class="ss">labels</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2216850695-6">[</span><span class="p" data-group-id="2216850695-6">]</span><span class="p" data-group-id="2216850695-4">}</span><span class="p">,</span><span class="w">
   </span><span class="ss">height</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
   </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">,</span><span class="w">
   </span><span class="ss">width</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="w">
-</span><span class="p" data-group-id="6442404032-3">}</span></code></pre>
+</span><span class="p" data-group-id="2216850695-3">}</span></code></pre>
   </section>
 </section>
 <section class="detail" id="to_url/1">
@@ -380,6 +425,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">to_url(chart)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/email/quickchart.ex#L113" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>to_url(<a href="#t:t/0">t</a>()) :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()</pre>
@@ -387,10 +436,10 @@ Functions          </h1>
   </div>
   <section class="docstring">
 <p>Given a chart, returns its corresponding quickchart url.</p>
-<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="5019119362-1">(</span><span class="p" data-group-id="5019119362-1">)</span><span class="w">
-</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">add_labels</span><span class="p" data-group-id="5019119362-2">(</span><span class="p" data-group-id="5019119362-3">[</span><span class="s">&quot;April&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;May&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;June&quot;</span><span class="p" data-group-id="5019119362-3">]</span><span class="p" data-group-id="5019119362-2">)</span><span class="w">
-</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">add_dataset</span><span class="p" data-group-id="5019119362-4">(</span><span class="s">&quot;Sales&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5019119362-5">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p" data-group-id="5019119362-5">]</span><span class="p" data-group-id="5019119362-4">)</span><span class="w">
-</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">to_url</span><span class="p" data-group-id="5019119362-6">(</span><span class="p" data-group-id="5019119362-6">)</span><span class="w">
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="3358868815-1">(</span><span class="p" data-group-id="3358868815-1">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">add_labels</span><span class="p" data-group-id="3358868815-2">(</span><span class="p" data-group-id="3358868815-3">[</span><span class="s">&quot;April&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;May&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;June&quot;</span><span class="p" data-group-id="3358868815-3">]</span><span class="p" data-group-id="3358868815-2">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">add_dataset</span><span class="p" data-group-id="3358868815-4">(</span><span class="s">&quot;Sales&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="3358868815-5">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p" data-group-id="3358868815-5">]</span><span class="p" data-group-id="3358868815-4">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Ada.Email.Quickchart</span><span class="o">.</span><span class="n">to_url</span><span class="p" data-group-id="3358868815-6">(</span><span class="p" data-group-id="3358868815-6">)</span><span class="w">
 </span><span class="s">&quot;https://quickchart.io/chart?c=%7B%27data%27%3A%7B%27datasets%27%3A%5B%7B%27data%27%3A%5B1%2C2%2C3%5D%2C%27label%27%3A%27Sales%27%7D%5D%2C%27labels%27%3A%5B%27April%27%2C%27May%27%2C%27June%27%5D%7D%2C%27type%27%3A%27bar%27%7D&amp;height=300&amp;width=516&quot;</span></code></pre>
   </section>
 </section>

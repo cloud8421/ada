@@ -67,7 +67,12 @@ ada      </a>
 
       <h1>
         <small class="app-vsn">ada v0.1.0</small>
-Ada.Backup.Strategy <small>behaviour</small>              </h1>
+Ada.Backup.Strategy <small>behaviour</small>        
+          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/strategy.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+      </h1>
 
 
         <section id="moduledoc">
@@ -155,6 +160,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">contents()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/strategy.ex#L14" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>contents() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">binary</a>()</pre>
@@ -171,6 +180,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">name()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/strategy.ex#L8" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>name() :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()</pre>
@@ -187,6 +200,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">path()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/strategy.ex#L11" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>path() :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()</pre>
@@ -213,6 +230,10 @@ Callbacks          </h1>
       <span class="sr-only">Link to this callback</span>
     </a>
     <h1 class="signature">configured?()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/strategy.ex#L23" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>configured?() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()</pre>
@@ -232,6 +253,10 @@ backups will be disabled.</p>
       <span class="sr-only">Link to this callback</span>
     </a>
     <h1 class="signature">download_file(path)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/strategy.ex#L40" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>download_file(<a href="#t:path/0">path</a>()) :: {:ok, <a href="#t:contents/0">contents</a>()} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
@@ -248,6 +273,10 @@ backups will be disabled.</p>
       <span class="sr-only">Link to this callback</span>
     </a>
     <h1 class="signature">list_files()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/strategy.ex#L29" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>list_files() :: {:ok, [<a href="#t:path/0">path</a>()]} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>
@@ -265,6 +294,10 @@ should be compatible with the <code class="inline">download_file/1</code> callba
       <span class="sr-only">Link to this callback</span>
     </a>
     <h1 class="signature">upload_file(name, contents)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/strategy.ex#L35" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>upload_file(<a href="#t:name/0">name</a>(), <a href="#t:contents/0">contents</a>()) :: {:ok, <a href="#t:path/0">path</a>()} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()}</pre>

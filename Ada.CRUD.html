@@ -67,7 +67,12 @@ ada      </a>
 
       <h1>
         <small class="app-vsn">ada v0.1.0</small>
-Ada.CRUD              </h1>
+Ada.CRUD        
+          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+      </h1>
 
 
         <section id="moduledoc">
@@ -159,6 +164,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">ctx()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L11" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>ctx() :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()</pre>
@@ -174,6 +183,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">resource()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L13" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>resource() ::
@@ -190,6 +203,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">resource_id()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>resource_id() :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">pos_integer</a>()</pre>
@@ -205,6 +222,10 @@ Types          </h1>
       <span class="sr-only">Link to this type</span>
     </a>
     <h1 class="signature">schema()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L12" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>schema() :: Ada.Schema.Location | Ada.Schema.ScheduledTask | Ada.Schema.User</pre>
@@ -232,6 +253,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">create(schema, attributes, ctx \\ [repo: Ada.Repo])</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L39" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>create(<a href="#t:schema/0">schema</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>(), <a href="#t:ctx/0">ctx</a>()) ::
@@ -251,6 +276,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">delete(resource, ctx \\ [repo: Ada.Repo])</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L61" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>delete(<a href="#t:resource/0">resource</a>(), <a href="#t:ctx/0">ctx</a>()) :: {:ok, <a href="#t:resource/0">resource</a>()} | {:error, <a href="https://hexdocs.pm/ecto/2.2.9/Ecto.Changeset.html#t:t/0">Ecto.Changeset.t</a>()}</pre>
@@ -269,6 +298,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">find(schema, id, ctx \\ [repo: Ada.Repo])</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L19" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>find(<a href="#t:schema/0">schema</a>(), <a href="#t:resource_id/0">resource_id</a>(), <a href="#t:ctx/0">ctx</a>()) :: <a href="#t:resource/0">resource</a>() | nil</pre>
@@ -287,6 +320,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">list(schema, ctx \\ [repo: Ada.Repo])</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L29" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>list(<a href="#t:schema/0">schema</a>(), <a href="#t:ctx/0">ctx</a>()) :: [<a href="#t:resource/0">resource</a>()]</pre>
@@ -305,6 +342,10 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">update(schema, resource, attributes, ctx \\ [repo: Ada.Repo])</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L50" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
         
       <div class="specs">
           <pre>update(<a href="#t:schema/0">schema</a>(), <a href="#t:resource/0">resource</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>(), <a href="#t:ctx/0">ctx</a>()) ::
