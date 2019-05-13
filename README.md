@@ -6,7 +6,7 @@ Ada is personal assistant designed to run on the [Pimoroni Scroll Bot](https://s
 
 It’s powered by [Nerves Project](https://nerves-project.org) and [Elixir](https://elixir-lang.org).
 
-![Ada Device](https://github.com/cloud8421/ada/blob/master/ada.jpg?raw=true).
+![Ada Device](https://github.com/cloud8421/ada/blob/master/ada.jpg?raw=true)
 
 ## Features
 

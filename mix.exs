@@ -23,6 +23,7 @@ defmodule Ada.MixProject do
       ],
       docs: [
         main: "readme",
+        source_url: "https://github.com/cloud8421/ada",
         extras: ["README.md"],
         groups_for_modules: [
           "Core Schemas": ~r/Schema/,
