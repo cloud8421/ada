@@ -23,7 +23,7 @@ defmodule Ada.CLI.Format.Weather do
     [
       Markup.h1("Current conditions"),
       Markup.left_pad(),
-      Markup.primary(currently.summary),
+      Markup.secondary(currently.summary),
       Markup.emdash(),
       "Feels like",
       Markup.space(),
