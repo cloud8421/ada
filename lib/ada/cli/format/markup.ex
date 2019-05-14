@@ -92,6 +92,15 @@ defmodule Ada.CLI.Markup do
   end
 
   @doc """
+  Returns the text, wrapped at the specified length.
+
+  All lines are padded on the left.
+  """
+  def wrap(contents, max_length) do
+    [WordWrap.paragraph(contents, max_length, @left_pad)]
+  end
+
+  @doc """
   Returns a list item, i.e. a definition with a name (wrapped in secondary
   colour) and a value.
 
