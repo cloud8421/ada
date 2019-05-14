@@ -84,7 +84,7 @@ jobs:
           paths: _ci_build
   docs-deploy:
     docker:
-      - image: node:8.10.0
+      - image: node:10
     steps:
       - checkout
       - attach_workspace:
