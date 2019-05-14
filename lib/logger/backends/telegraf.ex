@@ -38,6 +38,10 @@ defmodule Logger.Backends.Telegraf do
     {:ok, state}
   end
 
+  def handle_event(:flush, state) do
+    {:ok, state}
+  end
+
   ## Helpers
 
   defp configure(options, state \\ %{}) do
