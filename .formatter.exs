@@ -17,7 +17,9 @@
     timestamps: 1,
     embeds_one: 2,
     embeds_one: 3,
-    add: 3
+    add: 3,
+    # distillery
+    plugin: 1
   ],
   import_deps: [:distillery, :ex_cli]
 ]
