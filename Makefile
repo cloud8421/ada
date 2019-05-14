@@ -111,5 +111,5 @@ ci.docs-build: ## Produces documentation suitable for CI deployment
 .PHONY: ci.docs-build
 
 ci.docs-deploy: ## Deploys documentation built on CI
-	gh-pages --dotfiles --dist doc/_ci_build
+	gh-pages --dotfiles --dist doc/_ci_build --message 'Updates deriving from commit $(COMMIT_SHA)'
 .PHONY: ci.docs-deploy

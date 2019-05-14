@@ -96,7 +96,7 @@ jobs:
             git config user.name "ci-build"
       - run:
           name: Deploy docs to gh-pages branch
-          command: make ci.docs-deploy
+          command: COMMIT_SHA=$CIRCLE_SHA1 make ci.docs-deploy
 
 workflows:
   version: 2
