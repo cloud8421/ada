@@ -8,7 +8,7 @@
     <meta name="project" content="ada v0.1.0">
     <title>Ada.CLI.Markup — ada v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-6d2ab9f206.js"></script>
+    <script src="dist/sidebar_items-31ecda40b8.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -204,6 +204,12 @@ colour) and a value.</p></div>
     <div class="summary-synopsis"><p>Returns the text padded on the left, in red color
 and adds a break at the end.</p></div>
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#wrap/2">wrap(contents, max_length)</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns the text, wrapped at the specified length.</p></div>
+</div>
   </div>
         </section>
 
@@ -222,7 +228,7 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">bar(length)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L155" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L164" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -254,7 +260,7 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">dash()</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L147" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L156" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -288,7 +294,7 @@ to the left and right border of the page. The left text is wrapped in red.</p>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">ellipsis(string, max_length)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L160" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L169" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -304,7 +310,7 @@ to the left and right border of the page. The left text is wrapped in red.</p>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">emdash()</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L138" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L147" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -387,7 +393,7 @@ and adds a break at the end.</p>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">list_item(name, values)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L105" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L114" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -431,7 +437,7 @@ separated by a :
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">primary(contents)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L123" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L132" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -447,7 +453,7 @@ separated by a :
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">secondary(contents)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L128" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L137" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -479,7 +485,7 @@ separated by a :
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">tertiary(contents)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L133" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L142" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
@@ -503,6 +509,23 @@ separated by a :
   <section class="docstring">
 <p>Returns the text padded on the left, in red color
 and adds a break at the end.</p>
+  </section>
+</section>
+<section class="detail" id="wrap/2">
+    <div class="detail-header">
+    <a href="#wrap/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">wrap(contents, max_length)</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/cli/format/markup.ex#L99" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+          </div>
+  <section class="docstring">
+<p>Returns the text, wrapped at the specified length.</p>
+<p>All lines are padded on the left.</p>
   </section>
 </section>
           </div>

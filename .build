@@ -1,11 +1,11 @@
-dist/search_items-aca5ac7af9.js
+dist/search_items-d0d2ed5e48.js
 dist/html-d9f58a6320b5bfa6dd77.css
 dist/html-d9f58a6320b5bfa6dd77.js
 dist/html/fonts/icomoon.eot
 dist/html/fonts/icomoon.svg
 dist/html/fonts/icomoon.ttf
 dist/html/fonts/icomoon.woff
-dist/sidebar_items-6d2ab9f206.js
+dist/sidebar_items-31ecda40b8.js
 api-reference.html
 readme.html
 search.html
@@ -29,6 +29,7 @@ Ada.HTTP.Client.html
 Ada.Workflow.html
 Ada.CLI.html
 Ada.CLI.FishCompletion.html
+Ada.CLI.Format.HTML.html
 Ada.CLI.Helpers.html
 Ada.CLI.Markup.html
 Logger.Backends.Telegraf.html
