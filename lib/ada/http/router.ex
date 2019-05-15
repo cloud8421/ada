@@ -6,6 +6,7 @@ defmodule Ada.HTTP.Router do
     :cowboy_router.compile([
       {:_,
        [
+         {'/l/[:url_id]', Handler.Shortener, opts},
          {'/locations/[:location_id]/activate', Handler.Location.Activate, opts},
          collection_path('/locations', Schema.Location, opts),
          resource_path('/locations', Schema.Location, opts),

@@ -482,6 +482,27 @@ defmodule Ada.HTTP.IntegrationTest do
     end
   end
 
+  ################################################################################
+  ################################ URL SHORTENER #################################
+  ################################################################################
+
+  describe "GET /l/:url-id" do
+    test "when url exists" do
+      id = Ada.Shortener.shorten("http://example.com")
+
+      response = H.get(@base_url <> "/l/" <> id, [], %{}, autoredirect: false)
+      assert %H.Response{} = response
+      assert 302 == response.status_code
+      assert {"location", "http://example.com"} in response.headers
+    end
+
+    test "when url doesn't exist" do
+      response = H.get(@base_url <> "/l/non-existent")
+      assert %H.Response{} = response
+      assert 404 == response.status_code
+    end
+  end
+
   defp db_cleanup(_config) do
     on_exit(fn ->
       Ada.Repo.delete_all(Ada.Schema.User)

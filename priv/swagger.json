@@ -10,6 +10,34 @@
     }
   },
   "paths": {
+    "/l/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the URL to resolve",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Resolve a shortened url",
+        "operationId": "resolve-shortened-url",
+        "responses": {
+          "302": {
+            "description": "Redirected to url."
+          },
+          "400": {
+            "description": "Url not found."
+          }
+        },
+        "tags": [
+          "Shortened Urls"
+        ]
+      }
+    },
     "/display/brightness": {
       "get": {
         "summary": "Returns the current brightness level",

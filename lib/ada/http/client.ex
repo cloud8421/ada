@@ -72,8 +72,8 @@ defmodule Ada.HTTP.Client do
     end
   end
 
-  @spec get(String.t(), headers(), Enum.t()) :: Response.t() | ErrorResponse.t()
-  def get(url, headers \\ [], qs_params \\ %{}) do
+  @spec get(String.t(), headers(), Enum.t(), Keyword.t()) :: Response.t() | ErrorResponse.t()
+  def get(url, headers \\ [], qs_params \\ %{}, http_options \\ []) do
     headers =
       Enum.map(headers, fn {k, v} ->
         {String.to_charlist(k), String.to_charlist(v)}
@@ -84,7 +84,9 @@ defmodule Ada.HTTP.Client do
     meta = %{url: url_with_qs, method: :get}
 
     :timer.tc(fn ->
-      :httpc.request(:get, {String.to_charlist(url_with_qs), headers}, [], body_format: :binary)
+      :httpc.request(:get, {String.to_charlist(url_with_qs), headers}, http_options,
+        body_format: :binary
+      )
     end)
     |> process_response(meta)
   end
