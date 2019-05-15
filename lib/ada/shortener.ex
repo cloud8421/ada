@@ -32,7 +32,7 @@ defmodule Ada.Shortener do
   @spec shorten(url()) :: url_id()
   def shorten(url) do
     insertion_time = DateTime.utc_now() |> DateTime.to_unix()
-    id = Ecto.UUID.generate()
+    id = generate_id()
     true = :ets.insert(__MODULE__, {id, insertion_time, url})
     id
   end
@@ -89,6 +89,10 @@ defmodule Ada.Shortener do
 
       {:noreply, url_lifetime}
     end
+  end
+
+  defp generate_id do
+    :crypto.strong_rand_bytes(6) |> Base.url_encode64()
   end
 
   defp prune_urls(current_time, url_lifetime) do
