@@ -35,7 +35,7 @@ defmodule Ada.Source.News.ApiClient do
 
       %Story{
         title: Map.get(story_data, "webTitle"),
-        body_html: body_html,
+        body_html: Floki.parse(body_html),
         body_text: Floki.text(body_html),
         thumbnail: get_in(story_data, ["fields", "thumbnail"]),
         url: Map.get(story_data, "webUrl"),

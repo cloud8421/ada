@@ -9,7 +9,7 @@ defmodule Ada.Source.News.Story do
 
   @type t :: %__MODULE__{
           title: String.t(),
-          body_html: String.t(),
+          body_html: Floki.html_tree(),
           body_text: String.t(),
           thumbnail: String.t(),
           url: String.t(),
