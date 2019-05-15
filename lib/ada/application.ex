@@ -41,6 +41,7 @@ defmodule Ada.Application do
        repo: Ada.Repo, email_adapter: Ada.Email.Adapter.Sendgrid, timezone: timezone},
       {Ada.Backup.Uploader,
        repo: Ada.Repo, strategy: Ada.Backup.Strategy.Dropbox, timezone: timezone},
+      Ada.Shortener,
       {Ada.HTTP.Listener, listener_opts(@env, preferences)}
     ]
   end
