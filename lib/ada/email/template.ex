@@ -83,7 +83,7 @@ defmodule Ada.Email.Template do
   defp format_listened_at(:now_playing), do: "Now playing"
 
   defp format_listened_at(datetime) do
-    DateTime.to_iso8601(datetime)
+    Calendar.Strftime.strftime!(datetime, "%x, %H:%M")
   end
 
   defp chart_url(tracks, timezone, local_now) do
@@ -92,7 +92,7 @@ defmodule Ada.Email.Template do
     labels =
       counted_by_hour
       |> Keyword.keys()
-      |> Enum.map(fn dt -> Calendar.Strftime.strftime!(dt, "%x, %H:00") end)
+      |> Enum.map(&format_listened_at/1)
 
     Quickchart.new("bar")
     |> Quickchart.add_labels(labels)

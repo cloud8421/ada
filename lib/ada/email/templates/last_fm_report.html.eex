@@ -5,8 +5,8 @@
     <%= for track <- tracks do %>
       <li>
         <p>
-          <%= track.artist %> - <strong><%= track.name %></strong> (<%= track.album %>)
-          <small><%= format_listened_at(track.listened_at) %></small>
+          <small><%= format_listened_at(track.listened_at) %></small>:
+          <%= track.artist %> - <strong><%= track.name %></strong>
         </p>
       </li>
     <% end %>
