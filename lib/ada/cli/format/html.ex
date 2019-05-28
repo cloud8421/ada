@@ -1,6 +1,15 @@
 defmodule Ada.CLI.Format.HTML do
+  @moduledoc """
+  Experimental shell-based HTML renderer.
+  """
+
   alias Ada.CLI.Markup
 
+  @doc """
+  Prints an html tree (as specified in `t:Floki.html_tree/0`) as
+  an io list (with colors).
+  """
+  @spec pp(Floki.html_tree() | String.t()) :: [binary]
   def pp(nodes) when is_list(nodes), do: Enum.map(nodes, &pp/1)
   def pp(text) when is_binary(text), do: text
 
