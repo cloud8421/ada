@@ -62,7 +62,7 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
     {:ok, i2c} = Circuits.I2C.open(@bus)
     reset_i2c(i2c)
     initialize_display(i2c)
-    buffer = Matrix.new(@width, @height)
+    buffer = default_content() |> transpose_buffer()
     state = show(buffer, %__MODULE__{buffer: buffer, i2c: i2c})
     {:ok, state}
   end
