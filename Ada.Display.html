@@ -8,7 +8,7 @@
     <meta name="project" content="ada v0.1.0">
     <title>Ada.Display — ada v0.1.0</title>
     <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
-    <script src="dist/sidebar_items-31ecda40b8.js"></script>
+    <script src="dist/sidebar_items-a43bfa0594.js"></script>
       <script src="docs_config.js"></script>
     <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
     
@@ -76,27 +76,7 @@ Ada.Display
 
 
         <section id="moduledoc">
-<p>Supports the following contents:</p>
-<h2 id="module-static" class="section-heading">
-  <a href="#module-static" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
-  Static
-</h2>
-
-<pre><code class="nohighlight makeup elixir"><span class="nc">Ada.Display</span><span class="o">.</span><span class="n">set_content</span><span class="p" data-group-id="9030199282-1">(</span><span class="p" data-group-id="9030199282-2">{</span><span class="ss">:static</span><span class="p">,</span><span class="w"> </span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="9030199282-3">(</span><span class="sc">&#39;1234&#39;</span><span class="p" data-group-id="9030199282-3">)</span><span class="p" data-group-id="9030199282-2">}</span><span class="p" data-group-id="9030199282-1">)</span></code></pre>
-<h2 id="module-cyclic" class="section-heading">
-  <a href="#module-cyclic" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
-  Cyclic
-</h2>
-
-<pre><code class="nohighlight makeup elixir"><span class="nc">Ada.Display</span><span class="o">.</span><span class="n">set_content</span><span class="p" data-group-id="7275370547-1">(</span><span class="w">
-  </span><span class="p" data-group-id="7275370547-2">{</span><span class="ss">:cycle</span><span class="p">,</span><span class="w">
-   </span><span class="p" data-group-id="7275370547-3">[</span><span class="w">
-     </span><span class="p" data-group-id="7275370547-4">{</span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="7275370547-5">(</span><span class="sc">&#39;A   &#39;</span><span class="p" data-group-id="7275370547-5">)</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="7275370547-4">}</span><span class="p">,</span><span class="w">
-     </span><span class="p" data-group-id="7275370547-6">{</span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="7275370547-7">(</span><span class="sc">&#39; A  &#39;</span><span class="p" data-group-id="7275370547-7">)</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="7275370547-6">}</span><span class="p">,</span><span class="w">
-     </span><span class="p" data-group-id="7275370547-8">{</span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="7275370547-9">(</span><span class="sc">&#39;  A &#39;</span><span class="p" data-group-id="7275370547-9">)</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="7275370547-8">}</span><span class="p">,</span><span class="w">
-     </span><span class="p" data-group-id="7275370547-10">{</span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="7275370547-11">(</span><span class="sc">&#39;   A&#39;</span><span class="p" data-group-id="7275370547-11">)</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="7275370547-10">}</span><span class="w">
-   </span><span class="p" data-group-id="7275370547-3">]</span><span class="p" data-group-id="7275370547-2">}</span><span class="w">
-</span><span class="p" data-group-id="7275370547-1">)</span></code></pre>
+<p>Lower level driver to directly control the contents of the LED screen.</p>
         </section>
 
         <section id="summary" class="details-list">
@@ -107,80 +87,171 @@ Ada.Display
             </a>
             Summary
           </h1>
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:content/0">content()</a>
+  </div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:cycle_spec/0">cycle_spec()</a>
+  </div>
+    <div class="summary-synopsis"><p>Represents a specification for a cyclic screen, which loops over different
+buffers, each one with a specific duration.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:duration_ms/0">duration_ms()</a>
+  </div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:static_spec/0">static_spec()</a>
+  </div>
+    <div class="summary-synopsis"><p>Represents a specification for a static screen, constantly displaying the
+same contents.</p></div>
+</div>
+  </div>
   <div class="summary-functions summary">
     <h2>
       <a href="#functions">Functions</a>
     </h2>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#callback_mode/0">callback_mode()</a>
-  </div>
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c::gen_statem.callback_mode/0</code>.</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#child_spec/1">child_spec(opts)</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#cyclic/3">cyclic(event_type, arg2, data)</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#get_brightness/0">get_brightness()</a>
   </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#init/1">init(opts)</a>
-  </div>
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c::gen_statem.init/1</code>.</p></div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#is_valid_cycle_spec/1">is_valid_cycle_spec(cycle_spec)</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#off/3">off(arg1, arg2, data)</a>
-  </div>
+    <div class="summary-synopsis"><p>Gets the screen brigthness.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#set_brightness/1">set_brightness(brightness)</a>
   </div>
+    <div class="summary-synopsis"><p>Sets the screen brigthness.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#set_content/1">set_content(content)</a>
   </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#start_link/1">start_link(opts)</a>
-  </div>
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#static/3">static(arg1, arg2, data)</a>
-  </div>
+    <div class="summary-synopsis"><p>Sets the screen contents.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#turn_off/0">turn_off()</a>
   </div>
+    <div class="summary-synopsis"><p>Turn off the screen.</p></div>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#turn_on/0">turn_on()</a>
   </div>
+    <div class="summary-synopsis"><p>Turn on the screen.</p></div>
 </div>
   </div>
         </section>
 
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Types          </h1>
+          <div class="types-list">
+<section class="detail" id="t:content/0">
+    <div class="detail-header">
+    <a href="#t:content/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">content()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L37" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>content() :: <a href="#t:static_spec/0">static_spec</a>() | <a href="#t:cycle_spec/0">cycle_spec</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+  </section>
+</section>
+<section class="detail" id="t:cycle_spec/0">
+    <div class="detail-header">
+    <a href="#t:cycle_spec/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">cycle_spec()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L36" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>cycle_spec() :: {:cycle, [{<a href="Ada.Display.Driver.html#t:buffer/0">Ada.Display.Driver.buffer</a>(), <a href="#t:duration_ms/0">duration_ms</a>()}]}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Represents a specification for a cyclic screen, which loops over different
+buffers, each one with a specific duration.</p>
+<p>For example:</p>
+<pre><code class="nohighlight makeup elixir"><span class="p" data-group-id="4680657873-1">[</span><span class="w">
+  </span><span class="p" data-group-id="4680657873-2">{</span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="4680657873-3">(</span><span class="sc">&#39;A   &#39;</span><span class="p" data-group-id="4680657873-3">)</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="4680657873-2">}</span><span class="p">,</span><span class="w">
+  </span><span class="p" data-group-id="4680657873-4">{</span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="4680657873-5">(</span><span class="sc">&#39; A  &#39;</span><span class="p" data-group-id="4680657873-5">)</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="4680657873-4">}</span><span class="p">,</span><span class="w">
+  </span><span class="p" data-group-id="4680657873-6">{</span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="4680657873-7">(</span><span class="sc">&#39;  A &#39;</span><span class="p" data-group-id="4680657873-7">)</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="4680657873-6">}</span><span class="p">,</span><span class="w">
+  </span><span class="p" data-group-id="4680657873-8">{</span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="4680657873-9">(</span><span class="sc">&#39;   A&#39;</span><span class="p" data-group-id="4680657873-9">)</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p" data-group-id="4680657873-8">}</span><span class="w">
+</span><span class="p" data-group-id="4680657873-1">]</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="t:duration_ms/0">
+    <div class="detail-header">
+    <a href="#t:duration_ms/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">duration_ms()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L12" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>duration_ms() :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">pos_integer</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+  </section>
+</section>
+<section class="detail" id="t:static_spec/0">
+    <div class="detail-header">
+    <a href="#t:static_spec/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">static_spec()</span>
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L21" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>static_spec() :: {:static, <a href="Ada.Display.Driver.html#t:buffer/0">Ada.Display.Driver.buffer</a>()}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Represents a specification for a static screen, constantly displaying the
+same contents.</p>
+<p>For example:</p>
+<pre><code class="nohighlight makeup elixir"><span class="p" data-group-id="4957036170-1">{</span><span class="ss">:static</span><span class="p">,</span><span class="w"> </span><span class="nc">Ada.UI.Helpers</span><span class="o">.</span><span class="n">chars_to_matrix</span><span class="p" data-group-id="4957036170-2">(</span><span class="sc">&#39;1234&#39;</span><span class="p" data-group-id="4957036170-2">)</span><span class="p" data-group-id="4957036170-1">}</span></code></pre>
+  </section>
+</section>
+          </div>
+        </section>
         <section id="functions" class="details-list">
           <h1 class="section-heading">
             <a class="hover-link" href="#functions">
@@ -189,52 +260,6 @@ Ada.Display
             </a>
 Functions          </h1>
           <div class="functions-list">
-<section class="detail" id="callback_mode/0">
-    <div class="detail-header">
-    <a href="#callback_mode/0" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">callback_mode()</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L76" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-          </div>
-  <section class="docstring">
-<p>Callback implementation for <code class="inline">c::gen_statem.callback_mode/0</code>.</p>
-  </section>
-</section>
-<section class="detail" id="child_spec/1">
-    <div class="detail-header">
-    <a href="#child_spec/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">child_spec(opts)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L66" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="cyclic/3">
-    <div class="detail-header">
-    <a href="#cyclic/3" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">cyclic(event_type, arg2, data)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L170" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
 <section class="detail" id="get_brightness/0">
     <div class="detail-header">
     <a href="#get_brightness/0" class="detail-link" title="Link to this function">
@@ -242,60 +267,17 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">get_brightness()</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L52" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L87" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="init/1">
-    <div class="detail-header">
-    <a href="#init/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">init(opts)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L78" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-          </div>
-  <section class="docstring">
-<p>Callback implementation for <code class="inline">c::gen_statem.init/1</code>.</p>
-  </section>
-</section>
-<section class="detail" id="is_valid_cycle_spec/1">
-    <div class="detail-header">
-    <a href="#is_valid_cycle_spec/1" class="detail-link" title="Link to this macro">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this macro</span>
-    </a>
-    <h1 class="signature">is_valid_cycle_spec(cycle_spec)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L60" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-    
-      <span class="note">(macro)</span>
+        
+      <div class="specs">
+          <pre>get_brightness() :: <a href="Ada.Display.Driver.html#t:brightness/0">Ada.Display.Driver.brightness</a>()</pre>
       </div>
+  </div>
   <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="off/3">
-    <div class="detail-header">
-    <a href="#off/3" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">off(arg1, arg2, data)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L88" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-          </div>
-  <section class="docstring">
+<p>Gets the screen brigthness.</p>
   </section>
 </section>
 <section class="detail" id="set_brightness/1">
@@ -305,12 +287,17 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">set_brightness(brightness)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L48" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L79" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-          </div>
+        
+      <div class="specs">
+          <pre>set_brightness(<a href="Ada.Display.Driver.html#t:brightness/0">Ada.Display.Driver.brightness</a>()) :: :ok | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+      </div>
+  </div>
   <section class="docstring">
+<p>Sets the screen brigthness.</p>
   </section>
 </section>
 <section class="detail" id="set_content/1">
@@ -320,42 +307,18 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">set_content(content)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L44" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L71" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-          </div>
+        
+      <div class="specs">
+          <pre>set_content(<a href="#t:content/0">content</a>()) :: :ok | {:error, :cycle_spec_too_short} | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+      </div>
+  </div>
   <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="start_link/1">
-    <div class="detail-header">
-    <a href="#start_link/1" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">start_link(opts)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L32" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-          </div>
-  <section class="docstring">
-  </section>
-</section>
-<section class="detail" id="static/3">
-    <div class="detail-header">
-    <a href="#static/3" class="detail-link" title="Link to this function">
-      <span class="icon-link" aria-hidden="true"></span>
-      <span class="sr-only">Link to this function</span>
-    </a>
-    <h1 class="signature">static(arg1, arg2, data)</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L131" class="view-source" rel="help" title="View Source">
-       <span class="icon-code" aria-hidden="true"></span>
-       <span class="sr-only">View Source</span>
-     </a>
-          </div>
-  <section class="docstring">
+<p>Sets the screen contents.</p>
+<p>Please see <a href="#t:static_spec/0"><code class="inline">static_spec/0</code></a> and <a href="#t:cycle_spec/0"><code class="inline">cycle_spec/0</code></a> for information about supported formats.</p>
   </section>
 </section>
 <section class="detail" id="turn_off/0">
@@ -365,12 +328,17 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">turn_off()</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L40" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L61" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-          </div>
+        
+      <div class="specs">
+          <pre>turn_off() :: :ok</pre>
+      </div>
+  </div>
   <section class="docstring">
+<p>Turn off the screen.</p>
   </section>
 </section>
 <section class="detail" id="turn_on/0">
@@ -380,12 +348,17 @@ Functions          </h1>
       <span class="sr-only">Link to this function</span>
     </a>
     <h1 class="signature">turn_on()</span>
-      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L36" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/display.ex#L53" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-          </div>
+        
+      <div class="specs">
+          <pre>turn_on() :: :ok</pre>
+      </div>
+  </div>
   <section class="docstring">
+<p>Turn on the screen.</p>
   </section>
 </section>
           </div>
