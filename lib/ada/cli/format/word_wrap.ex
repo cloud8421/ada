@@ -3,13 +3,22 @@ defmodule Ada.CLI.Format.WordWrap do
   # Adapted from https://rosettacode.org/wiki/Word_wrap#Elixir
 
   def paragraph(string, max_line_length, left_pad) do
-    [word | rest] = String.split(string, ~r/\s+/, trim: true)
+    case String.split(string, ~r/\s+/, trim: true) do
+      [] ->
+        [left_pad, string, "\n"]
 
-    rest
-    |> lines_assemble(max_line_length - String.length(left_pad), String.length(word), word, [])
-    |> Enum.map(fn line ->
-      [left_pad, line, "\n"]
-    end)
+      [word | rest] ->
+        rest
+        |> lines_assemble(
+          max_line_length - String.length(left_pad),
+          String.length(word),
+          word,
+          []
+        )
+        |> Enum.map(fn line ->
+          [left_pad, line, "\n"]
+        end)
+    end
   end
 
   defp lines_assemble([], _, _, line, acc), do: [line | acc] |> Enum.reverse()
