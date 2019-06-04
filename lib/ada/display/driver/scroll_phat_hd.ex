@@ -28,7 +28,6 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
 
   defstruct buffer: nil,
             i2c: nil,
-            i2c_mod: ElixirALE.I2C,
             current_frame: 0,
             brightness: 1
 
@@ -59,15 +58,12 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
   # Callbacks
 
   @impl true
-  def init(opts) do
-    bus = Keyword.get(opts, :bus, @bus)
-    address = Keyword.get(opts, :address, @address)
-    i2c_mod = Keyword.get(opts, :i2c_mod, ElixirALE.I2C)
-    {:ok, i2c} = i2c_mod.start_link(bus, address)
-    reset_i2c(i2c_mod, i2c)
-    initialize_display(i2c_mod, i2c)
+  def init(_opts) do
+    {:ok, i2c} = Circuits.I2C.open(@bus)
+    reset_i2c(i2c)
+    initialize_display(i2c)
     buffer = Matrix.new(@width, @height)
-    state = show(buffer, %__MODULE__{buffer: buffer, i2c: i2c, i2c_mod: i2c_mod})
+    state = show(buffer, %__MODULE__{buffer: buffer, i2c: i2c})
     {:ok, state}
   end
 
@@ -91,16 +87,16 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
   defp show(buffer, state) do
     next_frame = next_frame(state.current_frame)
 
-    write_bank(state.i2c_mod, state.i2c, next_frame)
+    write_bank(state.i2c, next_frame)
 
     output =
       buffer
       |> Matrix.scale(state.brightness)
       |> convert_buffer_to_output()
 
-    write_output(state.i2c_mod, state.i2c, output)
+    write_output(state.i2c, output)
 
-    write_config_register(state.i2c_mod, state.i2c, @frame_register, next_frame)
+    write_config_register(state.i2c, @frame_register, next_frame)
 
     %{state | buffer: buffer, current_frame: next_frame}
   end
@@ -111,43 +107,39 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
     |> Matrix.transpose()
   end
 
-  defp reset_i2c(i2c_mod, i2c) do
-    write_bank(i2c_mod, i2c, @config_bank)
-    i2c_write(i2c_mod, i2c, @shutdown_register, 0)
+  defp reset_i2c(i2c) do
+    write_bank(i2c, @config_bank)
+    i2c_write(i2c, @shutdown_register, 0)
     Process.sleep(1)
-    i2c_write(i2c_mod, i2c, @shutdown_register, 1)
+    i2c_write(i2c, @shutdown_register, 1)
   end
 
-  defp initialize_display(i2c_mod, i2c) do
+  defp initialize_display(i2c) do
     # Switch to configuration bank
-    write_bank(i2c_mod, i2c, @config_bank)
+    write_bank(i2c, @config_bank)
 
     # Switch to picture mode
-    i2c_write(i2c_mod, i2c, @mode_register, @picture_mode)
+    i2c_write(i2c, @mode_register, @picture_mode)
 
     # Disable audio sync
-    i2c_write(i2c_mod, i2c, @audiosync_register, 0)
+    i2c_write(i2c, @audiosync_register, 0)
 
     # Switch to bank 1 (frame 1)
-    write_bank(i2c_mod, i2c, 1)
-    i2c_write(i2c_mod, i2c, @enable_offset, List.duplicate(255, 18))
+    write_bank(i2c, 1)
+    i2c_write(i2c, @enable_offset, List.duplicate(255, 18))
 
     # Switch to bank 0 (frame 0) and enable all LEDs
-    write_bank(i2c_mod, i2c, 0)
-    i2c_write(i2c_mod, i2c, @enable_offset, List.duplicate(255, 18))
+    write_bank(i2c, 0)
+    i2c_write(i2c, @enable_offset, List.duplicate(255, 18))
   end
 
-  defp write_bank(i2c_mod, i2c, value) do
-    i2c_write(i2c_mod, i2c, @bank_address, value)
+  defp write_bank(i2c, value) do
+    i2c_write(i2c, @bank_address, value)
   end
 
-  defp write_config_register(i2c_mod, i2c, register, value) do
-    write_bank(i2c_mod, i2c, @config_bank)
-    i2c_write(i2c_mod, i2c, register, value)
-  end
-
-  defp i2c_write(i2c_mod, i2c, address, value) do
-    i2c_mod.write(i2c, IO.iodata_to_binary([address, value]))
+  defp write_config_register(i2c, register, value) do
+    write_bank(i2c, @config_bank)
+    i2c_write(i2c, register, value)
   end
 
   defp next_frame(0), do: 1
@@ -178,14 +170,18 @@ defmodule Ada.Display.Driver.ScrollPhatHD do
     x_t * 16 + y
   end
 
-  defp write_output(i2c_mod, i2c, output) do
+  defp write_output(i2c, output) do
     chunk_size = 32
 
     output
     |> Enum.chunk_every(chunk_size)
     |> Enum.with_index()
     |> Enum.each(fn {chunks, index} ->
-      i2c_write(i2c_mod, i2c, @color_offset + index * chunk_size, chunks)
+      i2c_write(i2c, @color_offset + index * chunk_size, chunks)
     end)
+  end
+
+  def i2c_write(i2c, address, value) do
+    Circuits.I2C.write(i2c, @address, IO.iodata_to_binary([address, value]))
   end
 end
