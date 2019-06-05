@@ -62,7 +62,7 @@
   "statix": {:hex, :statix, "1.1.0", "af9a4586c5cd58f879e0595f06a4790878715de5b8f75f6346693aaa38da2424", [:mix], [], "hexpm"},
   "system_registry": {:hex, :system_registry, "0.8.2", "df791dc276652fcfb53be4dab823e05f8269b96ac57c26f86a67838dbc0eefe7", [:mix], [], "hexpm"},
   "telemetry": {:hex, :telemetry, "0.4.0", "8339bee3fa8b91cb84d14c2935f8ecf399ccd87301ad6da6b71c09553834b2ab", [:rebar3], [], "hexpm"},
-  "toolshed": {:hex, :toolshed, "0.2.9", "60e6022eb923d8b27eb4df1ccd9e7f0219d2ed3e703c8ceacac513035937de0b", [:mix], [{:nerves_runtime, "~> 0.8", [hex: :nerves_runtime, repo: "hexpm", optional: true]}], "hexpm"},
+  "toolshed": {:hex, :toolshed, "0.2.10", "31e33f3bfbd88085a5f34844930a75e579940417873eb8a5c25b9525ad1a1372", [:mix], [{:nerves_runtime, "~> 0.8", [hex: :nerves_runtime, repo: "hexpm", optional: true]}], "hexpm"},
   "tzdata": {:hex, :tzdata, "1.0.0", "fe4da40f76348d2ca0d16491196089fe75f57d6164e2a0ef8adf2804b9a2b3fa", [:mix], [{:hackney, "~> 1.0", [hex: :hackney, repo: "hexpm", optional: false]}], "hexpm"},
   "uboot_env": {:hex, :uboot_env, "0.1.1", "b01e3ec0973e99473234f27839e29e63b5b81eba6a136a18a78d049d4813d6c5", [:mix], [], "hexpm"},
   "unicode_util_compat": {:hex, :unicode_util_compat, "0.4.1", "d869e4c68901dd9531385bb0c8c40444ebf624e60b6962d95952775cac5e90cd", [:rebar3], [], "hexpm"},
