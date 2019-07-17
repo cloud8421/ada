@@ -4,18 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.20.2">
+    <meta name="generator" content="ExDoc v0.21.0">
     <meta name="project" content="ada v0.1.0">
     <title>Ada.Backup.Uploader — ada v0.1.0</title>
-    <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
+    <link rel="stylesheet" href="dist/html-6533ecd75f89a4bc2271.css" />
     <script src="dist/sidebar_items-a43bfa0594.js"></script>
       <script src="docs_config.js"></script>
-    <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
-    
+    <script async src="dist/html-6533ecd75f89a4bc2271.js"></script>
   </head>
   <body data-type="modules">
-    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
-    <div class="main">
+    <script>try { if(localStorage.getItem('night-mode') === 'true') document.body.className += ' night-mode'; } catch (e) { }</script>
+<div class="main">
 
 <button class="sidebar-button sidebar-toggle">
   <span class="icon-menu" title="Collapse/expand sidebar"></span>
@@ -64,11 +63,9 @@ ada      </a>
   <div class="content-outer">
     <div id="content" class="content-inner">
 
-
       <h1>
         <small class="app-vsn">ada v0.1.0</small>
-Ada.Backup.Uploader        
-          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L1" title="View Source" class="view-source" rel="help">
+Ada.Backup.Uploader          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L1" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -138,17 +135,16 @@ location.</p>
 Types          </h1>
           <div class="types-list">
 <section class="detail" id="t:start_opts/0">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#t:start_opts/0" class="detail-link" title="Link to this type">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this type</span>
     </a>
-    <h1 class="signature">start_opts()</span>
+    <h1 class="signature">start_opts()</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L16" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>start_opts() :: [{:strategy, <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">module</a>()}]</pre>
       </div>
@@ -167,34 +163,33 @@ Types          </h1>
 Functions          </h1>
           <div class="functions-list">
 <section class="detail" id="child_spec/1">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#child_spec/1" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">child_spec(init_arg)</span>
+    <h1 class="signature">child_spec(init_arg)</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L7" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-          </div>
+  </div>
   <section class="docstring">
 <p>Returns a specification to start this module under a supervisor.</p>
 <p>See <a href="https://hexdocs.pm/elixir/Supervisor.html"><code class="inline">Supervisor</code></a>.</p>
   </section>
 </section>
 <section class="detail" id="save_now/0">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#save_now/0" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">save_now()</span>
+    <h1 class="signature">save_now()</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L38" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>save_now() :: {:ok, <a href="Ada.Backup.Strategy.html#t:path/0">Ada.Backup.Strategy.path</a>()} | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
       </div>
@@ -204,17 +199,16 @@ Functions          </h1>
   </section>
 </section>
 <section class="detail" id="save_today/0">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#save_today/0" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">save_today()</span>
+    <h1 class="signature">save_today()</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L30" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>save_today() :: {:ok, <a href="Ada.Backup.Strategy.html#t:path/0">Ada.Backup.Strategy.path</a>()} | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
       </div>
@@ -224,17 +218,16 @@ Functions          </h1>
   </section>
 </section>
 <section class="detail" id="start_link/1">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#start_link/1" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">start_link(opts)</span>
+    <h1 class="signature">start_link(opts)</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/backup/uploader.ex#L22" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>start_link(<a href="#t:start_opts/0">start_opts</a>()) :: <a href="https://hexdocs.pm/elixir/GenServer.html#t:on_start/0">GenServer.on_start</a>()</pre>
       </div>
@@ -245,11 +238,11 @@ Functions          </h1>
 </section>
           </div>
         </section>
-          <footer class="footer">
+      <footer class="footer">
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.20.2),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.21.0),
           </span>
           <span class="line">
             designed by
@@ -260,8 +253,15 @@ Functions          </h1>
           <button class="line footer-button night-mode-toggle">
             Toggle night mode
           </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
           <button class="line footer-button display-shortcuts-help">
             Display keyboard shortcuts
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
           </button>
         </p>
       </footer>
@@ -269,7 +269,5 @@ Functions          </h1>
   </div>
 </section>
 </div>
-  
   </body>
 </html>
-

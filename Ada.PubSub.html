@@ -4,18 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.20.2">
+    <meta name="generator" content="ExDoc v0.21.0">
     <meta name="project" content="ada v0.1.0">
     <title>Ada.PubSub — ada v0.1.0</title>
-    <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
+    <link rel="stylesheet" href="dist/html-6533ecd75f89a4bc2271.css" />
     <script src="dist/sidebar_items-a43bfa0594.js"></script>
       <script src="docs_config.js"></script>
-    <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
-    
+    <script async src="dist/html-6533ecd75f89a4bc2271.js"></script>
   </head>
   <body data-type="modules">
-    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
-    <div class="main">
+    <script>try { if(localStorage.getItem('night-mode') === 'true') document.body.className += ' night-mode'; } catch (e) { }</script>
+<div class="main">
 
 <button class="sidebar-button sidebar-toggle">
   <span class="icon-menu" title="Collapse/expand sidebar"></span>
@@ -64,11 +63,9 @@ ada      </a>
   <div class="content-outer">
     <div id="content" class="content-inner">
 
-
       <h1>
         <small class="app-vsn">ada v0.1.0</small>
-Ada.PubSub        
-          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/pub_sub.ex#L1" title="View Source" class="view-source" rel="help">
+Ada.PubSub          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/pub_sub.ex#L1" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -78,9 +75,9 @@ Ada.PubSub
         <section id="moduledoc">
 <p>Provides a single-node pub-sub infrastructure on top of <a href="https://hexdocs.pm/elixir/Registry.html"><code class="inline">Registry</code></a>.</p>
 <p>It needs to be added to the application supervision tree:</p>
-<pre><code class="nohighlight makeup elixir"><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="7633716221-1">[</span><span class="w">
-  </span><span class="nc">Ada.PubSub</span><span class="w">
-</span><span class="p" data-group-id="7633716221-1">]</span></code></pre>
+<pre><code class="nohighlight makeup elixir"><samp class="n">children</samp><samp class="w"> </samp><samp class="o">=</samp><samp class="w"> </samp><samp class="p" data-group-id="6359796142-1">[</samp><samp class="w">
+  </samp><samp class="nc">Ada.PubSub</samp><samp class="w">
+</samp><samp class="p" data-group-id="6359796142-1">]</samp></code></pre>
 <p>See <a href="#subscribe/1"><code class="inline">subscribe/1</code></a> and <a href="#publish/2"><code class="inline">publish/2</code></a> for usage details.</p>
         </section>
 
@@ -121,17 +118,16 @@ in the shape of <code class="inline">{:Ada.PubSub.Broadcast, topic, message}</co
 Functions          </h1>
           <div class="functions-list">
 <section class="detail" id="publish/2">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#publish/2" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">publish(topic, message)</span>
+    <h1 class="signature">publish(topic, message)</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/pub_sub.ex#L33" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>publish(<a href="https://hexdocs.pm/elixir/Registry.html#t:key/0">Registry.key</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()) :: :ok</pre>
       </div>
@@ -141,17 +137,16 @@ Functions          </h1>
   </section>
 </section>
 <section class="detail" id="subscribe/1">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#subscribe/1" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">subscribe(topic)</span>
+    <h1 class="signature">subscribe(topic)</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/pub_sub.ex#L24" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>subscribe(<a href="https://hexdocs.pm/elixir/Registry.html#t:key/0">Registry.key</a>()) :: :ok</pre>
       </div>
@@ -163,11 +158,11 @@ in the shape of <code class="inline">{:Ada.PubSub.Broadcast, topic, message}</co
 </section>
           </div>
         </section>
-          <footer class="footer">
+      <footer class="footer">
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.20.2),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.21.0),
           </span>
           <span class="line">
             designed by
@@ -178,8 +173,15 @@ in the shape of <code class="inline">{:Ada.PubSub.Broadcast, topic, message}</co
           <button class="line footer-button night-mode-toggle">
             Toggle night mode
           </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
           <button class="line footer-button display-shortcuts-help">
             Display keyboard shortcuts
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
           </button>
         </p>
       </footer>
@@ -187,7 +189,5 @@ in the shape of <code class="inline">{:Ada.PubSub.Broadcast, topic, message}</co
   </div>
 </section>
 </div>
-  
   </body>
 </html>
-

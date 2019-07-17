@@ -4,18 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.20.2">
+    <meta name="generator" content="ExDoc v0.21.0">
     <meta name="project" content="ada v0.1.0">
     <title>Ada.CRUD — ada v0.1.0</title>
-    <link rel="stylesheet" href="dist/html-d9f58a6320b5bfa6dd77.css" />
+    <link rel="stylesheet" href="dist/html-6533ecd75f89a4bc2271.css" />
     <script src="dist/sidebar_items-a43bfa0594.js"></script>
       <script src="docs_config.js"></script>
-    <script async src="dist/html-d9f58a6320b5bfa6dd77.js"></script>
-    
+    <script async src="dist/html-6533ecd75f89a4bc2271.js"></script>
   </head>
   <body data-type="modules">
-    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
-    <div class="main">
+    <script>try { if(localStorage.getItem('night-mode') === 'true') document.body.className += ' night-mode'; } catch (e) { }</script>
+<div class="main">
 
 <button class="sidebar-button sidebar-toggle">
   <span class="icon-menu" title="Collapse/expand sidebar"></span>
@@ -64,11 +63,9 @@ ada      </a>
   <div class="content-outer">
     <div id="content" class="content-inner">
 
-
       <h1>
         <small class="app-vsn">ada v0.1.0</small>
-Ada.CRUD        
-          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L1" title="View Source" class="view-source" rel="help">
+Ada.CRUD          <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L1" title="View Source" class="view-source" rel="help">
             <span class="icon-code" aria-hidden="true"></span>
             <span class="sr-only">View Source</span>
           </a>
@@ -158,17 +155,16 @@ Ada.CRUD
 Types          </h1>
           <div class="types-list">
 <section class="detail" id="t:ctx/0">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#t:ctx/0" class="detail-link" title="Link to this type">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this type</span>
     </a>
-    <h1 class="signature">ctx()</span>
+    <h1 class="signature">ctx()</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L11" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>ctx() :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()</pre>
       </div>
@@ -177,17 +173,16 @@ Types          </h1>
   </section>
 </section>
 <section class="detail" id="t:resource/0">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#t:resource/0" class="detail-link" title="Link to this type">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this type</span>
     </a>
-    <h1 class="signature">resource()</span>
+    <h1 class="signature">resource()</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L13" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>resource() ::
   <a href="Ada.Schema.Location.html#t:t/0">Ada.Schema.Location.t</a>() | <a href="Ada.Schema.ScheduledTask.html#t:t/0">Ada.Schema.ScheduledTask.t</a>() | <a href="Ada.Schema.User.html#t:t/0">Ada.Schema.User.t</a>()</pre>
@@ -197,17 +192,16 @@ Types          </h1>
   </section>
 </section>
 <section class="detail" id="t:resource_id/0">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#t:resource_id/0" class="detail-link" title="Link to this type">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this type</span>
     </a>
-    <h1 class="signature">resource_id()</span>
+    <h1 class="signature">resource_id()</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L10" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>resource_id() :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">pos_integer</a>()</pre>
       </div>
@@ -216,17 +210,16 @@ Types          </h1>
   </section>
 </section>
 <section class="detail" id="t:schema/0">
-    <div class="detail-header">
+  <div class="detail-header">
     <a href="#t:schema/0" class="detail-link" title="Link to this type">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this type</span>
     </a>
-    <h1 class="signature">schema()</span>
+    <h1 class="signature">schema()</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L12" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>schema() :: Ada.Schema.Location | Ada.Schema.ScheduledTask | Ada.Schema.User</pre>
       </div>
@@ -245,19 +238,17 @@ Types          </h1>
 Functions          </h1>
           <div class="functions-list">
 <section class="detail" id="create/3">
-  
     <span id="create/2"></span>
   <div class="detail-header">
     <a href="#create/3" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">create(schema, attributes, ctx \\ [repo: Ada.Repo])</span>
+    <h1 class="signature">create(schema, attributes, ctx \\ [repo: Ada.Repo])</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L39" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>create(<a href="#t:schema/0">schema</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>(), <a href="#t:ctx/0">ctx</a>()) ::
   {:ok, <a href="#t:resource/0">resource</a>()} | {:error, <a href="https://hexdocs.pm/ecto/2.2.9/Ecto.Changeset.html#t:t/0">Ecto.Changeset.t</a>()}</pre>
@@ -268,19 +259,17 @@ Functions          </h1>
   </section>
 </section>
 <section class="detail" id="delete/2">
-  
     <span id="delete/1"></span>
   <div class="detail-header">
     <a href="#delete/2" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">delete(resource, ctx \\ [repo: Ada.Repo])</span>
+    <h1 class="signature">delete(resource, ctx \\ [repo: Ada.Repo])</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L61" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>delete(<a href="#t:resource/0">resource</a>(), <a href="#t:ctx/0">ctx</a>()) :: {:ok, <a href="#t:resource/0">resource</a>()} | {:error, <a href="https://hexdocs.pm/ecto/2.2.9/Ecto.Changeset.html#t:t/0">Ecto.Changeset.t</a>()}</pre>
       </div>
@@ -290,19 +279,17 @@ Functions          </h1>
   </section>
 </section>
 <section class="detail" id="find/3">
-  
     <span id="find/2"></span>
   <div class="detail-header">
     <a href="#find/3" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">find(schema, id, ctx \\ [repo: Ada.Repo])</span>
+    <h1 class="signature">find(schema, id, ctx \\ [repo: Ada.Repo])</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L19" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>find(<a href="#t:schema/0">schema</a>(), <a href="#t:resource_id/0">resource_id</a>(), <a href="#t:ctx/0">ctx</a>()) :: <a href="#t:resource/0">resource</a>() | nil</pre>
       </div>
@@ -312,19 +299,17 @@ Functions          </h1>
   </section>
 </section>
 <section class="detail" id="list/2">
-  
     <span id="list/1"></span>
   <div class="detail-header">
     <a href="#list/2" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">list(schema, ctx \\ [repo: Ada.Repo])</span>
+    <h1 class="signature">list(schema, ctx \\ [repo: Ada.Repo])</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L29" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>list(<a href="#t:schema/0">schema</a>(), <a href="#t:ctx/0">ctx</a>()) :: [<a href="#t:resource/0">resource</a>()]</pre>
       </div>
@@ -334,19 +319,17 @@ Functions          </h1>
   </section>
 </section>
 <section class="detail" id="update/4">
-  
     <span id="update/3"></span>
   <div class="detail-header">
     <a href="#update/4" class="detail-link" title="Link to this function">
       <span class="icon-link" aria-hidden="true"></span>
       <span class="sr-only">Link to this function</span>
     </a>
-    <h1 class="signature">update(schema, resource, attributes, ctx \\ [repo: Ada.Repo])</span>
+    <h1 class="signature">update(schema, resource, attributes, ctx \\ [repo: Ada.Repo])</h1>
       <a href="https://github.com/cloud8421/ada/blob/master/lib/ada/crud.ex#L50" class="view-source" rel="help" title="View Source">
        <span class="icon-code" aria-hidden="true"></span>
        <span class="sr-only">View Source</span>
      </a>
-        
       <div class="specs">
           <pre>update(<a href="#t:schema/0">schema</a>(), <a href="#t:resource/0">resource</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">map</a>(), <a href="#t:ctx/0">ctx</a>()) ::
   {:ok, <a href="#t:resource/0">resource</a>()} | {:error, <a href="https://hexdocs.pm/ecto/2.2.9/Ecto.Changeset.html#t:t/0">Ecto.Changeset.t</a>()}</pre>
@@ -358,11 +341,11 @@ Functions          </h1>
 </section>
           </div>
         </section>
-          <footer class="footer">
+      <footer class="footer">
         <p>
           <span class="line">
             Built using
-            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.20.2),
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.21.0),
           </span>
           <span class="line">
             designed by
@@ -373,8 +356,15 @@ Functions          </h1>
           <button class="line footer-button night-mode-toggle">
             Toggle night mode
           </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
           <button class="line footer-button display-shortcuts-help">
             Display keyboard shortcuts
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
           </button>
         </p>
       </footer>
@@ -382,7 +372,5 @@ Functions          </h1>
   </div>
 </section>
 </div>
-  
   </body>
 </html>
-
